@@ -1,0 +1,25 @@
+article {
+    background-color: #fff;
+    box-shadow: 0 2px 4px var(--c-shadow-1);
+}
+
+.title {
+    font-size: 24px;
+    font-weight: 600;
+    line-height: 1.6;
+    color: var(--c-1);
+    margin-bottom: 10px;
+}
+
+article .meta a {
+    color: var(--c-5);
+    font-weight: 600;
+}
+
+article .meta a:hover {
+    color: var(--c-2);
+}
+
+#main {
+    background-color: var(--c-bg-1);
+}

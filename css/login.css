@@ -1,0 +1,106 @@
+#main {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#main .container {
+    width: 880px;
+    height: 457px;
+    border-radius: 10px;
+    box-shadow: 2px 4px 10px var(--c-shadow-1);
+    display: flex;
+    overflow: hidden;
+}
+
+#main .container .left {
+    flex: 1;
+    overflow: hidden;
+}
+
+#main .container .right {
+    width: 33%;
+    position: relative;
+    padding: 22px 0 50px 0;
+}
+
+#main .container .right .content {
+    width: 80%;
+    margin: 0 auto;
+    vertical-align: middle;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+}
+
+.logo .name {
+    margin-left: 5px;
+    font-size: 14px;
+    color: var(--c-1);
+    font-weight: 600;
+}
+
+.logo img {
+    width: 40px; height: 40px; border-radius: 50%;
+}
+
+.greeting {
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--c-text-2);
+}
+.greeting .name {
+    font-size: 14px;
+}
+
+.input-1 {
+    border: none;
+    padding: 8px 0;
+    display: inline-block;
+    width: 100%;
+    height: inherit;
+    border-bottom: 1px solid var(--c-border-2);
+    color: var(--c-text-2);
+    transition: all 0.5s;
+}
+
+.input-1:focus {
+    border-color: var(--c-text-1);
+    padding-left: 4px;
+}
+
+.copyright {
+    width: 100% !important;
+    height: 50px;
+    color: var(--c-text-3);
+    font-size: 14px;
+    line-height: 1.6;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.forget {
+    color: var(--c-2);
+    font-size: 12px;
+}
+
+.message {
+    height: 3em;
+    max-height: 3em;
+    overflow: hidden;
+    color: var(--c-2);
+    font-weight: 500;
+    font-size: 12px;
+}
+
+.no-account {
+    color: var(--c-text-3);
+    font-size: 12px;
+}
