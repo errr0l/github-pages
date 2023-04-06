@@ -113,6 +113,10 @@
     line-height: 1.6;
 }
 
+.card .title a {
+    color: var(--c-text-2);
+}
+
 .card .content {
     text-indent: 2em;
     display: flex;
@@ -122,7 +126,7 @@
     flex: 210px 0 0;
     /*width: 210px;*/
     height: 118px;
-    margin-left: 10px;
+    margin-right: 10px;
     border-radius: 4px;
 }
 
@@ -244,7 +248,8 @@
 
 .reading-more {
     text-indent: 0; white-space: nowrap;
-    color: var(--c-3);
+    color: var(--c-5);
+    margin-left: 2px;
 }
 
 .reading-more:hover {
@@ -264,62 +269,62 @@
     margin-right: 20px;
 }
 
-.tag-2 {
-    float: left;
-    width: 32%;
-    font-size: 12px;
-    white-space: nowrap;
-    margin-bottom: 10px;
-    text-align: center;
-    padding: 0 0.6%;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
+/*.tag-2 {*/
+/*    float: left;*/
+/*    width: 32%;*/
+/*    font-size: 12px;*/
+/*    white-space: nowrap;*/
+/*    margin-bottom: 10px;*/
+/*    text-align: center;*/
+/*    padding: 0 0.6%;*/
+/*    overflow: hidden;*/
+/*    text-overflow: ellipsis;*/
+/*}*/
 
-.tag-2-1 {
-    background-color: var(--c-tag-1);
-    color: #fff;
-}
+/*.tag-2-1 {*/
+/*    background-color: var(--c-tag-1);*/
+/*    color: #fff;*/
+/*}*/
 
-.tag-2-2 {
-    background-color: var(--c-tag-2);
-    color: #fff;
-}
+/*.tag-2-2 {*/
+/*    background-color: var(--c-tag-2);*/
+/*    color: #fff;*/
+/*}*/
 
-.tag-2-3 {
-    background-color: var(--c-tag-3);
-    color: #fff;
-}
+/*.tag-2-3 {*/
+/*    background-color: var(--c-tag-3);*/
+/*    color: #fff;*/
+/*}*/
 
-.tag-2-4 {
-    background-color: var(--c-tag-4);
-    color: #fff;
-}
+/*.tag-2-4 {*/
+/*    background-color: var(--c-tag-4);*/
+/*    color: #fff;*/
+/*}*/
 
-.tag-2-5 {
-    background-color: var(--c-tag-5);
-    color: #fff;
-}
+/*.tag-2-5 {*/
+/*    background-color: var(--c-tag-5);*/
+/*    color: #fff;*/
+/*}*/
 
-.tag-2-6 {
-    background-color: var(--c-tag-6);
-    color: #fff;
-}
+/*.tag-2-6 {*/
+/*    background-color: var(--c-tag-6);*/
+/*    color: #fff;*/
+/*}*/
 
-.tag-2-7 {
-    background-color: var(--c-tag-7);
-    color: #fff;
-}
+/*.tag-2-7 {*/
+/*    background-color: var(--c-tag-7);*/
+/*    color: #fff;*/
+/*}*/
 
-.tag-2-8 {
-    background-color: var(--c-2);
-    color: #fff;
-}
+/*.tag-2-8 {*/
+/*    background-color: var(--c-2);*/
+/*    color: #fff;*/
+/*}*/
 
-.tag-2-9 {
-    background-color: var(--c-3);
-    color: #fff;
-}
+/*.tag-2-9 {*/
+/*    background-color: var(--c-3);*/
+/*    color: #fff;*/
+/*}*/
 
 .pagination {
     font-size: 0;

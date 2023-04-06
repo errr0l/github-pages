@@ -5,12 +5,12 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Errol's Blog</title>
-    <link rel="stylesheet" href="/css/reset.css">
-    <link rel="stylesheet" href="/css/base.css">
-    <link rel="stylesheet" href="/css/theme-light.css">
-    <link rel="stylesheet" href="/css/index.css">
-    <!-- 引入样式 -->
-    <link rel="stylesheet" href="/css/elementUI/index.css">
+    <link rel="stylesheet" href="./css/reset.css">
+    <link rel="stylesheet" href="./css/base.css">
+    <link rel="stylesheet" href="./css/theme-light.css">
+    <link rel="stylesheet" href="./css/index.css">
+    <link rel="stylesheet" href="./css/template-1.css">
+    <link rel="stylesheet" href="./css/elementUI/index.css">
 </head>
 <body>
 <div id="app">
@@ -19,18 +19,28 @@
             <div class="container mg-0-auto">
     <ul class="nav f-l">
         <li class="nav-item">
-            <a href="/" class="nav-link">
+            <a href="./" class="nav-link">
                 <span style="margin-left: 5px; font-weight: 600; color: var(--c-text-2)">小埃的个人博客</span>
             </a>
         </li>
             <li class="nav-item">
-                <a href="/index.html" class="nav-link active">
-                    <span>文章</span>
+                <a href="./index.html" class="nav-link active">
+                    <span>首页</span>
                 </a>
             </li>
             <li class="nav-item">
-                <a href="/category.html" class="nav-link ">
+                <a href="./category.html" class="nav-link ">
                     <span>分类</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="./category.html" class="nav-link ">
+                    <span>归档</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="./category.html" class="nav-link ">
+                    <span>关于</span>
                 </a>
             </li>
     </ul>
@@ -48,63 +58,21 @@
             <div class="left">
     <div class="card">
         <div class="wrapper">
-            <div class="item">
-                <a class="title" href="/articles/2.html">345</a>
-            </div>
-            <div class="item content">
-                <span class="brief">123<a href="/articles/2.html" class="reading-more">继续阅读<i class="el-icon-thumb f-w-b"></i></a></span>
-            </div>
-            <div class="item meta mg-b-10 footer pd-t-10">
-                <span class="author">由<a href="javascript:void(0);">errol</a>发表于<a href="#">2023-03-22 04:40:26</a></span>
-                <span>|</span>
-                <span class="time">
-                    分类为
-                    <a href="/categories/1.html">海伦1</a></span>
-                    <span>|</span>
-                    <span class="tags">
-                        标签为<a href="javascript:void(0);">123</a>、<a href="javascript:void(0);">345</a>
-                    </span>
-            </div>
-        </div>
-    </div>
-    <div class="card">
-        <div class="wrapper">
-            <div class="item">
-                <a class="title" href="/articles/3.html">567</a>
-            </div>
-            <div class="item content">
-                <span class="brief">123<a href="/articles/3.html" class="reading-more">继续阅读<i class="el-icon-thumb f-w-b"></i></a></span>
-            </div>
-            <div class="item meta mg-b-10 footer pd-t-10">
-                <span class="author">由<a href="javascript:void(0);">errol</a>发表于<a href="#">2023-03-22 04:40:26</a></span>
-                <span>|</span>
-                <span class="time">
-                    分类为
-                    <a href="/categories/1.html">海伦1</a></span>
-                    <span>|</span>
-                    <span class="tags">
-                        标签为<a href="javascript:void(0);">123</a>、<a href="javascript:void(0);">345</a>
-                    </span>
-            </div>
-        </div>
-    </div>
-    <div class="card">
-        <div class="wrapper">
-            <div class="item">
-                <a class="title" href="/articles/5.html">异世界冒险---其一</a>
+            <div class="item title mg-b-5">
+                <a href="./articles/5.html">异世界冒险---其一</a>
             </div>
             <div class="item content">
                 <div class="cover f-r">
                     <img style="object-fit: cover;" src="http://127.0.0.1:8080/image/general/74072703c1114c18be69dc13d25f9ec9-Pet1075_Icon_201102123022.png" alt="">
                 </div>
-                <span class="brief">前辈同维纳斯历经险境后，终于从古代回到学院中...<a href="/articles/5.html" class="reading-more">继续阅读<i class="el-icon-thumb f-w-b"></i></a></span>
+                <span class="brief">前辈同维纳斯历经险境后，终于从古代回到学院中...<a href="./articles/5.html" class="reading-more">继续阅读<i class="el-icon-thumb f-w-b"></i></a></span>
             </div>
             <div class="item meta mg-b-10 footer pd-t-10">
                 <span class="author">由<a href="javascript:void(0);">errol</a>发表于<a href="#">2023-03-28 04:30:06</a></span>
                 <span>|</span>
                 <span class="time">
                     分类为
-                    <a href="/categories/3.html">毒蛇1</a></span>
+                    <a href="./categories/3.html">毒蛇1</a></span>
                     <span>|</span>
                     <span class="tags">
                         标签为<a href="javascript:void(0);">游戏</a>、<a href="javascript:void(0);">project QT</a>
@@ -114,18 +82,18 @@
     </div>
     <div class="card">
         <div class="wrapper">
-            <div class="item">
-                <a class="title" href="/articles/6.html">测试文章1</a>
+            <div class="item title mg-b-5">
+                <a href="./articles/6.html">测试文章1</a>
             </div>
             <div class="item content">
-                <span class="brief">123456<a href="/articles/6.html" class="reading-more">继续阅读<i class="el-icon-thumb f-w-b"></i></a></span>
+                <span class="brief">123456<a href="./articles/6.html" class="reading-more">继续阅读<i class="el-icon-thumb f-w-b"></i></a></span>
             </div>
             <div class="item meta mg-b-10 footer pd-t-10">
                 <span class="author">由<a href="javascript:void(0);">errol</a>发表于<a href="#">2023-04-03 10:49:48</a></span>
                 <span>|</span>
                 <span class="time">
                     分类为
-                    <a href="/categories/1.html">海伦1</a></span>
+                    <a href="./categories/1.html">海伦1</a></span>
                     <span>|</span>
                     <span class="tags">
                         标签为<a href="javascript:void(0);">测试</a>
@@ -135,18 +103,18 @@
     </div>
     <div class="card">
         <div class="wrapper">
-            <div class="item">
-                <a class="title" href="/articles/7.html">测试文章2</a>
+            <div class="item title mg-b-5">
+                <a href="./articles/7.html">测试文章2</a>
             </div>
             <div class="item content">
-                <span class="brief">1234<a href="/articles/7.html" class="reading-more">继续阅读<i class="el-icon-thumb f-w-b"></i></a></span>
+                <span class="brief">1234<a href="./articles/7.html" class="reading-more">继续阅读<i class="el-icon-thumb f-w-b"></i></a></span>
             </div>
             <div class="item meta mg-b-10 footer pd-t-10">
                 <span class="author">由<a href="javascript:void(0);">errol</a>发表于<a href="#">2023-04-03 10:50:15</a></span>
                 <span>|</span>
                 <span class="time">
                     分类为
-                    <a href="/categories/3.html">毒蛇1</a></span>
+                    <a href="./categories/3.html">毒蛇1</a></span>
                     <span>|</span>
                     <span class="tags">
                         标签为<a href="javascript:void(0);">测试</a>
@@ -156,105 +124,24 @@
     </div>
     <div class="card">
         <div class="wrapper">
-            <div class="item">
-                <a class="title" href="/articles/8.html">测试文章3</a>
+            <div class="item title mg-b-5">
+                <a href="./articles/14.html">你是不是总脸黑？</a>
             </div>
             <div class="item content">
-                <span class="brief">test<a href="/articles/8.html" class="reading-more">继续阅读<i class="el-icon-thumb f-w-b"></i></a></span>
+                <div class="cover f-r">
+                    <img style="object-fit: cover;" src="http://127.0.0.1:8080/image/general/be7d424acecd46a0907fc1e0dfd4bff2-3CA6C14E256EB13DCD7C5353A3E1D681.jpg" alt="">
+                </div>
+                <span class="brief">最近，在"赌博"这一方面，我的运气特别背，几乎涉及我所接触的各个领域，挺纳闷的，这不禁让我想问问，究竟是因为干了什么伤天害理的事情，才让我处于现在这种状况。同样的资源，在别人手里是奖品兑换券，而在我手里却一直都是写有"谢谢惠顾"的废纸，而此时如果再看到别人出来分享喜悦的时候，心理落差更是进一步加大。<a href="./articles/14.html" class="reading-more">继续阅读<i class="el-icon-thumb f-w-b"></i></a></span>
             </div>
             <div class="item meta mg-b-10 footer pd-t-10">
-                <span class="author">由<a href="javascript:void(0);">errol</a>发表于<a href="#">2023-04-03 10:50:43</a></span>
+                <span class="author">由<a href="javascript:void(0);">errol</a>发表于<a href="#">2023-04-06 12:15:39</a></span>
                 <span>|</span>
                 <span class="time">
                     分类为
-                    <a href="/categories/1.html">海伦1</a></span>
+                    <a href="./categories/3.html">毒蛇1</a></span>
                     <span>|</span>
                     <span class="tags">
-                        标签为<a href="javascript:void(0);">测试</a>
-                    </span>
-            </div>
-        </div>
-    </div>
-    <div class="card">
-        <div class="wrapper">
-            <div class="item">
-                <a class="title" href="/articles/9.html">test5</a>
-            </div>
-            <div class="item content">
-                <span class="brief">test<a href="/articles/9.html" class="reading-more">继续阅读<i class="el-icon-thumb f-w-b"></i></a></span>
-            </div>
-            <div class="item meta mg-b-10 footer pd-t-10">
-                <span class="author">由<a href="javascript:void(0);">errol</a>发表于<a href="#">2023-04-03 10:51:07</a></span>
-                <span>|</span>
-                <span class="time">
-                    分类为
-                    <a href="/categories/3.html">毒蛇1</a></span>
-                    <span>|</span>
-                    <span class="tags">
-                        标签为<a href="javascript:void(0);">test</a>
-                    </span>
-            </div>
-        </div>
-    </div>
-    <div class="card">
-        <div class="wrapper">
-            <div class="item">
-                <a class="title" href="/articles/10.html">测试文章8</a>
-            </div>
-            <div class="item content">
-                <span class="brief">测试文章8<a href="/articles/10.html" class="reading-more">继续阅读<i class="el-icon-thumb f-w-b"></i></a></span>
-            </div>
-            <div class="item meta mg-b-10 footer pd-t-10">
-                <span class="author">由<a href="javascript:void(0);">errol</a>发表于<a href="#">2023-04-03 10:57:42</a></span>
-                <span>|</span>
-                <span class="time">
-                    分类为
-                    <a href="/categories/1.html">海伦1</a></span>
-                    <span>|</span>
-                    <span class="tags">
-                        标签为<a href="javascript:void(0);">测试</a>、<a href="javascript:void(0);">海伦</a>
-                    </span>
-            </div>
-        </div>
-    </div>
-    <div class="card">
-        <div class="wrapper">
-            <div class="item">
-                <a class="title" href="/articles/11.html">测试文章9</a>
-            </div>
-            <div class="item content">
-                <span class="brief">kkkkk<a href="/articles/11.html" class="reading-more">继续阅读<i class="el-icon-thumb f-w-b"></i></a></span>
-            </div>
-            <div class="item meta mg-b-10 footer pd-t-10">
-                <span class="author">由<a href="javascript:void(0);">errol</a>发表于<a href="#">2023-04-03 03:49:19</a></span>
-                <span>|</span>
-                <span class="time">
-                    分类为
-                    <a href="/categories/1.html">海伦1</a></span>
-                    <span>|</span>
-                    <span class="tags">
-                        标签为<a href="javascript:void(0);">测试</a>
-                    </span>
-            </div>
-        </div>
-    </div>
-    <div class="card">
-        <div class="wrapper">
-            <div class="item">
-                <a class="title" href="/articles/12.html">test10</a>
-            </div>
-            <div class="item content">
-                <span class="brief">test10<a href="/articles/12.html" class="reading-more">继续阅读<i class="el-icon-thumb f-w-b"></i></a></span>
-            </div>
-            <div class="item meta mg-b-10 footer pd-t-10">
-                <span class="author">由<a href="javascript:void(0);">errol</a>发表于<a href="#">2023-04-03 03:58:19</a></span>
-                <span>|</span>
-                <span class="time">
-                    分类为
-                    <a href="/categories/3.html">毒蛇1</a></span>
-                    <span>|</span>
-                    <span class="tags">
-                        标签为<a href="javascript:void(0);">test10</a>
+                        标签为<a href="javascript:void(0);">抽卡</a>、<a href="javascript:void(0);">游戏</a>、<a href="javascript:void(0);">尼姬</a>、<a href="javascript:void(0);">萌娘</a>、<a href="javascript:void(0);">脸黑</a>、<a href="javascript:void(0);">沉船</a>
                     </span>
             </div>
         </div>
@@ -269,13 +156,10 @@
                 </li>
 
                         <li class="pn current">
-                            <a href="index.html">1</a>
+                            <a href="./index.html">1</a>
                         </li>
-                        <li class="pn ">
-                            <a href="index_2.html">2</a>
-                        </li>
-                <li class="next ">
-                        <a href="index_2.html">下一页</a>
+                <li class="next disabled">
+                        <a href="javascript:void(0);">下一页</a>
                 </li>
             </ul>
         </div>
@@ -284,11 +168,11 @@
 
     <div id="footer">
         <div class="container mg-0-auto">
-            <div class="wrapper">
-                    <span class="item">
-                        ©2021-2023 www.errol.com All rights reserved. 鄂ICP备13017512号-3
-                    </span>
-            </div>
+    <div class="wrapper">
+        <span class="item">
+            some rights reserved：xxzhiwei.github.io
+        </span>
+    </div>
         </div>
     </div>
 </div>
