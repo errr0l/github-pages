@@ -23,21 +23,20 @@
             max-width: 980px;
             margin: 0 auto;
             padding: 20px;
-            color: var(--c-text-2);
         }
-
         .markdown-body ol, .markdown-body ul, .markdown-body li {
             list-style: disc;
         }
-
         @media (max-width: 767px) {
             .markdown-body {
                 padding: 15px;
             }
         }
+        .container .markdown-body {
+            color: var(--c-text-2);
+        }
     </style>
 </head>
-
 <body>
 <div id="app">
     <div id="header">
@@ -71,7 +70,7 @@
             </li>
     </ul>
                 <div id="search" class="mg-t-10">
-                    <input type="text" id="search-input" placeholder="搜索">
+                    <input type="text" id="search-input" placeholder="搜索" />
                     <a href="javascript:void(0);" class="search-icon t-a">
                         <i class="el-icon-search"></i>
                     </a>
@@ -176,7 +175,7 @@
 <p>100 * (1+0.7) * (1+0.2) * 1 * 1.25 = 255</p>
 </blockquote>
 <p>可以看到，在总体增幅数值不变的情况下，仅仅通过简单的分配原理，就可以提升造成的伤害，<strong>而当这个分配到达平衡时，可令伤害达到最大化。</strong></p>
-<p>~~当然也可以自己测试。~~</p>
+<p><em>当然也可以自己测试。</em></p>
 <p>以上面的例子的话，到达平衡状态时的数值分别为0.45：</p>
 <blockquote>
 <p>100 * (1+0.45) * (1+0.45) * 1 * 1.25 ≈ 263</p>
@@ -197,8 +196,8 @@
 <blockquote>
 <p>17542 * (1+0.8) * (1+0.52) * 3.05 * 1.25 ≈ 182981</p>
 </blockquote>
-<p>~~不知道为什么有时候会有一点点误差。~~
-<img src="../image/general/6d2702d56cbf4aebb7cc656b7f02d1e8-691A26A908018922736A6D36E10288F4.jpg" alt="image" /></p>
+<p><em>不知道为什么有时候会有一点点误差。</em></p>
+<p><img src="../image/general/26839e80ff9f46aea15da1bcd7233f38-17A725A9B00B5373AAB09DD4333AA4E8.jpg" alt="image" /></p>
 <p>第二套为：</p>
 <pre><code>伤害buff：32%(小号) + 20%(露娜) + 30%(精灵)
 攻击力buff：50%(九尾)
@@ -207,12 +206,12 @@
 <blockquote>
 <p>17542 * (1+0.5) * (1+0.52+0.3) * 3.05 * 1.25 ≈ 182579</p>
 </blockquote>
-<p><img src="../image/general/bfdbd9cedd854ef987c71a538e3b5de9-289FC984545AAAF1666CFB0878EA198D.jpg" alt="image" /></p>
+<p><img src="../image/general/94b30535962646eb90b4ddc11b6ceda2-F25982CD4D8A67B2C7C1CDC45CD89582.jpg" alt="image" /></p>
 <p>由于数值比例几乎相同（攻击力和伤害buff比例分别为：52%/80%和82%/50%），伤害差距并不大。</p>
 <p>因为目前手头上没有8星的小号（可以给露娜挂60%的伤害buff），无法在游戏内测试，但还是可以计算一下的，可以预测第一套阵容比第二套伤害更高。</p>
 <p>阵容不变，在八星露娜的条件下，第一套攻击力和伤害buff的比例为80%/80%，刚好是1:1，则其伤害为：</p>
 <blockquote>
-<p>17542.19 * (1+0.5) * (1+1.1) * 3.05 * 1.25 ≈ 210671</p>
+<p>17542 * (1+0.8) * (1+0.8) * 3.05 * 1.25 ≈ 216687</p>
 </blockquote>
 <p>第二套为50%/110%，伤害为：</p>
 <blockquote>
@@ -234,9 +233,9 @@
 <blockquote>
 <p>具体的做法就是，先选出自己所拥有的提供某个区间buff数值最高的角色，然后估算目前的分配情况，最后就是缺啥补啥。</p>
 </blockquote>
-<p>比如，要为露娜配队时，我首先选出能提供目前最高攻击力buff的九尾，然后再选出能提供最高伤害buff的小号，此时的攻/伤buff比例为：50%(九尾)/[60%(小号)+20%(露娜自身)]</p>
+<p>比如，要为露娜配队时，我首先选出能提供目前最高攻击力buff的九尾，然后再选出能提供最高伤害buff的小号，此时的攻/伤buff比例为：50%(九尾)/60%(小号)+20%(露娜自身)</p>
 <p>此时是攻击力区间比较小，那么我就应该选提供攻击力buff的角色，比如说女巫(40%攻击buff)。</p>
-<p>再比如要为风刀配队（堆技能后的强化刀伤害），由于所谓的强化刀其实是加攻击力250%，该数值已经特别大了，想要增加伤害时，我们应该堆伤害buff，因此我的选择是，小号、精灵、妹夫：(100%+250%)/60%+30%+20%+10%(风刀天赋)</p>
+<p>再比如要为卡米尔配队（堆技能后的强化刀伤害），由于所谓的强化刀其实是加了个250%的攻击力buff，该数值已经特别大了，想要增加伤害时，我们应该堆伤害buff，因此我的选择是小号、精灵、妹夫：100%(普通攻击倍率)+250%(强化刀buff)/60%+30%+20%+10%(风刀天赋)</p>
 <p>~~100%是普通攻击，此处风刀初始攻击为17047~~</p>
 <p>而这一记强化刀砸下来，可造成：</p>
 <blockquote>

@@ -23,21 +23,20 @@
             max-width: 980px;
             margin: 0 auto;
             padding: 20px;
-            color: var(--c-text-2);
         }
-
         .markdown-body ol, .markdown-body ul, .markdown-body li {
             list-style: disc;
         }
-
         @media (max-width: 767px) {
             .markdown-body {
                 padding: 15px;
             }
         }
+        .container .markdown-body {
+            color: var(--c-text-2);
+        }
     </style>
 </head>
-
 <body>
 <div id="app">
     <div id="header">
@@ -71,7 +70,7 @@
             </li>
     </ul>
                 <div id="search" class="mg-t-10">
-                    <input type="text" id="search-input" placeholder="搜索">
+                    <input type="text" id="search-input" placeholder="搜索" />
                     <a href="javascript:void(0);" class="search-icon t-a">
                         <i class="el-icon-search"></i>
                     </a>
