@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Errol's Blog</title>
+    <link rel="stylesheet" href="../css/reset.css">
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/theme-light.css">
+    <link rel="stylesheet" href="../css/index.css">
+    <link rel="stylesheet" href="../css/template-1.css">
+    <link rel="stylesheet" href="../css/elementUI/index.css">
+        <meta name="keywords" content="Project QT,激射萌娘,队伍搭配,伤害机制">
+    <link rel="stylesheet" href="../css/article.css">
+    <link rel="stylesheet" href="../css/comment.css">
+    <link rel="stylesheet" href="../css/markdown/github-markdown.css">
+    <link rel="stylesheet" href="../css/markdown/github-markdown-light.css">
+    <style>
+        .markdown-body {
+            box-sizing: border-box;
+            min-width: 200px;
+            max-width: 980px;
+            margin: 0 auto;
+            padding: 20px;
+            color: var(--c-text-2);
+        }
+
+        .markdown-body ol, .markdown-body ul, .markdown-body li {
+            list-style: disc;
+        }
+
+        @media (max-width: 767px) {
+            .markdown-body {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<div id="app">
+    <div id="header">
+        <div id="bar">
+            <div class="container mg-0-auto width-1000">
+    <ul class="nav f-l">
+        <li class="nav-item">
+            <a href="../" class="nav-link">
+                <span style="margin-left: 5px; font-weight: 600; color: var(--c-text-2)">小埃的个人博客</span>
+            </a>
+        </li>
+            <li class="nav-item">
+                <a href="../index.html" class="nav-link ">
+                    <span>首页</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="../category.html" class="nav-link ">
+                    <span>分类</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="../category.html" class="nav-link ">
+                    <span>归档</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="../category.html" class="nav-link ">
+                    <span>关于</span>
+                </a>
+            </li>
+    </ul>
+                <div id="search" class="mg-t-10">
+                    <input type="text" id="search-input" placeholder="搜索">
+                    <a href="javascript:void(0);" class="search-icon t-a">
+                        <i class="el-icon-search"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="main">
+        <div class="container width-1000 mg-0-auto pd-t-10">
+            <div class="left">
+                <article class="mg-b-20">
+                    <div class="markdown-body">
+                        <div class="title">PQT伤害机制与配队攻略</div>
+                        <div class="item meta mg-b-10">
+                            <span class="author">由<a href="javascript:void(0);">errol</a>发表于<a href="#">2023-04-09 12:17:41</a></span>
+                            <span>|</span>
+                            <span class="time">
+                            分类为
+                            <a href="../categories/1.html">海伦1</a></span>
+                            <span>|</span>
+                            <span class="tags">
+                                标签为<a href="javascript:void(0);">Project QT</a>、<a href="javascript:void(0);">激射萌娘</a>、<a href="javascript:void(0);">队伍搭配</a>、<a href="javascript:void(0);">伤害机制</a>
+                            </span>
+                        </div>
+                        <div class="content">
+                            <p>最近pqt出了很多“配件”，如字面意思，是纯纯的c位工具人角色，这类人物都有清一色的技能模板，可简单概括为“x回合提升x伤害”、“x回合增加x攻击”，主动&amp;被动&amp;天赋技能都有涉及到，有甚者更是直接三和一，完全就是为了辅助打伤害而生的，而在这样的背景下，整个游戏的伤害呈指数增长，只需要数回合就可以结束战斗，导致一些脆皮队伍连技能回都熬不到，被普通攻击活活a死（尤其是你奶队）。</p>
+<p>在这样的大环境之下，玩家们也开始纷纷“转型”，化身为了“强度党”，不再搞涩涩，只在能提升伤害的地方花费，追求火力至上，这也是无可奈何的事情，谁还能想起来pqt是一个黄油？虽然有pvp玩法的游戏都迟早会面临这一问题，但在现策划的一系列操作之下，这一时期提前到来了。</p>
+<p>试想，曾经的pqt平衡性还是在众多的游戏中还是值得玩家引以为傲的，这离不开前策划团队对角色的精心设计和把控。角色之间互相克制，既不强度超模，也不会弱到上不了场，几乎每个角色都能在竞技场上发光发亮，他们甚至不想落下任何一个人物，还对一批相对较弱的老角色进行了加强。</p>
+<p>但自从换了新策划之后（听说的），不仅加强计划被砍，还尽是出一些数值角色，丝毫不考虑游戏平衡性，相同类型的老角色与之根本无法相比，从而渐渐淡出玩家的视野...</p>
+<p>现在的pqt，只是单纯的在提升伤害，除了“配件”之外，甚至还有聚辅助&amp;输出为一体的数值怪物，只要拿到这些角色，就可以体验到碾压对手的快感，但这已经和当初那个可以靠阵容搭配来津津乐道的游戏已经相差甚远。</p>
+<p>玩家的阵容都千篇一律，游戏群也逐渐冷清，从现状不难看出，现策划真的摆烂，为了流水连脸都不要了，有与没有数值角色的玩家相比，前者可以爆杀后者，而后者能不能打赢前者都还要打个问号，这一现象不正是一种变相的逼氪行为？但本白嫖对此表示无动于衷，彻底摆烂，甚至连月卡都没有续。有些其他玩家也跟我的情况差不多，摆的摆，退坑的退坑，以至于这游戏只能通过不断合并分区来提升玩家的竞争意识，不过奈何玩家对那点万年不变的奖励提不起什么兴趣，因此该摆的还是摆，只有前排的几个人在拼命卷。</p>
+<p>玩家群体之间的差距也越来越大，而当氪佬体验到“独孤求败”的感觉，失去了对游戏的兴趣之后，估计就离退坑不远了，数据膨胀得越快游戏死得越快，所以，现策划的这种做法无异于杀鸡取卵，以一己之力改变了整个游戏的环境氛围，真可谓是成也策划败也策划啊！</p>
+<p>当然这些都是题外话了，虽然很想pqt更多地往阵容搭配、角色克制的方向发展，让游戏更好玩、有趣一些，而不是一味的堆叠伤害、数据膨胀，但这始终不是我们这些普通玩家所能左右的事情，只能顺其自然。</p>
+<p>所以，接下来才是本文的主题。</p>
+<p><strong>如何搭配角色以造成更多的伤害。</strong></p>
+<blockquote>
+<p>可能存在着这种现象：有的玩家把角色抽了，练度也满了，但是由于没有优化阵容的搭配导致伤害总是缺少那么一点没能赢下赛局，而反手被对方干掉了。</p>
+</blockquote>
+<p>虽然这种现象在一定程度上可以通过抄别人的作业来解决，但这始终不是一个好的方法，理由如下。</p>
+<ol>
+<li>一旦又出现新角色，原来的阵容被打乱，又得去寻求别人，抄别人的作业，而且更严重的是，由于玩家之间拥有的角色都各不相同，作业抄不抄得来也是个问题。</li>
+<li>无法判断角色的“强度”，不知道适不适合自己的阵容。我猜现在还有这样的玩家，别人说某个角色厉害就开始往该角色投入资源，而下一次别人又说这个角色不行时，他就不练了，完全是在浪费自己的时间和精力。要知道，对吴克、微克玩家来说，pqt的游戏角色培养是及其困难的，一旦出现错误，是得不偿失、不可接受的，会非常影响接下来的游戏体验。</li>
+</ol>
+<p><strong>因此，为何不自己掌控雷电，主导自己的角色培养计划走向？</strong></p>
+<p>想要到达这一目的，我们首先得了解pqt的伤害机制原理，此后，如何培养角色与配队也就一目了然了。</p>
+<p><em>先打一剂预防针，pqt的伤害机制并不复杂。</em></p>
+<p>游戏的伤害通是由一条固定公式通过给定的数值计算出来的，pqt也是类似，但更简单。pqt的伤害公式目前一共有5个乘区，而且其中3个变量由于是固定值，算下来只需要考虑2个乘区，再通过简单的四则运算即可得出最终的伤害，无伤害浮动、暴击等问题。</p>
+<p>因此，只要看完本篇文章，一定是可以增进对阵容配队的理解的，接下来就开始吧。</p>
+<h2>伤害公式</h2>
+<p>公式是用于根据角色面板和其身上的各种状态，来计算角色攻击所造成的伤害的，格式都大同小异，但pqt的公式极其简单。</p>
+<blockquote>
+<p>初始攻击 x (1+增攻量-减攻量) x (1+增伤量-减伤量) x 技能系数 x 克制系数</p>
+</blockquote>
+<p>如前面所提到的，该公式有三个固定的变量，分别是：初始攻击、技能系数、克制系数，因此可进一步将公式简化为：</p>
+<blockquote>
+<p>(1+攻击buff加成区) x (1+伤害buff加成区)</p>
+</blockquote>
+<p>~~为了以防万一，还是把克制系数列出来吧，buff区分默认玩家都懂了。~~</p>
+<blockquote>
+<p>克制系数：0.75，1，1.25</p>
+</blockquote>
+<p>分别为逆克制（如火打水），白字（如火打雷），克制（如火打风）。</p>
+<p>技能系数和初始攻击在角色信息处就可以获取，但是其中由于有其他地方的攻击力加成（如天赋、手册等），角色面板处的显示的攻击力并不是最终的初始攻击，最终初始攻击可以在gjjc角色信息出查看。此外要注意的是，普通攻击的技能系数为1。</p>
+<h2>伤害计算</h2>
+<p>假设某个角色的初始攻击为100，其属性为火元素，身上有一个10%的攻击力buff。</p>
+<h3>平a攻击伤害计算</h3>
+<p>当她用平a攻击风属性角色时，套用上述给出的公式，其所造成的伤害为：</p>
+<blockquote>
+<p>100 * (1+0.1) * 1 * 1 * 1.25 ≈ 138</p>
+</blockquote>
+<p>而她身上再多一个10%的伤害buff是，同样平a攻击风元素角色，则伤害为：</p>
+<blockquote>
+<p>100 * (1+0.1) * (1+0.1) * 1 * 1.25 ≈ 151</p>
+</blockquote>
+<p>当她攻击水元素角色时，则为：</p>
+<blockquote>
+<p>100 * (1+0.1) * (1+0.1) * 1 * 0.75 ≈ 91</p>
+</blockquote>
+<p>攻击火、雷也是类似的，只要把克制系统换为1即可。</p>
+<h3>技能伤害计算</h3>
+<p>（此处引用平a攻击伤害计算出的角色数据），假设某个角色的主动技能系数为1.8，单体伤害，则她用技能攻击风元素的伤害为：</p>
+<blockquote>
+<p>100 * (1+0.1) * (1+0.1) * 1.8 * 1.25 ≈ 272</p>
+</blockquote>
+<p>群体伤害也是相同的算法，无非就是多了攻击的目标而已。</p>
+<p><strong>到这里其实已经把pqt的伤害机制讲完了，不要怀疑自己的眼睛，就是那么简单。</strong></p>
+<p>公式确实很简单，但在实际的战斗中，由于有各种错综复杂的buff的存在，要计算出准确的伤害，还必须得了解双方阵容的信息，了解角色都能提供哪些buff，这需要玩家一定的背板能力。</p>
+<p>不过这也不是个问题，因为已经有大佬把pqt的角色信息都整理、翻译出来了，非常的简单易懂，只要去核对一下对应资料即可。</p>
+<h2>边际效应</h2>
+<p>通常听到的“攻击力被稀释”、“xx被稀释”指代的就是这个问题。</p>
+<p><strong>边际效应的意思是，单边资源的投入对整体收益的增加是不断递减的，听起来可能会有一点迷糊，但是下面举一个简单的例子就能明白这一原理。</strong></p>
+<p>还是引用上面的角色数据：</p>
+<blockquote>
+<p>元素：火，初始攻击力：100</p>
+</blockquote>
+<p>假设该角色身上只有一个90%的攻击力buff，并假设90%的攻击力buff已经饱满了，再也容不下其他buff了，则其平a攻击风属性角色所造成的伤害为：</p>
+<blockquote>
+<p>100 * (1+0.9) * 1 * 1 * 1.25 ≈ 237</p>
+</blockquote>
+<p>由于90%攻击力buff已经处于饱满状态，如果想堆其他buff（如伤害buff），将一些空间分配给其他buff时，只能从中做出取舍，假设分配了20%的数值给伤害buff，则相同条件下，其所造成的伤害为：</p>
+<blockquote>
+<p>100 * (1+0.7) * (1+0.2) * 1 * 1.25 = 255</p>
+</blockquote>
+<p>可以看到，在总体增幅数值不变的情况下，仅仅通过简单的分配原理，就可以提升造成的伤害，<strong>而当这个分配到达平衡时，可令伤害达到最大化。</strong></p>
+<p>~~当然也可以自己测试。~~</p>
+<p>以上面的例子的话，到达平衡状态时的数值分别为0.45：</p>
+<blockquote>
+<p>100 * (1+0.45) * (1+0.45) * 1 * 1.25 ≈ 263</p>
+</blockquote>
+<p>该原理类似于方形，长和宽越大，其面积也越大；在长和宽总数值不变的情况下，仅仅是长或宽大的方形，面积是没有前者大的，这就是边际效应的原理。</p>
+<p><strong>因此这里可以简单做个小结，当已经把某个区间的buff数值叠到比较高的情况下，就应该考虑提升另一个区间的buff数值，最好是让区间达到平衡状态，这样可以打出最高的伤害。</strong></p>
+<h2>实战，“云”计算</h2>
+<p>根据上面的理论知识，结合pqt现有的队伍，来计算、比较一下不同配置下角色所能造成的伤害。</p>
+<p>待测试队伍为：</p>
+<p><code>小号、una、九尾、露娜vs小号、九尾、精灵、露娜</code></p>
+<p><em>其中露娜初始攻击为17542，小号为7星，其他角色均为8星。</em></p>
+<p>主要测试露娜技能伤害，对于露娜技能来说，这两套阵容唯一的区别就是，前者多了30%的攻击力buff，后者多了30%的伤害buff。</p>
+<p>第一套阵容在露娜放技能时，身上的状态为：</p>
+<pre><code>伤害buff：32%(小号) + 20%(露娜)
+攻击力buff：30%(una) + 50%(九尾)
+</code></pre>
+<p>释放技能时，伤害为：</p>
+<blockquote>
+<p>17542 * (1+0.8) * (1+0.52) * 3.05 * 1.25 ≈ 182981</p>
+</blockquote>
+<p>~~不知道为什么有时候会有一点点误差。~~
+<img src="../image/general/6d2702d56cbf4aebb7cc656b7f02d1e8-691A26A908018922736A6D36E10288F4.jpg" alt="image" /></p>
+<p>第二套为：</p>
+<pre><code>伤害buff：32%(小号) + 20%(露娜) + 30%(精灵)
+攻击力buff：50%(九尾)
+</code></pre>
+<p>伤害为：</p>
+<blockquote>
+<p>17542 * (1+0.5) * (1+0.52+0.3) * 3.05 * 1.25 ≈ 182579</p>
+</blockquote>
+<p><img src="../image/general/bfdbd9cedd854ef987c71a538e3b5de9-289FC984545AAAF1666CFB0878EA198D.jpg" alt="image" /></p>
+<p>由于数值比例几乎相同（攻击力和伤害buff比例分别为：52%/80%和82%/50%），伤害差距并不大。</p>
+<p>因为目前手头上没有8星的小号（可以给露娜挂60%的伤害buff），无法在游戏内测试，但还是可以计算一下的，可以预测第一套阵容比第二套伤害更高。</p>
+<p>阵容不变，在八星露娜的条件下，第一套攻击力和伤害buff的比例为80%/80%，刚好是1:1，则其伤害为：</p>
+<blockquote>
+<p>17542.19 * (1+0.5) * (1+1.1) * 3.05 * 1.25 ≈ 210671</p>
+</blockquote>
+<p>第二套为50%/110%，伤害为：</p>
+<blockquote>
+<p>17542 * (1+0.5) * (1+1.1) * 3.05 * 1.25 ≈ 210668</p>
+</blockquote>
+<p>拉开了6k的伤害，其实差别也不大，但如果把九尾的攻击buff去掉时，两套阵容的伤害就有比较明显的差距了。</p>
+<p>~~下面假设将九尾排在露娜后面~~</p>
+<p>第一套的buff比例为30%/80%，伤害为：</p>
+<blockquote>
+<p>17542 * (1+0.3) * (1+0.8) * 3.05 * 1.25 ≈ 156496</p>
+</blockquote>
+<p>第二套为0/110%，伤害为：</p>
+<blockquote>
+<p>17542 * 1 * (1+1.1) * 3.05 * 1.25 ≈ 140445</p>
+</blockquote>
+<p>此条件下，第一套阵容比第二套多出了11.4%的伤害。</p>
+<p><strong>因此，在配队的时候，要花一点点时间来琢磨整个队伍buff区间的分配情况，尽量让不同区间的分配都接近平均，而避免某个区间特别突出，某个区间特别小或甚至没有的情况，这样就能打出该阵容的最高伤害。</strong></p>
+<p>当然，真正的平均肯定是比较难达到的，上面的那套阵容的确可以达到平均，不过那是是我特地选的，因此这里所谓的平均，更多的是说<strong>相对平均</strong>。</p>
+<blockquote>
+<p>具体的做法就是，先选出自己所拥有的提供某个区间buff数值最高的角色，然后估算目前的分配情况，最后就是缺啥补啥。</p>
+</blockquote>
+<p>比如，要为露娜配队时，我首先选出能提供目前最高攻击力buff的九尾，然后再选出能提供最高伤害buff的小号，此时的攻/伤buff比例为：50%(九尾)/[60%(小号)+20%(露娜自身)]</p>
+<p>此时是攻击力区间比较小，那么我就应该选提供攻击力buff的角色，比如说女巫(40%攻击buff)。</p>
+<p>再比如要为风刀配队（堆技能后的强化刀伤害），由于所谓的强化刀其实是加攻击力250%，该数值已经特别大了，想要增加伤害时，我们应该堆伤害buff，因此我的选择是，小号、精灵、妹夫：(100%+250%)/60%+30%+20%+10%(风刀天赋)</p>
+<p>~~100%是普通攻击，此处风刀初始攻击为17047~~</p>
+<p>而这一记强化刀砸下来，可造成：</p>
+<blockquote>
+<p>17047 * (1+2.5) * (1+0.6+0.3+0.2+0.1) * 1.25 ≈ 164077</p>
+</blockquote>
+<p>在没有其他角色提供伤害buff的情况下，仅仅只有82038，伤害足足翻了一倍。</p>
+<p>虽然该阵容并不实用，但我想以此来验证之前所提出的结论，<em>想要打出高的伤害，就得让不同区间达到相对平均状态，一味追求单区间的极限，而忽略其他区间的提升反而效果不理想，“雨露均沾”才是王道</em>。</p>
+<p><strong>简而言之，想要打出理想的伤害，胡乱摆放角色是行不通的，要花点心思衡量阵容内的buff分配情况，对其进行“取长补短”，使之达到相对平衡状态。</strong></p>
+<p>以上就是本篇的所有内对读者对于pqt伤害机制&amp;配队的理解有所帮助。</p>
+
+                        </div>
+                    </div>
+                </article>
+                <div class="comment-wrap">
+                        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+                        <script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+                        <div id="gitalk-container"></div>
+                        <script>
+                            const gitalk = new Gitalk({
+                                clientID: 'ae1422e500a8b19fb1fc',
+                                clientSecret: '9f387db6a84a4945cdf5dc743c16ce25fdef6b76',
+                                repo: 'github-pages',      // The repository of store comments,
+                                owner: 'xxzhiwei',
+                                admin: ['xxzhiwei'],
+                                id: location.pathname,      // Ensure uniqueness and length less than 50
+                                distractionFreeMode: false  // Facebook-like distraction free mode
+                            });
+                            gitalk.render('gitalk-container');
+                        </script>
+                </div>
+            </div>
+            <div class="right"></div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
