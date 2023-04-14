@@ -146,20 +146,17 @@
 .side-card {
     padding: 20px 20px 10px 20px;
     border-radius: 2px;
+    background-color: #fff;
 }
 
 .side-card .title {
     border-bottom: 1px solid var(--c-border-1);
-    padding-bottom: 12px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    padding-bottom: 6px;
+    /*display: flex;*/
+    /*justify-content: space-between;*/
+    /*align-items: center;*/
+    font-size: 18px;
     /* color: var(--c-2); */
-}
-
-.side-card .content {
-    padding-top: 15px;
-    overflow-y: auto;
 }
 
 .side-card img {
@@ -169,14 +166,22 @@
     border-radius: 5px;
 }
 
-.side-card.hot .content .item1 {
+.side-card .content .item1 {
     font-size: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+    /*display: flex;*/
+    /*align-items: center;*/
+    /*justify-content: space-between;*/
 }
 
-.side-card.hot .content .item1:not(:last-child) {
+.side-card .content .item1 a {
+    color: var(--c-text-2);
+}
+
+.side-card .content .item1 a:hover {
+    text-decoration: underline;
+}
+
+.side-card .content .item1:not(:last-child) {
     margin-bottom: 3px;
 }
 
