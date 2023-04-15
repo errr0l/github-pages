@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Errol's Blog</title>
+    <link rel="stylesheet" href="../css/reset.css">
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/theme-light.css">
+    <link rel="stylesheet" href="../css/index.css">
+    <link rel="stylesheet" href="../css/template-1.css">
+    <link rel="stylesheet" href="../css/elementUI/index.css">
+        <meta name="keywords" content="vue,提示保存,vue-router,页面刷新,关闭页面">
+    <link rel="stylesheet" href="../css/article.css">
+    <link rel="stylesheet" href="../css/comment.css">
+    <link rel="stylesheet" href="../css/markdown/github-markdown.css">
+    <link rel="stylesheet" href="../css/markdown/github-markdown-light.css">
+    <style>
+        .markdown-body {
+            box-sizing: border-box;
+            min-width: 200px;
+            max-width: 980px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .markdown-body ol, .markdown-body ul, .markdown-body li {
+            list-style: disc;
+        }
+        @media (max-width: 767px) {
+            .markdown-body {
+                padding: 15px;
+            }
+        }
+        .container .markdown-body {
+            color: var(--c-text-2);
+        }
+        .container .cover img {
+            max-height: 400px;
+            object-fit: cover;
+        }
+    </style>
+</head>
+<body>
+<div id="app">
+    <div id="header">
+        <div id="bar">
+            <div class="container mg-0-auto width-1000">
+    <ul class="nav f-l">
+        <li class="nav-item">
+            <a href="../" class="nav-link">
+                <span style="margin-left: 5px; font-weight: 600; color: var(--c-text-2)">小埃的个人博客</span>
+            </a>
+        </li>
+            <li class="nav-item">
+                <a href="../index.html" class="nav-link ">
+                    <span>首页</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="../category.html" class="nav-link ">
+                    <span>分类</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="../category.html" class="nav-link ">
+                    <span>归档</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="../category.html" class="nav-link ">
+                    <span>关于</span>
+                </a>
+            </li>
+    </ul>
+                <div id="search" class="mg-t-10">
+                    <input type="text" id="search-input" placeholder="搜索" />
+                    <a href="javascript:void(0);" class="search-icon t-a">
+                        <i class="el-icon-search"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="main">
+        <div class="container width-1000 mg-0-auto pd-t-10">
+            <div class="left">
+                <article class="mg-b-20">
+                    <div class="markdown-body">
+                        <div class="title">为vue单页面应用添加提示保存功能</div>
+                        <div class="item meta mg-b-10">
+                            <span class="author">由<a href="javascript:void(0);">errol</a>发表于<a href="#">2023-04-15 09:38:28</a></span>
+                            <span>|</span>
+                            <span class="time">
+                            分类为
+                            <a href="../categories/1.html">编程</a></span>
+                            <span>|</span>
+                            <span class="tags">
+                                标签为<a href="javascript:void(0);">vue</a>、<a href="javascript:void(0);">提示保存</a>、<a href="javascript:void(0);">vue-router</a>、<a href="javascript:void(0);">页面刷新</a>、<a href="javascript:void(0);">关闭页面</a>
+                            </span>
+                        </div>
+                            <div class="cover">
+                                <img src=".." alt="">
+                            </div>
+                        <div class="content">
+                            <p>在实际的生产应用中，提示保存是一个非常普遍且有用的功能之一，可以有效避免在用户填写或修改数据信息之后因误操作而导致数据丢失的情况，如不小心点到返回按钮、关闭按钮、刷新按钮等等，尤其是在需要填写大量数据信息的场景，这一功能显得尤为重要，否则用户误操后，需要再次花费大量的时间精力来填充数据，是非常影响用户体验的。</p>
+<blockquote>
+<p>这一功能在vue单页面应用中实现起来非常简单。</p>
+</blockquote>
+<p>一般情况下，vue单页面应用都依赖于vue-router插件，用来做页面组件之间的导航。</p>
+<p>vue-router具有<strong>导航守卫</strong>的概念，<strong>主要用来通过跳转或取消的方式守卫导航</strong>（即是否放行跳转至下一个路由组件），一共分为以下三种类型：</p>
+<ul>
+<li>全局守卫</li>
+<li>独享守卫</li>
+<li>组件内守卫</li>
+</ul>
+<p>而本文要实现的功能将会依赖于<strong>组件内守卫</strong>。（其他类型守卫请参考<a href="https://v3.router.vuejs.org/zh/guide/advanced/navigation-guards.html">vue-router</a>文档）
+如字面含义，该类型守卫属于组件级别的守卫，可以在每个独立的组件内使用，主要包含了以下三种导航守卫。</p>
+<ul>
+<li>beforeRouteEnter(to, from, next)</li>
+<li>beforeRouteUpdate(to, from, next)</li>
+<li>beforeRouteLeave(to, from, next)</li>
+</ul>
+<p>守卫以钩子函数的形式出现，每种守卫的调用时机都不同：beforeRouteEnter是在进入路由组件之前调用，beforeRouteUpdate是在路由组件更新之前调用，<strong>最后的beforeRouteLeave则是在离开路由组件之前调用。</strong></p>
+<p>看起来可能会显得有一点复杂，<strong>但庆幸的是，提示保存功能仅仅需要用到其中的一个钩子函数，即beforeRouteLeave。</strong></p>
+<p>下面开始着手实现这一功能。</p>
+<h2>给组件添加beforeRouteLeave钩子</h2>
+<p>为了模拟接近真实的应用场景，除了添加钩子内的逻辑外，还需要额外添加一些方法和数据，如表单字段、比较函数等。</p>
+<pre><code class="language-js">const defaultFormData = {
+    id: &quot;&quot;,
+    name: &quot;&quot;,
+    description: &quot;&quot;
+};
+export default {
+    data() {
+        return {
+            formData: { ...defaultFormData }, // 表单数据
+            original: { ...defaultFormData }, // 用于保存原始的表单数据（ajax请求时，会将数据保存于该变量）
+            keysChecked: Object.keys(defaultFormData), // 需要校验的key
+            skipComparison: false // 是否要跳过校验
+        }    
+    },
+    beforeRouteLeave(to, from, next) {
+        // 跳过比较，直接放行；比如，已经提交保存了的情况下
+        if (this.skipComparison) {
+            return next();
+        }
+        // 比较整个表单字段，如果字段全部相等时，放行，否则提示；
+        const r = this.compare(this.formData, this.original);
+        r === 0 ? next() : this.alert(next);
+    },
+    methods: {
+        // 两个对象的字段全部相等时，返回0，否则返回-1
+        compare(o1, o2) {
+            if (o1 === null || o2 === null) {
+                return 0;
+            }
+            for (let key of this.keysChecked) {
+                if (o1[key] !== o2[key]) {
+                    return -1;
+                }
+            }
+            return 0;
+        },
+        alert(next) {
+            this.$confirm('内容尚未保存，改动部分将会被丢弃，是否继续？', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() =&gt; {
+                next();
+            }).catch(() =&gt; {
+                next(false);
+            });
+        }
+    }
+}
+</code></pre>
+<p>在编写了上述简单的代码后，我们已经成功实现了离开当前路由组件时提示保存的功能。</p>
+<p><img src="../image/portal/0ca85b9f9e3c4c3cb6f6ac2c99ab4bbf-720C90F2B0798C32F40B1BB40649F3F4.jpg" alt="image" /></p>
+<p>由于填写了表单数据又没保存，所以点击返回时，应用弹出了提示对话框。</p>
+<p><strong>但有一点需要注意。</strong></p>
+<p>插件的router.go()方法，类似于window.history.go(n)，是在浏览器的history记录中向前或者后退，并不经过vue-router。所以使用该方法返回上一个路由组件时，会出现钩子逻辑不能正常运行的现象，因此想要正常触发提示保存功能，就不能使用这个函数，可以使用用push()或者replace()作为代替。</p>
+<h2>添加侦听器监听beforeunload事件</h2>
+<p>实际上，虽然我们已经实现了路由组件返回前的提示功能，但是以上的逻辑并不能应用于<strong>关闭浏览器标签页或刷新浏览器页面，这两种情况还需要做额外的处理</strong>，但也相当简单，只需要往window对象添加一个侦听器监听beforeunload事件即可。</p>
+<p>该侦听器会在相应的时候，对以上两种情况进行拦截。</p>
+<pre><code class="language-js">export default {
+    // ...略
+    mounted() {
+        window.addEventListener('beforeunload', this.beforeUnloadHandler);
+    },
+    destroyed() {
+        // 别忘了卸载侦听器
+        window.removeEventListener(&quot;beforeunload&quot;, this.beforeUnloadHandler);
+    },
+    methods() {
+        // ...略
+        // 使用同样的比较逻辑，如果发生了变动，就提示用户；
+        beforeUnloadHandler(e) {
+            const r = this.compare(this.formData, this.original);
+            if (r !== 0) {
+                e.returnValue = &quot;温馨提示&quot;;
+            }
+        }    
+    }
+}
+</code></pre>
+<p>有点可惜的是，这个弹窗并不能自定义提示信息。</p>
+<p><strong>刷新页面</strong></p>
+<p><img src="../image/portal/7d2b140e55c44c14b920fb47c64ce898-a.png" alt="image" /></p>
+<p><strong>关闭标签页</strong></p>
+<p><img src="../image/portal/6822b988f6c4416f88de1ca9564e8429-c.png" alt="image" /></p>
+<p>目前，我们已经为所有的情况添加了提示保存功能：离开当前路由组件、关闭标签页、刷新页面，原理和实现还是比较简单的，唯一要注意的是，检测数据是否发生改动的方法很可能会因项目而异，有的比较简单（如文中的示例），有的就比较复杂，这需要根据项目的实际的情况来实现该方法。</p>
+<p>此外，还可以考虑把以上的逻辑都抽为一个模块，随后在需要提示保存功能的地方引入相关的方法和数据即可，这样无论是从维护角度还是使用角度来说，都是比较方便的。</p>
+<p>以上就是本篇文章的全部内容，希望对你有所帮助。</p>
+
+                        </div>
+                    </div>
+                </article>
+                <div class="comment-wrap">
+                        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+                        <script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+                        <div id="gitalk-container"></div>
+                        <script>
+                            const gitalk = new Gitalk({
+                                clientID: 'ae1422e500a8b19fb1fc',
+                                clientSecret: '9f387db6a84a4945cdf5dc743c16ce25fdef6b76',
+                                repo: 'github-pages',      // The repository of store comments,
+                                owner: 'xxzhiwei',
+                                admin: ['xxzhiwei'],
+                                id: location.pathname,      // Ensure uniqueness and length less than 50
+                                distractionFreeMode: false  // Facebook-like distraction free mode
+                            });
+                            gitalk.render('gitalk-container');
+                        </script>
+                </div>
+            </div>
+            <div class="right">
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
