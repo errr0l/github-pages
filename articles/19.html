@@ -4,12 +4,14 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>首页 - 小埃的个人博客</title>
+    <title>为vue单页面应用添加提示保存功能 - 小埃的个人博客</title>
+    <link rel="stylesheet" href="../css/reset.css">
     <link rel="stylesheet" href="../css/reset.css">
     <link rel="stylesheet" href="../css/base.css">
     <link rel="stylesheet" href="../css/theme-light.css">
     <link rel="stylesheet" href="../css/index.css">
     <link rel="stylesheet" href="../css/template-1.css">
+    <link rel="shortcut icon" href="../favicon.ico" type="image/x-icon">
         <meta name="keywords" content="vue,提示保存,vue-router,页面刷新,关闭页面">
     <link rel="stylesheet" href="../css/article.css">
     <link rel="stylesheet" href="../css/comment.css">
@@ -50,9 +52,9 @@
         <div id="bar">
             <div class="container mg-0-auto width-1000">
     <ul class="nav f-l">
-        <li class="nav-item">
+        <li class="nav-item logo">
             <a href="../" class="nav-link">
-                <span style="margin-left: 5px; font-weight: 600; color: var(--c-text-2)">小埃的个人博客</span>
+                <img src="../image/portal/logo.jpg" alt="小埃的个人博客">
             </a>
         </li>
             <li class="nav-item">
@@ -119,11 +121,11 @@
 <li>beforeRouteUpdate(to, from, next)</li>
 <li>beforeRouteLeave(to, from, next)</li>
 </ul>
-<p>守卫以钩子函数的形式出现，每种守卫的调用时机都不同：beforeRouteEnter是在进入路由组件之前调用，beforeRouteUpdate是在路由组件更新之前调用，<strong>最后的beforeRouteLeave则是在离开路由组件之前调用。</strong></p>
-<p>看起来可能会显得有一点复杂，<strong>但庆幸的是，提示保存功能仅仅需要用到其中的一个钩子函数，即beforeRouteLeave。</strong></p>
+<p>守卫以钩子函数的形式出现，每种守卫的调用时机都不同：beforeRouteEnter是在进入路由组件之前（组件实例还没创建完成）调用，beforeRouteUpdate是在路由组件更新之前调用，<strong>最后的beforeRouteLeave则是在离开路由组件之前调用。</strong></p>
+<p>看起来可能会显得有一点复杂，<strong>但庆幸的是，提示保存功能仅仅需要用到其中的一个钩子函数：beforeRouteLeave。</strong></p>
 <p>下面开始着手实现这一功能。</p>
 <h2>给组件添加beforeRouteLeave钩子</h2>
-<p>为了模拟接近真实的应用场景，除了添加钩子内的逻辑外，还需要额外添加一些方法和数据，如表单字段、比较函数等。</p>
+<p>为了更接近真实的应用场景，除了添加钩子内的逻辑外，还需要额外添加一些方法和数据，如表单字段、比较函数等。</p>
 <pre><code class="language-javascript">const defaultFormData = {
     id: &quot;&quot;,
     name: &quot;&quot;,
@@ -206,9 +208,13 @@ export default {
 }
 </code></pre>
 <p>有点可惜的是，这个弹窗并不能自定义提示信息。</p>
-<p><strong>刷新页面</strong></p>
+<blockquote>
+<p>未保存数据，点击刷新页面时的提示信息</p>
+</blockquote>
 <p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/7d2b140e55c44c14b920fb47c64ce898-a.png" /></p>
-<p><strong>关闭标签页</strong></p>
+<blockquote>
+<p>未保存数据，关闭标签页时的提示信息</p>
+</blockquote>
 <p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/6822b988f6c4416f88de1ca9564e8429-c.png" /></p>
 <p>目前，我们已经为所有的情况添加了提示保存功能：离开当前路由组件、关闭标签页、刷新页面，原理和实现还是比较简单的，唯一要注意的是，检测数据是否发生改动的方法很可能会因项目而异，有的比较简单（如文中的示例），有的就比较复杂，可能是因为属性多，或者属性的结构复杂等等，这需要根据项目的实际的情况来实现该方法。</p>
 <p>此外，还可以考虑把以上的逻辑都抽为一个模块，随后在需要提示保存功能的地方引入相关的方法和数据即可，这样无论是从维护角度还是使用角度来说，都是比较方便的。</p>
