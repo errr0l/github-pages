@@ -173,9 +173,11 @@ export default {
     }
 }
 </code></pre>
-<p>在编写了上述简单的代码后，我们已经成功实现了离开当前路由组件时提示保存的功能。</p>
+<p>再将属性绑在表单元素上。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/f13d0eb2c5814767a3f9e9394eeda573-d.png" /></p>
+<p>在编写了上述简单的代码后，我们已经成功实现了离开当前路由组件时提示保存的功能，
+由于填写了数据又没保存，所以点击返回时，应用弹出了提示对话框。</p>
 <p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/0ca85b9f9e3c4c3cb6f6ac2c99ab4bbf-720C90F2B0798C32F40B1BB40649F3F4.jpg" /></p>
-<p>由于填写了表单数据又没保存，所以点击返回时，应用弹出了提示对话框。</p>
 <p><strong>但有一点需要注意。</strong></p>
 <p>插件的router.go(n)方法，类似于window.history.go(n)，是在浏览器的history记录中向前或者后退，并不经过vue-router。所以使用该方法返回上一个路由组件时，会出现钩子逻辑不能正常运行的现象，因此想要正常触发提示保存功能，就不能使用这个函数，可以使用push()或者replace()作为代替。</p>
 <h2>添加侦听器监听beforeunload事件</h2>
