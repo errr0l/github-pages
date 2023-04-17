@@ -6,15 +6,15 @@ function lazyLoad() {
     // 获取浏览器视口高度,这里写在函数内部是考虑浏览器窗口大小改变的情况
     const viewPortHeight = window.innerHeight || document.documentElement.clientHeight
     for (let i=index; i<imgList.length; i++) {
+        let dataSrc = imgList[i].getAttribute('data-src');
+        if (!dataSrc) {
+            continue;
+        }
         // 这里用可视区域高度减去图片顶部距离可视区域顶部的高度
         const distance = viewPortHeight - imgList[i].getBoundingClientRect().top;
         // 如果可视区域高度大于等于元素顶部距离可视区域顶部的高度，说明图片已经出现在了视口范围内
         if (distance >= 0) {
             // 给图片赋值真实的src，展示图片
-            let dataSrc = imgList[i].getAttribute('data-src');
-            if (!dataSrc) {
-                continue;
-            }
             imgList[i].src = dataSrc;
             // 前i张图片已经加载完毕，下次从第i+1张开始检查是否需要显示
             index = i + 1;

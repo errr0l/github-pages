@@ -78,6 +78,17 @@
                 </a>
             </li>
     </ul>
+    <div id="search" class="mg-t-10">
+        <input type="text" id="search-input" placeholder="搜索" autocomplete="off" />
+        <a href="javascript:void(0);" class="search-icon t-a">
+            <img class="el-icon-search" src="../image/portal/search.png" width="16" height="16">
+        </a>
+        <div id="search-result">
+            <div class="content">
+            </div>
+            <div class="arrow"></div>
+        </div>
+    </div>
             </div>
         </div>
     </div>
@@ -106,7 +117,7 @@
 <blockquote>
 <p>这一功能在vue单页面应用中实现起来非常简单。</p>
 </blockquote>
-<p>该功能的逻辑虽然比较简单，但却意外的实用有效，很大程度上加大了<strong>用户操作的容错率</strong>。</p>
+<p>该功能的逻辑虽然比较简单，但却意外的实用有效，很大程度上增加了<strong>用户操作的容错率</strong>。</p>
 <p>一般情况下，vue单页面应用都依赖于vue-router插件，用来做页面组件之间的导航。</p>
 <p>vue-router具有<strong>导航守卫</strong>的概念，<strong>主要用来通过跳转或取消的方式守卫导航</strong>（即是否放行跳转至下一个路由组件），一共分为以下三种类型：</p>
 <ul>
@@ -246,6 +257,8 @@ export default {
         </div>
     </div>
 </div>
+    <script src="../js/dataList.js"></script>
     <script src="../js/lazy.js"></script>
+    <script src="../js/search.js"></script>
 </body>
 </html>

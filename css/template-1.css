@@ -75,35 +75,6 @@
 /*    background-color: var(--c-1);*/
 /*}*/
 
-#search {
-    position: relative;
-    float: right;
-}
-
-#search input {
-    width: 150px;
-    padding: 0 50px 0 20px;
-    height: 40px;
-    border: 1px solid var(--c-border-3);
-    border-radius: 20px;
-    background-color: var(--c-border-3);
-    transition: width 0.5s;
-}
-
-#search input:focus {
-    width: 180px;
-}
-
-#search .search-icon {
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 50px;
-    height: 40px;
-    line-height: 40px;
-    text-align: center;
-}
-
 #footer .container > .wrapper {
     margin-right: calc(28% + 10px);
     text-align: center;
