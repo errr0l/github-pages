@@ -17,12 +17,14 @@ function search(value) {
     return r;
 }
 
-let baseHref = window.location.href.replace(/(articles\/)(.*)/, '$1')
+// let baseHref = window.location.href.replace(/(articles\/)(.*)/, '$1')
 let searchInput = document.querySelector("#search-input");
 let searchResult;
 if (searchInput) {
     searchResult = document.querySelector("#search-result");
     let content = searchResult.querySelector('.content');
+
+    let prefix = searchInput.getAttribute('data-prefix');
     let wrap = debounce(function() {
         let value = searchInput.value;
         if (value) {
@@ -31,7 +33,7 @@ if (searchInput) {
             if (list.length > 0) {
                 html += "<ul>";
                 for (let item of list) {
-                    let href = baseHref + item.fileName;
+                    let href = prefix + item.fileName;
                     html += "<li class='item' title='"+ item.original +"'>";
                     html += "<a class='hover-1' href='"+ href +"'>" + item.title + "</a>";
                     html += "</li>"
@@ -69,4 +71,3 @@ window.addEventListener('beforeunload', function () {
     searchInput = null;
     searchResult = null;
 });
-
