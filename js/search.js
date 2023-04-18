@@ -1,3 +1,4 @@
+// 文本搜索方法，并将文本添加高亮效果
 function search(value) {
     let r = [];
     for (let item of dataList || []) {
@@ -17,13 +18,11 @@ function search(value) {
     return r;
 }
 
-// let baseHref = window.location.href.replace(/(articles\/)(.*)/, '$1')
 let searchInput = document.querySelector("#search-input");
 let searchResult;
 if (searchInput) {
     searchResult = document.querySelector("#search-result");
     let content = searchResult.querySelector('.content');
-
     let prefix = searchInput.getAttribute('data-prefix');
     let wrap = debounce(function() {
         let value = searchInput.value;
@@ -57,6 +56,7 @@ if (searchInput) {
     searchInput.addEventListener('focus', wrap);
 }
 
+// 点击其他以外的地方时，隐藏当前搜索结果
 searchResult.addEventListener('click', function(e) {
     e.stopPropagation();
 });
