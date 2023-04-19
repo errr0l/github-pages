@@ -67,7 +67,7 @@ window.addEventListener('click', function () {
     }
 });
 
-window.addEventListener('beforeunload', function () {
-    searchInput = null;
-    searchResult = null;
-});
+// window.addEventListener('beforeunload', function () {
+//     searchInput = null;
+//     searchResult = null;
+// });
