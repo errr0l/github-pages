@@ -6,15 +6,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>PQT伤害机制与配队攻略 - 小埃的个人博客</title>
     <link rel="stylesheet" href="../css/reset.css">
-    <link rel="stylesheet" href="../css/reset.css">
     <link rel="stylesheet" href="../css/base.css">
-    <link rel="stylesheet" href="../css/theme-light.css">
     <link rel="stylesheet" href="../css/index.css">
-    <link rel="stylesheet" href="../css/template-1.css">
+    <link rel="stylesheet" href="../css/header.css">
+    <link rel="stylesheet" href="../css/mobile.css">
+    <link rel="stylesheet" href="../css/theme-light.css">
     <link rel="shortcut icon" href="../favicon.ico" type="image/x-icon">
         <meta name="keywords" content="Project QT,激射萌娘,队伍搭配,伤害机制">
     <link rel="stylesheet" href="../css/article.css">
-    <link rel="stylesheet" href="../css/comment.css">
     <link rel="stylesheet" href="../css/markdown/github-markdown.css">
     <link rel="stylesheet" href="../css/markdown/github-markdown-light.css">
     <link rel="stylesheet"
@@ -44,51 +43,70 @@
             max-height: 400px;
             object-fit: cover;
         }
+        .content > *:last-child {
+            margin-bottom: 0;
+        }
+        .comment-wrap {
+            background-color: #fff;
+            box-shadow: 0 -1px 4px var(--c-shadow-1);
+            padding: 0 20px;
+            min-height: 124px;
+        }
     </style>
 </head>
 <body>
 <div id="app">
     <div id="header">
-        <div id="bar">
-            <div class="container mg-0-auto width-1000">
-    <ul class="nav f-l">
-        <li class="nav-item logo">
-            <a href="../" class="nav-link">
-                <img src="../image/portal/logo.jpg" alt="小埃的个人博客">
-            </a>
-        </li>
-            <li class="nav-item">
-                <a href="../index.html" class="nav-link ">
-                    <span>首页</span>
+    <div id="bar">
+        <div class="container mg-0-auto d-f">
+            <div class="logo">
+                <a href="../" class="nav-link">
+                    <img src="../image/portal/logo.jpg" alt="小埃的个人博客">
                 </a>
-            </li>
-            <li class="nav-item">
-                <a href="../category.html" class="nav-link ">
-                    <span>分类</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a href="../about.html" class="nav-link ">
-                    <span>关于</span>
-                </a>
-            </li>
-    </ul>
-    <div id="search" class="mg-t-10">
-        <input type="text" id="search-input" data-prefix="../" placeholder="搜索" autocomplete="off" />
-        <a href="javascript:void(0);" class="search-icon t-a">
-            <img class="el-icon-search" src="../image/portal/search.png" width="16" height="16">
-        </a>
-        <div id="search-result">
-            <div class="content">
             </div>
-            <div class="arrow"></div>
+            <div class="right">
+                <ul class="nav f-l">
+                        <li class="nav-item">
+                            <a href="../index.html" class="nav-link active">
+                                <span>首页</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="../category.html" class="nav-link ">
+                                <span>分类</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="../about.html" class="nav-link ">
+                                <span>关于</span>
+                            </a>
+                        </li>
+                </ul>
+                <div id="search">
+                    <input type="text" id="search-input" data-prefix="../" placeholder="搜索" autocomplete="off" />
+                    <a href="javascript:void(0);" class="search-icon t-a">
+                        <img class="el-icon-search" src="../image/portal/search.png" width="16" height="16">
+                    </a>
+                    <div id="search-result">
+                        <div class="content">
+                        </div>
+                        <div class="arrow"></div>
+                    </div>
+                </div>
+                <div class="eb-title">
+                    小埃的个人博客
+                </div>
+                <div class="eb-menu">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-list-ul" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M5 11.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm-3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm0 4a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm0 4a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
+                    </svg>
+                </div>
+            </div>
         </div>
     </div>
-            </div>
-        </div>
     </div>
     <div id="main">
-        <div class="container width-1000 mg-0-auto pd-t-10">
+        <div class="container mg-0-auto pd-t-10">
             <div class="left">
                 <article class="mg-b-20">
                     <div class="markdown-body">
@@ -297,9 +315,17 @@
             </div>
         </div>
     </div>
+    <div class="back">返回</div>
 </div>
     <script src="../js/dataList.js"></script>
     <script src="../js/lazy.js"></script>
     <script src="../js/search.js"></script>
+    <script src="../js/menu.js"></script>
+<script>
+    let back = document.querySelector(".back");
+    back.addEventListener("click", function () {
+        window.history.go(-1)
+    });
+</script>
 </body>
 </html>

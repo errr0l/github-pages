@@ -1,0 +1,96 @@
+@media only screen and (min-width: 768px) {
+    .eb-menu, .eb-title  {
+        display: none;
+    }
+}
+@media only screen and (min-width: 1024px) {
+    .container {
+        width: 1000px;
+    }
+}
+@media only screen and (max-width: 768px) {
+    #search, .nav {
+        display: none;
+    }
+    .nav {
+        position: fixed;
+        left: 0;
+        right: 0;
+        top: 64px;
+        background-color: #fff;
+        box-shadow: 0 2px 4px var(--c-shadow-1);
+        border-top: solid 1px var(--c-shadow-1);
+    }
+    .nav .nav-item {
+        display: flex;
+        justify-content: center;
+        border-bottom: solid 1px var(--c-shadow-1);
+    }
+    .nav .nav-item .nav-link {
+        height: 46px;
+        font-size: 15px;
+    }
+    .nav-link.active span::after {
+        bottom: -4px;
+    }
+
+    .container {
+        width: 100%;
+        box-sizing: border-box;
+    }
+    .eb-menu {
+        display: flex;
+        align-items: center;
+        font-size: 18px;
+    }
+    .eb-title {
+        flex-grow: 1;
+        margin-left: 10px;
+    }
+    #main .container .left, #main .pagination, #footer .container > .wrapper {
+        margin-right: 0;
+    }
+
+    #main .card .cover {
+        display: none;
+    }
+
+    .category.container {
+        padding: 20px;
+    }
+    .container .right {
+        display: none;
+    }
+    .category-2.container .category-card {
+        margin-right: 0;
+    }
+    .category.container .category-card {
+        display: block;
+        width: 100%;
+        margin-right: 0;
+        margin-bottom: 3%;
+    }
+    .category.container .cover, .category-2.container .cover {
+        height: 40px;
+        flex: 60px 0 0;
+    }
+    .category-card .content {
+        align-items: center;
+    }
+
+    .back {
+        position: fixed;
+        right: 20px;
+        bottom: 20px;
+        border-radius: 50%;
+        box-shadow: 0 2px 4px var(--c-shadow-1);
+        background-color: rgba(250, 106, 99, 0.9);
+        color: #fff;
+        height: 40px;
+        width: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+    }
+}

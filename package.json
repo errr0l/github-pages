@@ -1,0 +1,26 @@
+{
+  "name": "easyblog-output",
+  "version": "1.0.0",
+  "description": "> Easyblog是一个简易的博客项目，主要的功能是将markdown格式的文本转换为独立的html页面，具有完全静态化的特性，可直接部署到Github Pages, Gitee Pages或者其他服务器上。",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xxzhiwei/github-pages.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/xxzhiwei/github-pages/issues"
+  },
+  "homepage": "https://github.com/xxzhiwei/github-pages#readme",
+  "devDependencies": {
+    "postcss": "^8.4.23",
+    "postcss-pxtorem": "^6.0.0"
+  },
+  "dependencies": {
+    "amfe-flexible": "^2.2.1"
+  }
+}

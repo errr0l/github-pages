@@ -1,24 +1,9 @@
-#header {
-    /*position: relative;*/
-    border-bottom: 1px solid var(--c-border-1);
-    min-height: 64px;
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 1002;
-}
-#bar {
-    height: 64px;
-    /* display: flex; */
-    /* align-items: center; */
-    box-shadow: 0 2px 4px var(--c-shadow-1);
-    background-color: #fff;
-}
+
 
 #main {
     color: var(--c-text-2);
-    padding: 64px 0 20px 0;
+    padding-top: 64px;
+    /* padding-top: 64px 0 20px 0; */
 }
 
 #footer {
@@ -39,63 +24,10 @@
     right: 0;
 }
 
-/* #bar .left {
-    flex: 1;
-    display: flex;
-} */
-
-#bar .right {
-    width: 20%;
-    text-align: right;
-}
-
-#nav-banner {
-    position: relative;
-    height: 355px;
-    top: 64px;
-    overflow: hidden;
-    box-shadow: 0 2px 4px var(--c-shadow-1);
-}
-
-#nav-banner .banners {
-    height: 100%;
-}
-
-#nav-banner .banners .item {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-}
-
-#nav-banner .banners .item > img {
-    width: 100%;
-    opacity: 0;
-    transition: all 1s;
-}
-
-#nav-banner .banners .item:first-child img {
-    opacity: 1;
-}
-
 #footer .container .item {
     /* color: var(--c-text-3); */
     display: inline-flex;
     font-size: 14px;
-}
-
-/* 去除a标签之间的间隔（nav-link-parent,nav-link一起使用） */
-/* .nav-link-parent {
-    font-size: 0;
-} */
-
-.nav-link {
-    font-size: 17px;
-    color: var(--c-text-1);
-    height: 64px;
-    display: flex;
-    align-items: center;
 }
 
 .card {
@@ -205,28 +137,6 @@
     display: inline-block;
 }
 
-.nav-link.active span {
-    position: relative;
-    /* font-size: 15px; */
-}
-
-.nav-link.active span {
-    color: var(--c-1);
-    font-weight: 700;
-}
-
-.nav-link.active span::after {
-    position: absolute;
-    content: " ";
-    bottom: -8px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 16px;
-    height: 3px;
-    border-radius: 10px;
-    background-color: var(--c-1);
-}
-
 #search {
     position: relative;
     float: right;
@@ -240,76 +150,6 @@
     border-radius: 20px;
     background-color: var(--c-border-3);
     transition: width 0.5s;
-}
-
-#search .search-icon {
-    position: absolute;
-    top: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    right: 0;
-    width: 50px;
-    height: 40px;
-}
-
-#search {
-    position: relative;
-}
-#search-result {
-    position: absolute;
-    top: 52px;
-    background-color: #fff;
-    width: 120%;
-    box-shadow: 0 2px 4px var(--c-shadow-1);
-    border: 1px solid var(--c-border-1);
-    display: none;
-}
-#search-result .content {
-    max-height: 300px;
-    padding: 10px;
-    overflow-x: hidden;
-}
-#search-result .content .item {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-#search-result .content .item:not(:last-child)  {
-    margin-bottom: 7px;
-    border-bottom: 1px solid var(--c-border-1);
-    padding-bottom: 7px;
-}
-#search-result .content a {
-    color: var(--c-text-2);
-}
-#search-result .content a:hover {
-    color: var(--c-text-1);
-}
-.arrow {
-    position: absolute;
-    top: -12px;
-    width: 0;
-    height: 0;
-    border-color: transparent;
-    border-bottom-color: var(--c-border-1);
-    border-style: solid;
-    border-width: 6px;
-    left: 20px;
-}
-.arrow::after {
-    position: absolute;
-    display: block;
-    width: 0;
-    height: 0;
-    border-color: transparent;
-    border-style: solid;
-    content: " ";
-    border-width: 6px;
-    top: 1px;
-    margin-left: -6px;
-    border-top-width: 0;
-    border-bottom-color: #fff;
 }
 
 .more:hover i {
@@ -333,75 +173,6 @@
     /* border-top: 1px solid var(--c-border-1); */
     color: var(--c-text-3)
 }
-
-.nav .nav-item {
-    float: left;
-    margin-right: 20px;
-}
-
-.nav .nav-item.logo img {
-    width: 40px;
-    height: 40px;
-    object-fit: cover;
-    border-radius: 5px;
-}
-
-/*.tag-2 {*/
-/*    float: left;*/
-/*    width: 32%;*/
-/*    font-size: 12px;*/
-/*    white-space: nowrap;*/
-/*    margin-bottom: 10px;*/
-/*    text-align: center;*/
-/*    padding: 0 0.6%;*/
-/*    overflow: hidden;*/
-/*    text-overflow: ellipsis;*/
-/*}*/
-
-/*.tag-2-1 {*/
-/*    background-color: var(--c-tag-1);*/
-/*    color: #fff;*/
-/*}*/
-
-/*.tag-2-2 {*/
-/*    background-color: var(--c-tag-2);*/
-/*    color: #fff;*/
-/*}*/
-
-/*.tag-2-3 {*/
-/*    background-color: var(--c-tag-3);*/
-/*    color: #fff;*/
-/*}*/
-
-/*.tag-2-4 {*/
-/*    background-color: var(--c-tag-4);*/
-/*    color: #fff;*/
-/*}*/
-
-/*.tag-2-5 {*/
-/*    background-color: var(--c-tag-5);*/
-/*    color: #fff;*/
-/*}*/
-
-/*.tag-2-6 {*/
-/*    background-color: var(--c-tag-6);*/
-/*    color: #fff;*/
-/*}*/
-
-/*.tag-2-7 {*/
-/*    background-color: var(--c-tag-7);*/
-/*    color: #fff;*/
-/*}*/
-
-/*.tag-2-8 {*/
-/*    background-color: var(--c-2);*/
-/*    color: #fff;*/
-/*}*/
-
-/*.tag-2-9 {*/
-/*    background-color: var(--c-3);*/
-/*    color: #fff;*/
-/*}*/
 
 .pagination {
     font-size: 0;
