@@ -1,5 +1,5 @@
 // 获取所有图片
-const imgList = document.querySelectorAll('img')
+const imgList = document.querySelectorAll('img');
 // 用于记录当前显示到了哪一张图片
 let index = 0;
 function lazyLoad() {
@@ -9,6 +9,12 @@ function lazyLoad() {
         let dataSrc = imgList[i].getAttribute('data-src');
         if (!dataSrc) {
             continue;
+        }
+
+        // 如果有display为none的，就显示了（媒体查询处隐藏的）
+        let cssObj = window.getComputedStyle(imgList[i].parentNode);
+        if (cssObj && cssObj.display === 'none') {
+            return;
         }
         // 这里用可视区域高度减去图片顶部距离可视区域顶部的高度
         const distance = viewPortHeight - imgList[i].getBoundingClientRect().top;

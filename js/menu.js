@@ -2,10 +2,11 @@ let menu = document.querySelector('.eb-menu');
 let showed = false;
 
 if (menu) {
-    let mask = document.querySelector(".mask");
+    let mask = document.querySelector("#mask-1");
     if (!mask) {
         mask = document.createElement('div');
         mask.className = "mask";
+        mask.id = "mask-1";
         document.body.appendChild(mask);
     }
 

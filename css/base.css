@@ -138,6 +138,24 @@ a:hover {
     color: var(--c-2);
 }
 
-.back {
+.back, #search-input-2 {
     display: none;
+}
+
+
+.input-1 {
+    border: none;
+    padding: 11px 0 6px 0;
+    display: inline-block;
+    width: 100%;
+    height: inherit;
+    border-bottom: 1px solid #909399;
+    transition: all 0.5s;
+    font-size: 13px;
+}
+
+.input-1:focus {
+    border-color: #333;
+    padding-left: 4px;
+    color: #333;
 }
