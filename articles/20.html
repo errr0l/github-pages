@@ -148,7 +148,10 @@
 </blockquote>
 <p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202304/10b7fb0ae369432e9802917696ce413c-AFDFF839D4A2E24473AE68AB7CD1E263.jpg" /></p>
 <p><strong>要实现这一需求，首先是通过关联表查询出目标文章的标签id。</strong></p>
-<pre><code class="language-sql">select t2.tag_id from test.article t1 join test.article_tag t2 on t2.article_id = t1.id where t1.id = 1;
+<pre><code class="language-sql">select t2.tag_id 
+from test.article t1 
+join test.article_tag t2 on t2.article_id = t1.id
+where t1.id = 1;
 </code></pre>
 <p>查询结果如下。</p>
 <p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202304/4d529481622d4f919a52076d7e334c84-1F74FFA587483FB7F926FB1E84F980E2.jpg" /></p>
@@ -207,7 +210,8 @@ select find_in_set('c', 'a,b,c') &gt; 0; # 返回1
 select find_in_set('d', 'a,b,c') &gt; 0; # 返回0
 </code></pre>
 <p><strong>至此，所有的条件已经都准备好了，我们可以把sql写成这样。</strong></p>
-<pre><code class="language-sql">select id, title,tag,((find_in_set('vue', tag) &gt; 0) + (find_in_set('vue-router', tag) &gt; 0) + (find_in_set('abc', tag) &gt; 0)) matched from article where id = 19;
+<pre><code class="language-sql">select id, title,tag,((find_in_set('vue', tag) &gt; 0) + (find_in_set('vue-router', tag) &gt; 0) + (find_in_set('abc', tag) &gt; 0)) matched
+from article where id = 19;
 </code></pre>
 <p><del>mysql当然可以进行简单的四则运算。</del></p>
 <p>执行的结果为：</p>
@@ -218,7 +222,9 @@ select find_in_set('d', 'a,b,c') &gt; 0; # 返回0
 <p><del>state not in (2, 3)是为了过滤一些记录而加入的条件，这个是无关紧要的。</del></p>
 <pre><code class="language-sql">select id, title,
        ((find_in_set('vue', tag) &gt; 0) + (find_in_set('提示保存', tag) &gt; 0) + (find_in_set('vue-router', tag) &gt; 0) + (find_in_set('页面刷新', tag) &gt; 0) + (find_in_set('关闭页面', tag) &gt; 0) + (find_in_set('javascript', tag) &gt; 0)) tagMatched
-from article where id != 19 and state not in (2, 3) order by tagMatched desc;
+from article
+where id != 19 and state not in (2, 3)
+order by tagMatched desc;
 </code></pre>
 <p>从查询结果里可以看到，只有一条数据是跟id为19的文章相关联，而且只有一个标签匹配，其他记录都不相关。</p>
 <p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202304/2bd85cdfbbb8496cbc9c30954d9cbd51-3A77F4BD2C9F18E6FF137E9F4FBF44C8.jpg" /></p>

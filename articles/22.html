@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>为静态站点添加搜索功能 - 小埃的个人博客</title>
+    <link rel="stylesheet" href="../css/reset.css">
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/index.css">
+    <link rel="stylesheet" href="../css/header.css">
+    <link rel="stylesheet" href="../css/mobile.css">
+    <link rel="stylesheet" href="../css/theme-light.css">
+    <link rel="shortcut icon" href="../favicon.ico" type="image/x-icon">
+        <meta name="keywords" content="静态站点,静态站点搜索,搜索功能,静态页面,html,js,css">
+    <link rel="stylesheet" href="../css/article.css">
+    <link rel="stylesheet" href="../css/markdown/github-markdown.css">
+    <link rel="stylesheet" href="../css/markdown/github-markdown-light.css">
+    <link rel="stylesheet"
+          href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+    <style>
+        .markdown-body {
+            box-sizing: border-box;
+            min-width: 200px;
+            max-width: 980px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .markdown-body ol, .markdown-body ul, .markdown-body li {
+            list-style: disc;
+        }
+        @media (max-width: 767px) {
+            .markdown-body {
+                padding: 15px;
+            }
+        }
+        .container .markdown-body {
+            color: var(--c-text-2);
+        }
+        .container .cover img {
+            max-height: 400px;
+            object-fit: cover;
+        }
+        .content > *:last-child {
+            margin-bottom: 0;
+        }
+        .comment-wrap {
+            background-color: #fff;
+            box-shadow: 0 -1px 4px var(--c-shadow-1);
+            padding: 0 20px;
+            min-height: 124px;
+        }
+    </style>
+</head>
+<body>
+<div id="app">
+    <div id="header">
+    <div id="bar">
+        <div class="container mg-0-auto d-f">
+            <div class="logo">
+                <a href="../" class="nav-link">
+                    <img src="../image/portal/logo.jpg" alt="小埃的个人博客">
+                </a>
+            </div>
+            <div class="right">
+                <ul class="nav f-l">
+                        <li class="nav-item">
+                            <a href="../index.html" class="nav-link active">
+                                <span>首页</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="../category.html" class="nav-link ">
+                                <span>分类</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="../about.html" class="nav-link ">
+                                <span>关于</span>
+                            </a>
+                        </li>
+                </ul>
+                <div class="eb-title">
+                    小埃的个人博客
+                </div>
+                <div id="search">
+                    <input type="text" id="search-input" data-prefix="../" placeholder="搜索" autocomplete="off" />
+                    <span class="search-icon t-a">
+                        <img class="el-icon-search" src="../image/portal/search.png" width="16" height="16">
+                    </span>
+                    <div id="search-result">
+                        <input type="text" class="input-1" id="search-input-2" data-prefix="../" placeholder="请输入" autocomplete="off" />
+                        <div class="content">
+                        </div>
+                        <div class="arrow"></div>
+                    </div>
+                </div>
+                <div class="eb-menu">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-list-ul" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M5 11.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm-3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm0 4a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm0 4a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    <div id="main">
+        <div class="container mg-0-auto pd-t-10">
+            <div class="left">
+                <article class="mg-b-20">
+                    <div class="markdown-body">
+                        <div class="title">为静态站点添加搜索功能</div>
+                        <div class="item meta mg-b-10">
+                            <span class="author">由<a href="javascript:void(0);">errol</a>发表于<a href="#">2023-04-21 04:22:10</a></span>
+                            <span>|</span>
+                            <span class="time">
+                            分类为
+                            <a href="../categories/1.html">编程</a></span>
+                            <span>|</span>
+                            <span class="tags">
+                                标签为<a href="javascript:void(0);">静态站点</a>、<a href="javascript:void(0);">静态站点搜索</a>、<a href="javascript:void(0);">搜索功能</a>、<a href="javascript:void(0);">静态页面</a>、<a href="javascript:void(0);">html</a>、<a href="javascript:void(0);">js</a>、<a href="javascript:void(0);">css</a>
+                            </span>
+                        </div>
+                        <div class="content">
+                            <p>静态网页，指的是全部由html、css、js等文件组成的页面，一经发布出来，就已经不会再发生变化了（除非有人手动修改），静态网页是完全运行在客户端的。</p>
+<p>与之相对应的便是动态网页，这种网页即使在没有人修改过网页内容的情况下，也会随着用户、时间、地点等因素而返回不同的内容，因此被称为是“动态”的。常见的有jsp、asp、php等等，此外使用异步请求向服务器获取数据也属于动态网页的范畴。</p>
+<p>相比于静态网页，动态网页可以实现更丰富的功能，如登陆、注册、内容管理、数据统计、数据查询等等，这些功能都有一个共同点，即它们都是以数据库为基础来实现的。</p>
+<p>至此我们了解到，<strong>动、静态网页的最主要区别，其实是页面内容有没有受到数据库的影响</strong>，而不是页面有没有在“动”（如gif、视频、动画效果等等）。</p>
+<p>看到这里，可能会有读者疑惑：</p>
+<blockquote>
+<p>既然静态页面不经过数据库，那要怎么实现搜索功能？</p>
+</blockquote>
+<p>确实，在日常的生活和开发当中，大多数的搜索功能，都是使用异步请求来向服务端获取数据的，都是要经过数据库的，百度、谷歌搜索、淘宝上搜索商品、搜索WebAPI等等，但实际上，这只是搜索功能实现的方式之一，它并不是搜索的唯一方式，我们姑且把这种方式称为“<strong>动态搜索</strong>”。</p>
+<p>如果有接触过一些静态博客项目的话，如WordPress、Hexo等，应该都知道这些系统都是支持文章搜索功能的。</p>
+<blockquote>
+<p><a href="https://iswbm.com/">WordPress</a></p>
+</blockquote>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202304/0f22a70fbdeb4e72aa697eb95abfda81-507CAAE60640FDF345B99B205D6FA031.jpg" /></p>
+<blockquote>
+<p><a href="https://zkqiang.cn/">Hexo</a></p>
+</blockquote>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202304/576002f2beec43159414b910c98eab24-13A25478D7716E39086E12C475A8EF96.jpg" /></p>
+<p>以上的搜索功能没有经过服务器数据库。</p>
+<p><del>虽然很想这么说，但是有多少人会信？</del></p>
+<p>举一个更直观的例子，如果使用Vue框架开发过项目的话，应该都接触过ElementUI这个经典的UI库，其中就包含了一些具有搜索功能的组件，如Select、Cascader、Input，虽然我们一般都是将这些组件配合API来异步获取&amp;渲染数据的，但实际上，即使没有API的支持，它也能够完成搜索功能，下面以Select组件为例。</p>
+<blockquote>
+<p>提供给组件的数据</p>
+</blockquote>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202304/06e4221aae4048b4a7d9c69ec637117f-90F5C299D4BF61B229CFED9590B44BF2.jpg" /></p>
+<blockquote>
+<p>搜索数据</p>
+</blockquote>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202304/9e579d2103be414ebc99c284ddedee1b-FBFB9D88BA6C9400C1EB9AB3FAD7DD53.jpg" /></p>
+<p>这个组件的搜索功能，其实跟前面提到的WordPress、Hexo系统的文章搜索功能是类似的，都是通过匹配固定的数据来返回搜索结果，需要注意的是，这一过程中，并没有数据库的参与，所以，它们都属于“<strong>静态搜索</strong>”。</p>
+<p>现在我们应该了解到，静态搜索，<strong>就是把数据和搜索逻辑都放在前端，由前端来完成从输入关键字到返回数据的全搜索过程，这就是它的原理</strong>。</p>
+<p>其实无论静态搜索，还是动态搜索，都是通过某些算法来匹配数据返回搜索结果的，只不过是两者搜索逻辑的执行位置和数据存放位置不同而已。</p>
+<p>所以，要完成这个静态搜索功能，有两个地方需要我们去准备，它们分别是负责检索数据的逻辑和用于检索的数据。</p>
+<h2>实现搜索逻辑</h2>
+<p>根据上面所举的Select组件例子，我们很容易想到，这个功能应该要满足这样的需求：</p>
+<blockquote>
+<p>从搜索input表单中获取出文本，并将其和数据的某些字段匹配，如果匹配成功就把该条数据返回，最后将返回的数据渲染在搜索结果面板上。</p>
+</blockquote>
+<h3>首先准备需要的HTML结构</h3>
+<p><del>样式就不贴了，可能每个人做出来的效果都不一样，能用就行。</del></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202304/642396c9717b4dae8ff69c0e2019a483-1D377AE907ECEE228A07C4C6E0B6FFFA.jpg" /></p>
+<p>以下是渲染出来的效果。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202304/a2acbb0fe40748109ba90a5e2ed1c59a-6D57EA7C57CA50A358FC6E1764569959.jpg" /></p>
+<h3>定义搜索方法</h3>
+<p>此处的代码实现了一个简单的逻辑，即如果数据的title字段包含有输入的文本value的话，就将其返回。</p>
+<pre><code class="language-JavaScript">// 跟日常开发一样，我们可以先忽略后端的数据，随便编一些就好了。
+let dataList = [
+    {
+        fileName: &quot;http:///11.html&quot;,
+        tag: &quot;测试标签1,测试标签11&quot;,
+        title: &quot;测试标题1&quot;,
+        categoryName:&quot;测试分类1&quot;
+    },
+    {
+        fileName: &quot;http:///22.html&quot;,
+        tag: &quot;测试标签2&quot;,
+        title: &quot;测试标题2&quot;,
+        categoryName:&quot;测试分类2&quot;
+    },
+    {
+        fileName: &quot;http:///33.html&quot;,
+        tag: &quot;测试标签3&quot;,
+        title: &quot;测试标题3&quot;,
+        categoryName:&quot;测试分类3&quot;
+    }
+];
+
+function search(value) {
+    let r = [];
+    for (let item of dataList || []) {
+        if (item.title.includes(value)) {
+            r.push(item);
+        }
+    }
+    return r;
+}
+</code></pre>
+<h3>定义渲染数据方法</h3>
+<p>在该方法中执行搜索方法，如果有数据返回，则将数据用字符串拼接为一个ul列表，并将其设置为dom节点ele的html内容，否则返回找不到数据的提示信息。</p>
+<pre><code class="language-js">let render = function(val, ele, ) {
+    let list = search(val);
+    let html = &quot;&quot;;
+    if (list.length &gt; 0) {
+        html += &quot;&lt;ul&gt;&quot;;
+        for (let item of list) {
+            let href = item.fileName;
+            html += &quot;&lt;li class='item' title='&quot;+ item.title +&quot;'&gt;&quot;;
+            html += &quot;&lt;a class='hover-1' href='&quot;+ href +&quot;'&gt;&quot; + item.title + &quot;&lt;/a&gt;&quot;;
+            html += &quot;&lt;/li&gt;&quot;
+        }
+        html += &quot;&lt;/ul&gt;&quot;;
+    }
+    else {
+        html += &quot;&lt;div&gt;搜索不到数据:|&lt;/div&gt;&quot;;
+    }
+    ele.innerHTML = html;
+}
+</code></pre>
+<h3>为input搜索框添加事件侦听器</h3>
+<p>监听input输入事件和失去焦点事件，同时，为了尽可能地优化性能，我们还可以用防抖函数对主要函数进行包装，来处理频繁执行的问题。</p>
+<p>该侦听器主要的功能为，监听输入事件，并获取其中的文本，如果不为空，则执行渲染方法，并现实搜索结果面板，否则隐藏搜索结果面板。</p>
+<pre><code class="language-js">let searchInput = document.querySelector(&quot;#search-input&quot;);
+let searchResult = document.querySelector(&quot;#search-result&quot;);
+let content = searchResult.querySelector('.content');
+
+// 防抖
+function debounce(fn, delay = 500) {
+    let timer = null;
+    return function (...args) {
+        if (timer) clearTimeout(timer);
+        timer = setTimeout(() =&gt; {
+            fn.apply(this, args);
+        }, delay);
+    };
+}
+
+let wrap = debounce(function() {
+    let value = searchInput.value;
+    if (value) {
+        render(value, content);
+        searchResult.style.display = &quot;block&quot;;
+    }
+    else {
+        if (searchResult.style.display === 'block') {
+            searchResult.style.display = &quot;none&quot;;
+        }
+    }
+});
+searchInput.addEventListener('input', wrap);
+searchInput.addEventListener('focus', wrap);
+</code></pre>
+<p>完成以上的代码后，基本的搜索功能已经实现了。</p>
+<p><del>上述的代码是连贯的，都在同一个文件内，按顺序摆放就行，分开只是为了让它们看起来更方便</del></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202304/a77b19a42c004cc5b6561caefeaa38c6-4BE7AE00CFF5B426DCE6293351CFD1D2.jpg" /></p>
+<p><strong>此外我们还可以为匹配命中的字符添加高亮效果</strong>，将搜索逻辑部分代码修改如下。</p>
+<pre><code class="language-js">function search(value) {
+    let r = [];
+    for (let item of dataList || []) {
+        let reg = new RegExp('(' + value + ')', 'i');
+        if (reg.test(item.title)) {
+            // 将匹配命中的字符用span标签包装，并添加样式
+            let title = item.title.replace(reg, &quot;&lt;span style='color: var(--c-1);'&gt;$1&lt;/span&gt;&quot;);
+            let _item = {
+                fileName: item.fileName,
+                tag: item.tag,
+                title: title,
+                categoryName: item.categoryName,
+                original: item.title // 由于替换后的title并不是纯文本，所以把原数据备份，后续可能会使用到
+            };
+            r.push(_item);
+        }
+    }
+    return r;
+}
+</code></pre>
+<p>查看运行效果。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202304/ed9e011f869348f08d2c05417bdf6d43-9F3F4B1CE5F06C1A595A01CC23F71CFA.jpg" /></p>
+<h2>只差最后一步</h2>
+<p>完成以上的代码编写后，只差准备数据这一步了。</p>
+<p>这一步是异常简单的，你甚至可以不用写逻辑代码，自己手动输入一份格式正确的数据（即包含标题等信息，上述的例子中只用到了title这一字段），或者也可以像我一样，把从数据库查询出来的记录按照正确的格式直接写进一个js文件里，然后再通过script标签加载，相当的简单粗暴。</p>
+<p>数据库查询的记录如下。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202304/55ae8e2c7202426eac1cab606febc431-730FDC93-BD0A-434F-AD1B-197105D81AB4.png" /></p>
+<p><del>这里使用的是java语言，其他语言也是类似的，其他语言请自行实现</del></p>
+<pre><code class="language-java">private void writeDataListToJsFile(List&lt;Article&gt; articleList) {
+        List&lt;Map&lt;String, Object&gt;&gt; dataList = new ArrayList&lt;&gt;();
+
+        articleList.forEach(item -&gt; {
+            Map&lt;String, Object&gt; map = new HashMap&lt;&gt;();
+            map.put(&quot;title&quot;, item.getTitle());
+            map.put(&quot;fileName&quot;, FolderName.ARTICLE_FOLDER + File.separator + item.getId() + &quot;.html&quot;);
+            map.put(&quot;categoryName&quot;, item.getCategoryName());
+            map.put(&quot;tag&quot;, item.getTag());
+            dataList.add(map);
+        });
+
+        String outputPath = appConfig.getOutputPath();
+        try {
+            BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(outputPath + File.separator + FolderName.JS_FOLDER + File.separator + &quot;dataList.js&quot;));
+            String str = &quot;let dataList = &quot; + JSON.toJSONString(dataList) + &quot;;&quot;;
+            bufferedWriter.write(str);
+            IOUtil.close(bufferedWriter);
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new CustomException(&quot;将数据写入文件失败&quot;);
+        }
+}
+</code></pre>
+<p><strong>然后在html文件中，使用script标签加载该js文件（注意要在搜索逻辑之前加载）。</strong></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202304/f3a389c0e5f541128b434f1a740b818c-7DA31A33F50B2FAADFD5582BC1A2706B.jpg" /></p>
+<p>最终的效果如下。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202304/7a59d72e99a24673aa175ec03b27585e-3B283EE1742E8A303AAC811AC99AE7F6.jpg" /></p>
+<hr />
+<p>至此，这个简单版的静态搜索功能就算完成了，如果需要更复杂的搜索逻辑和更多的匹配字段，比方说，同时根据标题、标签、分类进行匹配，可以在此基础上自行拓展。</p>
+<p>当然，该功能缺点也是有的，比如说，当数据量很大的时候，查询速度会变得很慢，以及加载网页的速度也会变慢，会严重影响用户的网站体验，这也是为什么常用异步请求搜索数据的原因之一，但对于个人博客项目那点体量的数据而言，无需担心这个问题。</p>
+<p>以上就是本篇文章的所有内容了，希望对你有所帮助。</p>
+
+                        </div>
+                    </div>
+                </article>
+                <div class="comment-wrap">
+                        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+                        <script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+                        <div id="gitalk-container"></div>
+                        <script>
+                            const gitalk = new Gitalk({
+                                clientID: 'ae1422e500a8b19fb1fc',
+                                clientSecret: '9f387db6a84a4945cdf5dc743c16ce25fdef6b76',
+                                repo: 'github-pages',      // The repository of store comments,
+                                owner: 'xxzhiwei',
+                                admin: ['xxzhiwei'],
+                                id: location.pathname,      // Ensure uniqueness and length less than 50
+                                distractionFreeMode: false  // Facebook-like distraction free mode
+                            });
+                            gitalk.render('gitalk-container');
+                        </script>
+                </div>
+            </div>
+            <div class="right">
+            </div>
+        </div>
+    </div>
+    <div class="back">返回</div>
+</div>
+    <script src="../js/dataList.js"></script>
+    <script src="../js/lazy.js"></script>
+    <script src="../js/search.js"></script>
+    <script src="../js/menu.js"></script>
+<script>
+    let back = document.querySelector(".back");
+    back.addEventListener("click", function () {
+        window.history.go(-1)
+    });
+</script>
+</body>
+</html>
