@@ -1,8 +1,6 @@
 var fs = require('fs');
 var postcss = require('postcss');
-const path = require("path");
 var pxtorem = require('postcss-pxtorem');
-var css = fs.readFileSync(__dirname + '/css/base.css', 'utf8');
 
 var options = {
     replace: true,
