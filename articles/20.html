@@ -16,6 +16,7 @@
     <link rel="stylesheet" href="../css/article.css">
     <link rel="stylesheet" href="../css/markdown/github-markdown.css">
     <link rel="stylesheet" href="../css/markdown/github-markdown-light.css">
+    <link rel="stylesheet" href="../css/gittalk-cover.css">
     <link rel="stylesheet"
           href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
     <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
@@ -30,11 +31,6 @@
         }
         .markdown-body ol, .markdown-body ul, .markdown-body li {
             list-style: disc;
-        }
-        @media (max-width: 767px) {
-            .markdown-body {
-                padding: 15px;
-            }
         }
         .container .markdown-body {
             color: var(--c-text-2);
@@ -252,11 +248,12 @@ order by tagMatched desc limit 5;
         order by tagMatched desc limit 5
 &lt;/select&gt;
 </code></pre>
-<p>对应的接口如下，其中，参数依次文章id，文章tag，文章tag构成的正则表达式。</p>
+<p>对应的接口如下，其中，参数依次为文章id，文章tag，文章tag构成的正则表达式。</p>
 <pre><code class="language-java">List&lt;Article&gt; selectRelativeList(@Param(&quot;id&quot;) Integer id, @Param(&quot;tag&quot;) String tag, @Param(&quot;regexp&quot;) String regexp);
 </code></pre>
 <p>事实证明，方法还是比困难多一点的，为了实现这一需求，刚开始当我意识到数据库表设计存在的问题时，我原本已经做了最坏的打算：修改数据库设计，但这样一来，项目就会涉及到很多需要修改的地方，这或许是任何一位开发者都不情愿的事情...</p>
 <p>好在功夫不负有心人，虽然中途花了不少的时间，但最后终于是找到解决的方法，同时也避免了修改数据库设计（长叹了一口气）。</p>
+<p>现在可以得出结论，不管是关联关系存储，还是字符串存储，都是可以实现关联性查询的，相较之下，前者需要使用的sql语句多一些，而后者则需要绕一点弯。</p>
 <p>以上就是本篇文章的所有内容了，希望对你有所帮助，还有如果有更好的方式，望告知。</p>
 
                         </div>

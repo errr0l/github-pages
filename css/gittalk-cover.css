@@ -1,0 +1,38 @@
+#gitalk-container .gt-container .gt-btn-login {
+    background-color: var(--c-5);
+    border: 1px solid var(--c-5);
+}
+
+#gitalk-container .gt-container .gt-btn-public {
+    background-color: var(--c-5);
+    border: 1px solid var(--c-5);
+}
+
+#gitalk-container .gt-container .gt-btn-public:hover {
+    background-color: var(--c-1);
+    border: 1px solid var(--c-1);
+}
+
+#gitalk-container .gt-container .gt-btn {
+    border: 1px solid var(--c-5);
+}
+
+#gitalk-container .gt-container a {
+    color: var(--c-5);
+}
+
+#gitalk-container .gt-container .gt-btn-preview:hover {
+    border: 1px solid var(--c-1);
+}
+
+#gitalk-container .gt-container .gt-svg svg {
+    fill: var(--c-5);
+}
+
+#gitalk-container .gt-container .gt-comment-username {
+    color: var(--c-5);
+}
+
+#gitalk-container .gt-container .gt-popup .gt-action.is--active:before {
+    background: var(--c-5);
+}
