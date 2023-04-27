@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>兼容部署在Github Pages与其他服务器的应用引入资源的解决方案 - 小埃的个人博客</title>
+    <title>星铁暴死预测 - 小埃的个人博客</title>
     <link rel="stylesheet" href="../css/reset.css">
     <link rel="stylesheet" href="../css/base.css">
     <link rel="stylesheet" href="../css/index.css">
@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="../css/mobile.css">
     <link rel="stylesheet" href="../css/theme-light.css">
     <link rel="shortcut icon" href="../favicon.ico" type="image/x-icon">
-        <meta name="keywords" content="相对路径,绝对路径,网络路径,静态资源404,Github Pages,js">
+        <meta name="keywords" content="游戏">
     <link rel="stylesheet" href="../css/article.css">
     <link rel="stylesheet" href="../css/markdown/github-markdown.css">
     <link rel="stylesheet" href="../css/markdown/github-markdown-light.css">
@@ -115,64 +115,31 @@
             <div class="left">
                 <article class="mg-b-20">
                     <div class="markdown-body">
-                        <div class="title">兼容部署在Github Pages与其他服务器的应用引入资源的解决方案</div>
+                        <div class="title">星铁暴死预测</div>
                         <div class="item meta mg-b-10">
-                            <span class="author">由<a href="javascript:void(0);">errol</a>发表于<a href="#">2023-04-07 11:03:58</a></span>
+                            <span class="author">由<a href="javascript:void(0);">errol</a>发表于<a href="#">2023-04-27 10:57:13</a></span>
                             <span>|</span>
                             <span class="time">
                             分类为
-                            <a href="../categories/1.html">编程</a></span>
+                            <a href="../categories/6.html">瞎聊</a></span>
                             <span>|</span>
                             <span class="tags">
-                                标签为<a href="javascript:void(0);">相对路径</a>、<a href="javascript:void(0);">绝对路径</a>、<a href="javascript:void(0);">网络路径</a>、<a href="javascript:void(0);">静态资源404</a>、<a href="javascript:void(0);">Github Pages</a>、<a href="javascript:void(0);">js</a>
+                                标签为<a href="javascript:void(0);">游戏</a>
                             </span>
                         </div>
-                            <div class="cover mg-b-10">
-                                <img src="../image/portal/202304/cover/3d1e234ec548474aa029e07874aa6ed3-d6a08501caac287b7d89c5cc5206ffce.jpg" alt="">
-                            </div>
                         <div class="content">
-                            <p>原本该项目是使用绝对路径的方式来加载静态资源，这种方式的优势在于简单明了、易维护，直接从项目的根目录下加载资源，在开发环境与部署在其他服务器下都运行良好，但是，当将该项目上传至Github Pages之后，则出现了静态资源404的问题。</p>
-<p>以link标签为例，原加载css文件的源码如下。</p>
-<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202304/a27b4185ab26416195ddd2646f8bb078-CEE0CEC6C1A7D43EA48EBA01571B6CD7.jpg" /></p>
-<p>而将项目部署到Github Pages之后，则出现了无法加载文件的问题。</p>
-<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202304/30a947122e894683902075217827da80-0AD5F18A875E15542BC431320E9F212B.jpg" /></p>
-<p><strong>究其原因是Github Pages所提供的静态站点路径问题。</strong></p>
-<blockquote>
-<p>https://xxzhiwei.github.io/github-pages/</p>
-</blockquote>
-<p>可以看到域名下面还有一层以当前Github Pages项目仓库命名的目录，而项目的所有资源都存在于此，所以，使用绝对路径来引入资源的问题就出现了。</p>
-<p>以&quot;/&quot;开头表示使用绝对路径，但在Github Pages下，&quot;/&quot;指的是&quot;https://xxzhiwei.github.io/&quot;，而不是&quot;https://xxzhiwei.github.io/github-pages/&quot;，所以才导致无法加载出资源的问题，因此解决方法就很显而易见了，只要在静态资源的路径前，再加一层Github Pages的项目名称就可以了。</p>
-<p><strong>但这样改动之后，在其他服务器部署当前项目时，也会出现静态资源404的问题</strong>，所以这始终不算一个很好的解决方案。</p>
-<p><strong>那有没有既兼容其他服务器，又兼容Github Pages引入静态资源的方法呢？</strong></p>
-<blockquote>
-<p>答案是有的，而且方法不止一种，但都具有各自的优缺点，需要根据项目的实际情况来考虑使用何种方式。</p>
-</blockquote>
-<h2>以相对路径的方式引入资源</h2>
-<p>这同时也是当前项目使用的方式，顾名思义就是以当前文件为参考对象，来引入其他路径下的资源。</p>
-<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202304/06ae8aeb5ec6475b9257b3a28a3a9578-438580D24EA7A4523B3A9DE08FD01C8C.jpg" /></p>
-<blockquote>
-<p>./css/reset.css, ../css/theme-light.css</p>
-</blockquote>
-<p>其中&quot;./&quot;表示当前目录，而&quot;../&quot;则表示上一级目录，不必考虑项目部署的位置（如/github-pages/），只要依靠项目中的相对路径，并保证路径正确就能正常运行。</p>
-<p>以这种方式引入资源可以在单机模式下使用，甚至是不需要服务器也可以直接在浏览器上打开（使用File协议）。当然了，其应用场景不大，既然项目都部署到Github Pages上了，应该就不需要以本地文件的形式存在了吧？</p>
-<p>看到这里你可能已经有一些眉目了，因为不同层级的文件相对于其他文件的路径都各不相同，一旦文件出现变动，与该文件相关的其他文件也必须一起修改，所以相对路径用起来是有点麻烦的。</p>
-<p>特别是项目结构比较复杂时，其麻烦程度还要再上升一个量级，改动堪比火葬场，因此期间可能还会出现问候祖宗的现象。</p>
-<p>所以，在结构复杂的项目中不推荐使用相对路径的方式来引入资源。</p>
-<h2>以网络路径的方式引入资源</h2>
-<p>还有一种好用且常见的方式，就是使用网络路径从第三方服务器来加载资源。</p>
-<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202304/6e47148d2b1d4dbc82e25a82d20112c8-76EDA8773F9E863863D0ED8B7190B273.jpg" /></p>
-<p>这种方式的优势在于，只要第三方服务器能正常提供服务时，不仅完全不需要考虑引用资源路径的问题，还能减少当前服务器的负载，相对的是需要连接外网。</p>
-<p>但同时也还有一些问题需要考虑，比方说项目的文件是不是常常变动，如果以网络路径的方式来引入常变动的文件，那就意味着每次迭代项目，都要在第三方服务器更新引用的文件，这相对来说也是挺麻烦的；资源提供方是否能稳定提供服务...</p>
-<h2>混合使用</h2>
-<p>以上的方式都具有各自的特点和适用场景，而现在的环境下，更多选择的是两种方式混合在一起使用：固定不变的资源使用网络路径来加载，其他文件则使用相对或绝对路径（在Github Pages只能使用相对路径）。</p>
-<p>如一些库文件、js插件就很适合使用网络路径来加载，而图片现在更多的是使用第三方服务器来存储/加载（如七牛、阿里云OSS等），</p>
-<p>对于相对路径而言，虽然用起来麻烦，但在某些情况下（如Github Pages），不得不使用使用该种方式，下面有一些优化的方法。</p>
-<ul>
-<li>将文件合并为一，以减少路径的修改，css、js都可以考虑</li>
-<li>如果是使用框架、模板进行开发时，则可以考虑将引用的资源封装为一个组件（模块），统一管理和修改</li>
-</ul>
-<p>总结一下，引用资源的路径分为三种，分别为绝对路径、相对路径、网络路径，但在不改变项目源码的情况下兼容部署在Github Pages和其他服务器的应用加载资源的只有相对路径和网络路径，它们都有各自的优势和特点，既可以在项目中单独使用，也可以组合在一起，这需要根据实际情况来考量。</p>
-<p>以上就是本文的所有内容了，希望对你有所帮助。</p>
+                            <p>我先做一个预测，星穹铁道这个游戏绝对会大暴死。</p>
+<p>市面上有那么多好玩的回合制游戏，为啥要去玩你那个鸡巴抽卡换皮氪金手游？</p>
+<p>回合制游戏主打的是剧情，但根据以往的情况来看，想必米厂也憋不出什么大招，毕竟人人都说原是9+的过家家剧情，旗下的蹦也不遑多让；此外，还是原来的味道，技能动画占了大半时长，先不说剧情和演出动画的水平如何，我觉得并不是每个玩家都喜欢这些东西，所以加skip是对玩家的一种尊重，让他们有权利选择看或不看，再加上剧情本就在同类游戏内也算不上优秀，这样的情况下还把skip按键删除，逼着玩家观看不给跳过，我认为这样确实是有点傲慢了...</p>
+<p>不过米确实有这个资本，毕竟圈了那么多忠实的粉丝，以至于每当有人提议米游应该加剧情跳过或者其他功能（如载具）时，总会有忠实粉丝出来维护，说得井井有条，句句在理，要不是有人站出来反驳他们，我差点就信了... 当然，不加这些便利的功能对于游戏厂商来说，好处多了去了，刷在线时长、月活、加深玩家对游戏的印象等等，只是对于一些粉丝或路人来说，这是极其不友好的。</p>
+<p><strong>高情商，沉浸式游戏体验，低情商，坐牢。</strong></p>
+<p>其次便是策略，我都不知道这个游戏能搞出什么游戏策略，专武、命座... 不全都是数值嘛，再出几个人权角色，然后每日刷圣遗物刷词条，呃，不好意思，走错片场了... 游戏出货率更是不用说了，低得离谱，价格还高得要命。所以，这游戏一开始就固定死了，没有任何横行拓展空间，注定只能围绕卖数值来展开“游戏机制”，玩家光练一个人物都要牢底坐穿了，角色、装备搭配根本不沾边。</p>
+<p>缺少了这两个核心，还算什么回合制，就一垃圾换皮圈钱游戏，甚至我觉得这游戏的目标用户都没定位清楚，想长远运营？因此，我并不看好它。</p>
+<p><strong>游戏性不够，宣发来凑。</strong></p>
+<p>买量推广铺天盖地，即使我一对这游戏不闻不问的人也经常看见，开屏广告、弹窗广告、游戏推荐、热搜... 跟牛皮癣一样。更搞笑的人，还做了个开服倒计时的直播，不知道的还以为是全民期待的游戏大作要上线了呢，这原来就是米粉口中的自闭宣发。</p>
+<p>除了官方之外，一些米粉们也没闲着，同样在尽心尽力地宣传，以至于最近几天所在的qq群每天都能看到这个游戏的身影，其他论坛就更不在话下，甚至连150国热搜登顶都来了，巴不得全世界都知道米的新游要开服了似的，无语死了... 不得不说，米哈游这家公司真的厉害，不仅把玩家培养得黏着性高，还特别忠诚。</p>
+<p><del>说实话，被这游戏官方和玩家都整得人都麻了，怎么形容的话，就是感觉有点被恶心到了，不过有钱确实可以为所欲为。</del></p>
+<p>什么年代了，还来强制看剧情看动画演出的“回合制”游戏，其他以大量文本剧情为核心卖点的游戏都没敢这么干，仅此米一家。别的不多说，我就期待着它大暴死，跟那个七圣召唤一样，开服前吹得有多牛逼，现在就有多狼狈。现在有点迫不及待想看到那些无脑鼓吹这游戏的人破防、失望的样子，不过鉴于米厂的推广力度以及一些米粉的忠诚性，这游戏估计一时半会还不死不了。当然，只要了解这游戏本性的其他人不闻不问，慢性死亡就是它的宿命。</p>
 
                         </div>
                     </div>
@@ -201,10 +168,7 @@
                             <h2 class="item title">相关文章</h2>
                             <div class="item content">
                                     <div class="item1">
-                                        <a href="../articles/19.html">为vue单页面应用添加提示保存功能</a>
-                                    </div>
-                                    <div class="item1">
-                                        <a href="../articles/22.html">为静态站点添加搜索功能</a>
+                                        <a href="../articles/18.html">玩游戏时血压是这么上来的</a>
                                     </div>
                             </div>
                         </div>
