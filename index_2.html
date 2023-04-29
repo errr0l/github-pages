@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>分类 - 小埃的个人博客</title>
+    <title>首页 - 小埃的个人博客</title>
     <link rel="stylesheet" href="./css/reset.css">
     <link rel="stylesheet" href="./css/base.css">
     <link rel="stylesheet" href="./css/index.css">
@@ -12,48 +12,7 @@
     <link rel="stylesheet" href="./css/mobile.css">
     <link rel="stylesheet" href="./css/theme-light.css">
     <link rel="shortcut icon" href="./favicon.ico" type="image/x-icon">
-    <style>
-        .category-card .cover {
-            height: 80px;
-            flex: 100px 0 0;
-            margin-right: 10px;
-
-        }
-        .category-card .cover img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        .category-card {
-            width: 48%;
-            padding: 10px;
-            box-sizing: border-box;
-            margin-right: 1%;
-            margin-bottom: 1%;
-            display: inline-block;
-        }
-
-        .category-card .content {
-            display: flex;
-        }
-        .category-card .content .inf {
-            overflow: hidden;
-            justify-content: space-around;
-        }
-        .category-card .content .inf .name {
-            color: #fa7872;
-            font-size: 18px;
-        }
-        .text {
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        .count {
-            color: var(--c-5);
-            font-size: 13px;
-        }
-    </style>
+    <meta name="keywords" content="程序员,静态博客,个人博客,xxzhiwei,errol,小埃">
 </head>
 <body>
 <div id="app">
@@ -68,12 +27,12 @@
             <div class="right">
                 <ul class="nav f-l">
                         <li class="nav-item">
-                            <a href="./index.html" class="nav-link ">
+                            <a href="./index.html" class="nav-link active">
                                 <span>首页</span>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="./category.html" class="nav-link active">
+                            <a href="./category.html" class="nav-link ">
                                 <span>分类</span>
                             </a>
                         </li>
@@ -108,68 +67,55 @@
     </div>
     </div>
     <div id="main">
-        <div class="container category mg-0-auto pd-t-10">
+        <div class="container mg-0-auto pd-t-10">
             <div class="left">
-    <div class="category-card b-s-1">
+    <div class="card">
         <div class="wrapper">
-            <div class="item content">
-                    <div class="cover">
-                        <img src="./image/portal/202304/cover/3d5c033001d64eb2beccef8b5cb27005-7ad549a4678c166e7375f126a52b77a2.png" alt="">
-                    </div>
-                <div class="inf">
-                    <div class="name">
-                        <a style="display: inline-block; width: 100%; height: 100%;" href="./categories/1.html">编程</a>
-                    </div>
-                    <div class="desc text">循环写bug、修bug</div>
-                    <div class="count">
-                        文章数：4
-                    </div>
-                </div>
+            <div class="item title mg-b-5">
+                <a href="./articles/5.html">异世界冒险---其一</a>
             </div>
-        </div>
-    </div>
-    <div class="category-card b-s-1">
-        <div class="wrapper">
             <div class="item content">
-                    <div class="cover">
-                        <img src="./image/portal/202304/cover/7343a87cf8934418bf3ac578bc919ac5-ff99cd229909f4f47c1d1deeb62a17c1.png" alt="">
-                    </div>
-                <div class="inf">
-                    <div class="name">
-                        <a style="display: inline-block; width: 100%; height: 100%;" href="./categories/3.html">游戏</a>
-                    </div>
-                    <div class="desc text">爱游戏，享受生活</div>
-                    <div class="count">
-                        文章数：5
-                    </div>
+                <div class="cover f-r">
+                    <img style="object-fit: cover;" src="./image/portal/loading.gif" data-src="./image/portal/202304/cover/74072703c1114c18be69dc13d25f9ec9-Pet1075_Icon_201102123022.png" alt="">
                 </div>
+                <span class="brief">前辈同维纳斯历经险境后，终于从古代回到学院中...<a href="./articles/5.html" class="reading-more">继续阅读<i class="el-icon-thumb f-w-b"></i></a></span>
             </div>
-        </div>
-    </div>
-    <div class="category-card b-s-1">
-        <div class="wrapper">
-            <div class="item content">
-                    <div class="cover">
-                        <img src="./image/portal/202304/cover/632a56a267494b458e4e29612873bc4d-541BE1327BA0E914B1E358681524E2B0.jpg" alt="">
-                    </div>
-                <div class="inf">
-                    <div class="name">
-                        <a style="display: inline-block; width: 100%; height: 100%;" href="./categories/6.html">瞎聊</a>
-                    </div>
-                    <div class="desc text">没什么，随便说说而已</div>
-                    <div class="count">
-                        文章数：2
-                    </div>
-                </div>
+            <div class="item meta mg-b-10 footer pd-t-10">
+                <span class="author">由<a href="javascript:void(0);">errol</a>发表于<a href="#">2023-03-28 04:30:06</a></span>
+                <span>|</span>
+                <span class="time">
+                    分类为
+                    <a href="./categories/3.html">游戏</a></span>
+                    <span>|</span>
+                    <span class="tags">
+                        标签为<a href="javascript:void(0);">project QT</a>
+                    </span>
             </div>
         </div>
     </div>
             </div>
             <div class="right">
             </div>
+
+        <div class="pagination-wrapper" style="text-align: center; margin-top: 20px;">
+            <ul class="pagination">
+                <li class="pre ">
+                        <a href="./index.html">上一页</a>
+                </li>
+
+                        <li class="pn ">
+                            <a href="./index.html">1</a>
+                        </li>
+                        <li class="pn current">
+                            <a href="./index_2.html">2</a>
+                        </li>
+                <li class="next disabled">
+                        <a href="javascript:void(0);">下一页</a>
+                </li>
+            </ul>
+        </div>
         </div>
     </div>
-
     <div id="footer">
         <div class="container mg-0-auto">
     <div class="wrapper">
