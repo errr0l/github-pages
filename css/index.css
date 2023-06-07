@@ -73,6 +73,7 @@
     /*text-indent: 2em;*/
     color: var(--c-text-2);
     flex: 1;
+    line-height: 1.6;
 }
 
 .side-card {
