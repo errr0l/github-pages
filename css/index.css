@@ -215,7 +215,8 @@
     height: 80px;
     flex: 100px 0 0;
     margin-right: 10px;
-
+    border-radius: 5px;
+    overflow: hidden;
 }
 .category-card .cover img {
     width: 100%;
