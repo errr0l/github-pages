@@ -32,6 +32,11 @@ article .meta a:hover {
     line-height: 1.6 !important;
     color: var(--c-text-2) !important;
 }
+
+.markdown-body em {
+    font-style: italic;
+}
+
 .markdown-body ol, .markdown-body ul, .markdown-body li {
     list-style: disc;
 }
