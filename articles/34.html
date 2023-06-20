@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>axios重发设计方案 - 小埃的个人博客</title>
+    <link rel="stylesheet" href="../css/reset.css">
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/index.css">
+    <link rel="stylesheet" href="../css/header.css">
+    <link rel="stylesheet" href="../css/mobile.css">
+    <link rel="stylesheet" href="../css/theme-light.css">
+    <link rel="shortcut icon" href="../favicon.ico" type="image/x-icon">
+        <meta name="keywords" content="axios,重发请求,刷新令牌,jwt">
+    <link rel="stylesheet" href="../css/article.css">
+    <link rel="stylesheet" href="../css/markdown/github-markdown.css">
+    <link rel="stylesheet" href="../css/markdown/github-markdown-light.css">
+    <link rel="stylesheet" href="../css/gittalk-cover.css">
+    <link rel="stylesheet"
+          href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</head>
+<body>
+<div id="app">
+    <div id="header">
+    <div id="bar">
+        <div class="container mg-0-auto d-f">
+            <div class="logo">
+                <a href="../" class="nav-link">
+                    <img src="../image/portal/logo.jpg" alt="小埃的个人博客">
+                </a>
+            </div>
+            <div class="right">
+                <ul class="nav f-l">
+                        <li class="nav-item">
+                            <a href="../index.html" class="nav-link active">
+                                <span>首页</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="../category.html" class="nav-link ">
+                                <span>分类</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="../about.html" class="nav-link ">
+                                <span>关于</span>
+                            </a>
+                        </li>
+                </ul>
+                <div class="eb-title">
+                    小埃的个人博客
+                </div>
+                <div id="search">
+                    <input type="text" id="search-input" data-prefix="../" placeholder="搜索" autocomplete="off" />
+                    <span class="search-icon t-a">
+                        <img class="el-icon-search" src="../image/portal/search.png" width="16" height="16">
+                    </span>
+                    <div id="search-result">
+                        <input type="text" class="input-1" id="search-input-2" data-prefix="../" placeholder="请输入" autocomplete="off" />
+                        <div class="content">
+                        </div>
+                        <div class="arrow"></div>
+                    </div>
+                </div>
+                <div class="eb-menu">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-list-ul" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M5 11.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm-3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm0 4a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm0 4a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    <div id="main">
+        <div class="container mg-0-auto pd-t-10">
+            <div class="left">
+                <article class="mg-b-20">
+                    <div class="markdown-body">
+                        <div class="title">axios重发设计方案</div>
+                        <div class="item meta mg-b-10">
+                            <span class="author">由<a href="javascript:void(0);">errol</a>发表于<a href="#">2023-06-17 11:46:38</a></span>
+                            <span>|</span>
+                            <span class="time">
+                            分类为
+                            <a href="../categories/1.html">编程</a></span>
+                            <span>|</span>
+                            <span class="tags">
+                                标签为<a href="javascript:void(0);">axios</a>、<a href="javascript:void(0);">重发请求</a>、<a href="javascript:void(0);">刷新令牌</a>、<a href="javascript:void(0);">jwt</a>
+                            </span>
+                        </div>
+                            <div class="cover mg-b-10">
+                                <img src="../image/portal/202306/a4526b56530d4182b380c30c46171583-7899e59abab5e08a2271fa31444f58ff.jpeg" alt="">
+                            </div>
+                        <div class="content">
+                            <p>axios是现如今web前端领域中比较流行的一个http客户端，它基于promise封装，不仅体积小巧、简单易用，还具有很强的拓展性，使得它非常灵活多变，可以适应不同的环境场景。因此，axios深得web前端开发者的喜爱，已经成为前端web项目中的&quot;标配&quot;。</p>
+<p>通常情况下，&quot;授权认证&quot;是一个项目系统中不可或缺的一部分，在以往传统的web项目中，都是采用基于session+cookie的认证方案，这套体系已经相当成熟，几乎所有语言的web开发框架都内置了这套经典的认证方案，如spring、express等，只需要添加很少的配置依赖即可使用；但在前后端分离的环境中，很少再使用这套认证方式，取而代之的是基于token的认证方案。</p>
+<p>token认证一般指的是，在通过用户认证之后，在请求中携带由服务器颁发&quot;令牌&quot;（即token）访问服务器时，服务器对&quot;令牌&quot;进行校验的一个过程，比如判断token是否还有效、判断持有该token的用户是否具有某些权限等等，只有校验通过才会放行。</p>
+<p>跟session一样，一般会把token的有效期设置得比较短（如1，2小时不等），以减少数据泄露的风险，从而提升账号的安全性。</p>
+<p>但与session认证不同的是，token默认情况下，不具备&quot;刷新&quot;的机制：基于session的认证会在session快过期的时候，对session进行&quot;刷新&quot;，使得访问服务器得以正常继续；而基于token的认证在token过期时，只能重新颁发一组令牌，所引发的结果就是强制用户重新登陆，而如果在用户使用系统过程中遇到这种情况，那将会是非常糟糕的用户体验。</p>
+<p>对于这个问题，有两种处理思路：</p>
+<ul>
+<li>在请求前判断token是否过期（或接近过期），如果过期了，就先向服务器请求刷新token后，携带新的token再请求服务器；</li>
+<li>在服务器返回token过期的响应后，向服务器请求刷新token，再重发因token过期而请求失败的请求。</li>
+</ul>
+<p>两种方式都有优缺点，对于第一种方式，因为是在前端判断token是否过期，所以会少发送一次请求，但相对的是，服务器要返回判断token是否过期的依据给前端；第二种刚好相反，由于token过期判断逻辑放在服务器，因此会比第一种方式多请求一次。</p>
+<p>综合考虑之下，作者选择了第二种处理思路，一方面作者本人觉得，项目系统中承担主要责任的是后端服务器，不应该把问题抛给前端处理；另一方面，作者还觉得将逻辑放在服务器更有安全感。</p>
+<p>顺着这个思路，下面正式开始本文的主题。</p>
+<h2>axios重发原理</h2>
+<p>主要依赖了<strong>拦截器</strong>和<strong>promise</strong>两个点。</p>
+<p>利用拦截器，我们都是可以主动控制axios的返回数据的，请求失败也不例外。</p>
+<p>利用拦截器，我们可以实现，当因会话过期导致请求数据失败时，先让Promise原地等待，不让它进行决策（resolve），我们可以利用其等待的时间，重新向服务器刷新令牌，等令牌刷新成功后，因登陆过期而请求失败的接口，在带上新的令牌之后，也就能通过认证了。</p>
+<p>即使请求失败了，也先不让Promise进行决策，这样它就会处于Pending状态，阻塞等待期间，我们向服务器发起刷新令牌的请求，一般情况下，都可以在请求失败接口等待期间，完成令牌的刷新工作，此后，请求失败的接口带上新的令牌，重新向服务器请求数据。</p>
+<p>至此，重发的流程结束。</p>
+<h2>配置axios</h2>
+<h3>axios实例</h3>
+<p>此处创建了一个基本的axios实例，后续会将该实例暴露出去供其他地方使用；此外还准备了一些必要的数据。</p>
+<pre><code class="language-javascript">import { refresh } from '@/api/index';
+import { Message, MessageBox } from 'element-ui';
+import bus from &quot;@/util/bus.js&quot;;
+
+const maxRetryingCount = 3; // 最大重发次数
+const queue = []; // 请求队列
+
+let retrying = false;
+
+const service = axios.create({
+    baseURL: &quot;http://localhost:8888/&quot;,
+    timeout: 5000,
+    retryingCount: maxRetryingCount
+});
+
+function release(ok) {
+    if (queue.length) {
+        for (const handler of queue) {
+            handler(ok);
+        }
+        // 释放队列
+        queue.length = 0;
+    }
+}
+
+// ...
+
+export default service;
+</code></pre>
+<h3>设置请求拦截器</h3>
+<p>本文的请求拦截器非常简单，主要是检查本地是否存在token，如果存在，则往请求头中写入数据。</p>
+<pre><code class="language-javascript">// 此处从localStorage中读取token
+export const tokenInterceptor = config =&gt; {
+    const accessToken = window.localStorage.getItem(&quot;accessToken&quot;);
+    if (accessToken) {
+        config.headers[&quot;Authorization&quot;] = `Bearer ${accessToken}`;
+    }
+    return config;
+}
+
+service.interceptors.request.use(
+    tokenInterceptor,
+    error =&gt; {
+        console.log(error);
+        return Promise.reject(error);
+    }
+);
+</code></pre>
+<h3>状态码处理器</h3>
+<p>相对来说，响应拦截器要比请求拦截器更复杂一些，它主要的功能是根据服务器返回的状态码做出下一步动作，如弹出提示信息、正常返回数据等。</p>
+<p>由于请求的响应方式有&quot;正常响应&quot;和&quot;错误响应&quot;两种，即后端开发在响应某个请求的时候，可能是以状态码为200的正常响应形式返回，也可能是以400、401、405等错误状态码的错误响应形式返回，&quot;错误响应&quot;将会被错误处理器或回调处理，&quot;正常响应&quot;则会进入标准处理流程，因此前端作为被动接受的一方，最好是把这两种情况都考虑在内，以防止后续出现奇怪的问题。</p>
+<p>为了方便调用，此处把所有的逻辑都封装成了一个函数形式。</p>
+<p>该处理器会在服务器返回40101状态码的时候，尝试向服务器刷新令牌，刷新成功再把失败的请求重发一遍，达到了用户<strong>无感登陆</strong>的效果。</p>
+<pre><code class="language-javascript">// 状态码处理器
+async function respHandler(resp) {
+    const data = resp.data;
+    switch (data.code) {
+        case 0:
+            return data;
+        // 未登录或accessToken过期
+        case 40101:
+            const refreshToken = window.localStorage.getItem(&quot;refreshToken&quot;);
+            // 若请求某个请求返回&quot;未登录&quot;且刷新令牌也为空时，则提示用户重新登陆
+            if (!refreshToken) {
+                return MessageBox(&quot;请先登录&quot;, &quot;提示&quot;, {
+                    confirmButtonText: '确定'
+                }).then(() =&gt; {});
+            }
+            if (!retrying) {
+                retrying = true;
+                try {
+                    const refreshResp = await refresh({ refreshToken });
+                    if (!refreshResp || refreshResp.code !== 0) {
+                        throw new Error('刷新失败');
+                    }
+                    const { accessToken, refreshToken: _new } = refreshResp.data;
+                    window.localStorage.setItem(&quot;accessToken&quot;, accessToken);
+                    if (_new) {
+                        window.localStorage.setItem(&quot;refreshToken&quot;, _new);
+                    }
+                    bus.$emit('refresh:token', { accessToken, refreshToken: _new });
+                    // 刷新成功后，重新发起请求
+                    release(true);
+                    return service(resp.config);
+                } catch (error) {
+                    console.error(&quot;刷新请求出现错误：&quot;, error);
+                    window.localStorage.setItem(&quot;accessToken&quot;, &quot;&quot;);
+                    bus.$emit('clear:token', { accessToken: true });
+                } finally {
+                    retrying = false;
+                }
+            }
+            // 在并发请求的情况下，将后续的请求加入队列
+            else {
+                return new Promise((resolve, reject) =&gt; {
+                    queue.push((ok) =&gt; {
+                        // 刷新成功成功后，重新发起请求
+                        if (ok) {
+                            resolve(service(resp.config));
+                        }
+                        else {
+                            reject('refreshing failure.');
+                        }
+                    });
+                });
+            }
+            break;
+        case 40198:
+            window.localStorage.setItem(&quot;refreshToken&quot;, &quot;&quot;);
+            bus.$emit('clear:token', { refreshToken: true });
+            Message.error(data.message || &quot;请重新登陆&quot;);
+            break;
+        default:
+            Message.error(data.message || &quot;系统发生异常&quot;);
+    }
+    return data;
+}
+</code></pre>
+<h3>设置响应拦截器</h3>
+<p>正常响应部分直接交由状态码处理器处理即可，但错误响应部分需要做特殊处理，有这样的规则：如果错误对象有请求响应结果response，就将错误交给状态码处理器处理，否则将错误抛给下游，进入重发逻辑或直接返回。</p>
+<pre><code class="language-javascript">service.interceptors.response.use(
+    response =&gt; {
+        return respHandler(response);
+    },
+    error =&gt; {
+        if (error.response) {
+            return respHandler(error.response);
+        }
+
+        // 可以拓展更多的需要重发请求的情况
+        if (error.code === 'ECONNABORTED' || error.message.includes('timeout of')) {
+            if (error.config.retryingCount &gt; 0) {
+                error.config.retryingCount--;
+                let current = Math.abs(error.config.retryingCount - maxRetryingCount);
+                console.error(&quot;第&quot; + current + &quot;次重发中...&quot;);
+                return service(error.config);
+            }
+            console.error(&quot;[&quot; + error.config.url + &quot;] 请求失败，总次数为：&quot; + maxRetryingCount);
+            release(false);
+        }
+
+        Message.error(error.message || &quot;系统发生异常&quot;);
+        return Promise.reject(error);
+    }
+);
+</code></pre>
+<h2>使用封装的axios</h2>
+<p>可以看到，在点击&quot;获取数据&quot;的时候，由于&quot;未登录&quot;导致数据获取失败，接着自动发起刷新令牌请求，最后再携带新的令牌请求服务器，最终成功获取到数据。</p>
+<p>&lt;video controls autoplay height='100%' width='100%' src='https://xxzhiwei.oss-cn-beijing.aliyuncs.com/15ABAAB5AFD202C01DBAFE25F032B9A4.mp4'&gt;&lt;/video&gt;</p>
+<p>本文章所用到的<a href="https://github.com/xxzhiwei/demo/tree/main/axios-refreshingToken-demo">demo</a>存放在这里，需要的读者可以自行下载测试。</p>
+<h2>结语</h2>
+<p>总的来说，重发请求是一个常见且有用的小功能，但由于日常的开发中，没有真正遇到过这样的场景（基本上都是直接呼用户重新登陆），因此之前封装的axios总是存在着各种各样的毛病和问题，用起来很别扭，这也是写下本文章的直接原因。</p>
+<p>中途参考了很多大佬的文章，才得以完成了这个自己比较满意的版本，非常感谢他们。</p>
+<p>可能还会存在问题或不合理之处，届时请不吝赐教。</p>
+<hr />
+<p>参考文章：</p>
+<ul>
+<li><a href="https://zhuanlan.zhihu.com/p/80125501?utm_id=0">https://zhuanlan.zhihu.com/p/80125501?utm_id=0</a></li>
+<li><a href="https://juejin.cn/post/7188038078865342521">https://juejin.cn/post/7188038078865342521</a></li>
+</ul>
+
+                        </div>
+                    </div>
+                </article>
+                <div class="comment-wrap">
+                        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+                        <script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+                        <div id="gitalk-container"></div>
+                        <script>
+                            const gitalk = new Gitalk({
+                                clientID: 'ae1422e500a8b19fb1fc',
+                                clientSecret: '9f387db6a84a4945cdf5dc743c16ce25fdef6b76',
+                                repo: 'github-pages',      // The repository of store comments,
+                                owner: 'xxzhiwei',
+                                admin: ['xxzhiwei'],
+                                id: location.pathname,      // Ensure uniqueness and length less than 50
+                                distractionFreeMode: false  // Facebook-like distraction free mode
+                            });
+                            gitalk.render('gitalk-container');
+                        </script>
+                </div>
+            </div>
+            <div class="right">
+            </div>
+        </div>
+    </div>
+    <div class="back">返回</div>
+</div>
+    <script src="../js/dataList.js"></script>
+    <script src="../js/lazy.js"></script>
+    <script src="../js/search.js"></script>
+    <script src="../js/menu.js"></script>
+<script>
+    let back = document.querySelector(".back");
+    back.addEventListener("click", function () {
+        window.history.go(-1);
+    });
+</script>
+</body>
+</html>
