@@ -260,9 +260,16 @@ async function respHandler(resp) {
 );
 </code></pre>
 <h2>使用封装的axios</h2>
+<p>本文章所用到的<a href="https://github.com/xxzhiwei/demo/tree/main/axios-refreshingToken-demo">demo</a>存放在这里，需要的读者可以自行下载测试。</p>
+<h3>测试刷新令牌</h3>
 <p>可以看到，在点击&quot;获取数据&quot;的时候，由于&quot;未登录&quot;导致数据获取失败，接着自动发起刷新令牌请求，最后再携带新的令牌请求服务器，最终成功获取到数据。</p>
 <p><video controls autoplay muted height='100%' width='100%' src='https://xxzhiwei.oss-cn-beijing.aliyuncs.com/15ABAAB5AFD202C01DBAFE25F032B9A4.mp4'></video></p>
-<p>本文章所用到的<a href="https://github.com/xxzhiwei/demo/tree/main/axios-refreshingToken-demo">demo</a>存放在这里，需要的读者可以自行下载测试。</p>
+<h3>测试重发请求</h3>
+<p>此处最大请求次数为三，如果超过三次没能成功获取数据则不再重试。</p>
+<p>1、成功的请求如下</p>
+<p><video controls autoplay height='100%' width='100%' src='https://xxzhiwei.oss-cn-beijing.aliyuncs.com/large.mov'></video></p>
+<p>2、失败的请求如下</p>
+<p><video controls autoplay height='100%' width='100%' src='https://xxzhiwei.oss-cn-beijing.aliyuncs.com/large-2.mov'></video></p>
 <h2>结语</h2>
 <p>总的来说，重发请求是一个常见且有用的小功能，但由于作者的日常开发中，没有真正遇到过这样的场景（基本上都是直接呼用户重新登陆），因此之前封装的axios总是存在着各种各样的毛病和问题，用起来很别扭，这也是写下本文章的直接原因。</p>
 <p>现在一次性把这些问题都解决了，心中的烦闷也随之消散，好不痛快！</p>
