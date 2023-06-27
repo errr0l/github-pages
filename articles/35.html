@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>树形结构数据工具类的设计与实现 - 小埃的个人博客</title>
+    <link rel="stylesheet" href="../css/reset.css">
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/index.css">
+    <link rel="stylesheet" href="../css/header.css">
+    <link rel="stylesheet" href="../css/mobile.css">
+    <link rel="stylesheet" href="../css/theme-light.css">
+    <link rel="shortcut icon" href="../favicon.ico" type="image/x-icon">
+        <meta name="keywords" content="树形结构数据,设计与实现,通用接口">
+    <link rel="stylesheet" href="../css/article.css">
+    <link rel="stylesheet" href="../css/markdown/github-markdown.css">
+    <link rel="stylesheet" href="../css/markdown/github-markdown-light.css">
+    <link rel="stylesheet" href="../css/gittalk-cover.css">
+    <link rel="stylesheet"
+          href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</head>
+<body>
+<div id="app">
+    <div id="header">
+    <div id="bar">
+        <div class="container mg-0-auto d-f">
+            <div class="logo">
+                <a href="../" class="nav-link">
+                    <img src="../image/portal/logo.jpg" alt="小埃的个人博客">
+                </a>
+            </div>
+            <div class="right">
+                <ul class="nav f-l">
+                        <li class="nav-item">
+                            <a href="../index.html" class="nav-link active">
+                                <span>首页</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="../category.html" class="nav-link ">
+                                <span>分类</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="../about.html" class="nav-link ">
+                                <span>关于</span>
+                            </a>
+                        </li>
+                </ul>
+                <div class="eb-title">
+                    小埃的个人博客
+                </div>
+                <div id="search">
+                    <input type="text" id="search-input" data-prefix="../" placeholder="搜索" autocomplete="off" />
+                    <span class="search-icon t-a">
+                        <img class="el-icon-search" src="../image/portal/search.png" width="16" height="16">
+                    </span>
+                    <div id="search-result">
+                        <input type="text" class="input-1" id="search-input-2" data-prefix="../" placeholder="请输入" autocomplete="off" />
+                        <div class="content">
+                        </div>
+                        <div class="arrow"></div>
+                    </div>
+                </div>
+                <div class="eb-menu">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-list-ul" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M5 11.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm-3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm0 4a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm0 4a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    <div id="main">
+        <div class="container mg-0-auto pd-t-10">
+            <div class="left">
+                <article class="mg-b-20">
+                    <div class="markdown-body">
+                        <div class="title">树形结构数据工具类的设计与实现</div>
+                        <div class="item meta mg-b-10">
+                            <span class="author">由<a href="javascript:void(0);">errol</a>发表于<a href="#">2023-06-27 11:22:43</a></span>
+                            <span>|</span>
+                            <span class="time">
+                            分类为
+                            <a href="../categories/1.html">编程</a></span>
+                            <span>|</span>
+                            <span class="tags">
+                                标签为<a href="javascript:void(0);">树形结构数据</a>、<a href="javascript:void(0);">设计与实现</a>、<a href="javascript:void(0);">通用接口</a>
+                            </span>
+                        </div>
+                        <div class="content">
+                            <p>树形结构数据是一种比较常见的数据格式，主要作为前端树形、级联等控件的数据源，以更清晰、更美观大方地展示数据之间的层次或所属关系，如常常用于表示&quot;权限/菜单&quot;、&quot;分类&quot;、&quot;地区/区域&quot;、&quot;公司部门&quot;等具有隶属关系的信息。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202306/56a7c3cb464745968cb5de1804ff0c9c-D479211871E282822984D1DC5A455E0C.jpg" /></p>
+<p><em>图1 级联选择器</em></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202306/530614e3815f462c837fecd8ef436869-1AF581EB508FF945E225AEDCA0232687.jpg" /></p>
+<p><em>图2 树形控件</em></p>
+<p>组件所使用的数据，即树形结构数据，主要是以下面的格式出现，其中我们称数据中的每个对象为&quot;节点&quot;，按照隶属关系，还可以分为两种类型，一种是父节点，另一种是子节点。其中有一种父节点更为特殊，它处于最顶部，没有父节点，因此我们也常称其为&quot;根节点&quot;；&quot;children&quot;被称为当前节点的&quot;子节点&quot;。</p>
+<pre><code class="language-json">[
+    {
+        &quot;name&quot;: &quot;xxx&quot;,
+        &quot;children&quot;: [
+            {
+                &quot;name&quot;: &quot;xxx&quot;,
+                &quot;children&quot;: null,
+                &quot;id&quot;: 3,
+                &quot;parentId&quot;: 1
+            },
+        ],
+        &quot;id&quot;: 1,
+        &quot;parentId&quot;: -1
+    },
+    ...
+]
+</code></pre>
+<p>不过，一般情况下，数据库或其他存储方式不会直接存储这种具有层次关系的数据，数据往往都以扁平的形式存在，仅通过某个字段属性来表示它们之间的关系（如上面所示的parent_id属性），一方面是为了更容易查询，另一方面是为了让存储数据更通用、更容易操作。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202306/d43f939cded04f42ba1bd963881185c6-8870DE2C3403E4F4AB8F7BF0E32D763A.jpg" /></p>
+<p><em>图3 存储在数据库中的商品分类</em></p>
+<p><strong>所以实际上，这种格式的数据，是需要专门编写方法或函数来生成的，这也正是本篇文章的主题所在。</strong></p>
+<p>作者在网上查询过很多树形结构数据的实现方案，但由于大家的个性风格与编程思维都各不相同，所以几乎每个人的实现方式都不大一样，有点写得比较复杂，有的写得比较难让人理解，还有的虽然写得简单，但并不通用。</p>
+<p>总体上的特点，就是经常是传入一些硬编码的数据类型，限制了生成树形结构数据方法的通用性，这样就会导致出现很多重复的代码，比如，昨天&quot;权限菜单&quot;需要树形结构数据，这需要编写一套方法，而今天&quot;公司部门&quot;也需要树形结构数据，由于方法不具备通用性，因此也必须再编写另一套方法。</p>
+<blockquote>
+<p>这样既不美观，后期也不好维护。</p>
+</blockquote>
+<p>我想要的是一个更通用、更简单的实现方案，以方便维护和管理，因此，以上查询到的方案并不符合我的需求，决定自己手动写一套方案。<del>（在考虑到并不难实现之后...）</del></p>
+<h3>一、定义类</h3>
+<p>以下将生成树形结构数据的类声明为&quot;TreeMaker&quot;，这个类只对外暴露一个&quot;make&quot;方法，调用这个方法后，传入的数据就能转为树形结构格式数据。</p>
+<pre><code class="language-java">public class TreeMaker {
+    public static &lt;T extends TreeNode&lt;T&gt;&gt; List&lt;T&gt; make(List&lt;T&gt; list) {
+        // ...
+    }
+    
+    private static &lt;T extends TreeNode&lt;T&gt;&gt; List&lt;T&gt; makeChildren(T parent, List&lt;T&gt; list, List&lt;T&gt; toRemove) {
+        // ...
+    }
+}
+</code></pre>
+<h3>二、准备接口</h3>
+<p>想要具有通用性，接口是必要的。</p>
+<p>首先要准备的是TreeNode接口，这个接口接收一个泛型参数T，参数对应的正是实际的数据类型，所有想要使用本生成树形结构数据方法的数据类型，都必须要实现该接口。</p>
+<pre><code class="language-java">public interface TreeNode&lt;T&gt; {
+    void setChildren(List&lt;T&gt; children);
+    boolean isRootNode();
+    boolean isParentNode(T node);
+}
+</code></pre>
+<p>这个接口主要有三个方法：</p>
+<ul>
+<li>isRootNode()：用于判断某个节点是否为根节点；</li>
+<li>isParentNode(T node)：判断当前节点是否为传入节点的父节点；</li>
+<li>setChildren(List&lt;T&gt; children)：为节点设置children子节点。</li>
+</ul>
+<p>实现的逻辑需要根据实际的数据类型而定。</p>
+<h3>三、编写TreeMaker类方法的逻辑</h3>
+<h4>1、make方法</h4>
+<pre><code class="language-java">public static &lt;T extends TreeNode&lt;T&gt;&gt; List&lt;T&gt; make(List&lt;T&gt; list) {
+    if (list == null || list.size() == 0) {
+        return new ArrayList&lt;&gt;();
+    }
+    List&lt;T&gt; rootNodes = list.stream().filter(T::isRootNode).collect(Collectors.toList());
+    list.removeAll(rootNodes);
+
+    List&lt;T&gt; toRemove = new ArrayList&lt;&gt;();
+    for (T rootNode : rootNodes) {
+        makeChildren(rootNode, list, toRemove);
+        if (toRemove.size() &gt; 0) {
+            // 将已经处理过的节点从列表中删除
+            list.removeAll(toRemove);
+            toRemove.clear();
+        }
+    }
+
+    return rootNodes;
+}
+</code></pre>
+<h4>2、makeChildren</h4>
+<pre><code class="language-java">private static &lt;T extends TreeNode&lt;T&gt;&gt; List&lt;T&gt; makeChildren(T parent, List&lt;T&gt; list, List&lt;T&gt; toRemove) {
+
+    List&lt;T&gt; children = new ArrayList&lt;&gt;();
+
+    for (T node : list) {
+        if (parent.isParentNode(node)) {
+            toRemove.add(node);
+            // 递归添加节点
+            node.setChildren(makeChildren(node, list, toRemove));
+            children.add(node);
+        }
+    }
+    if (children.size() &gt; 0) {
+        parent.setChildren(children);
+        return children;
+    }
+
+    return null;
+}
+</code></pre>
+<h3>四、使用TreeMaker</h3>
+<p>本篇文章的<a href="https://github.com/xxzhiwei/demo/tree/main/treeMaker-demo">demo</a>放在这里，需要的读者自行下载。</p>
+<p>在完成了以上的逻辑后，整个生成树形结构数据的方案也宣告完成了，但在使用TreeMaker之前，还差最后一步，其实前面也有提到过，<strong>想要使用TreeMaker的数据类型，必须要实现TreeNode接口。</strong></p>
+<h4>1、实现TreeNode接口</h4>
+<p>下面的测试数据TestNode类型为例，该类型判断为&quot;根节点&quot;的逻辑比较简单，如果&quot;parentId&quot;属性为null，则认定其为根节点；而如果判断某个节点的&quot;parentId&quot;与当前节点的&quot;id&quot;相同，则会认定传入的节点为当前节点的子节点。</p>
+<pre><code class="language-java">public class TestNode implements TreeMaker.TreeNode&lt;TestNode&gt; {
+    // ... 省略
+    @JSONField(serialize = false)
+    public boolean isRootNode() {
+        return parentId == null;
+    }
+
+    public boolean isParentNode(TestNode node) {
+        return id.equals(node.parentId);
+    }
+
+    public void setChildren(List&lt;TestNode&gt; children) {
+        this.children = children;
+    }
+
+    public List&lt;TestNode&gt; getChildren() {
+        return children;
+    }
+}
+</code></pre>
+<p>为了测试方法的通用性，此处还额外准备了另一种数据类型，其实现接口的逻辑不同于TestNode类型。</p>
+<pre><code class="language-java">public class TestCategory implements TreeMaker.TreeNode&lt;TestCategory&gt; {
+    // ... 省略
+    @JSONField(serialize = false)
+    public boolean isRootNode() {
+        return pId.equals(-1); // 此处判断是否为根节点的依据是其pId是否为-1
+    }
+
+    public boolean isParentNode(TestCategory node) {
+        return id.equals(node.pId);
+    }
+
+    public void setChildren(List&lt;TestCategory&gt; children) {
+        this.children = children;
+    }
+
+    public List&lt;TestCategory&gt; getChildren() {
+        return children;
+    }
+}
+</code></pre>
+<h4>2、准备测试类、测试数据和测试方法</h4>
+<pre><code class="language-java">public class Test {
+    public static void main(String[] args) {
+        example1();
+    }
+    
+    /**
+     * 测试方法1
+     * ---
+     * id/name/parent_id
+     * ---
+     * 1/node-1/null
+     * 2/node-2/null
+     * 3/node-3/1
+     * 4/node-4/1
+     * 5/node-5/4
+     * 6/node-6/2
+     * 7/node-7/5
+     * 8/node-8/5
+     * 9/node-9/2
+     * 10/node-10/2
+     */
+    public static void example1() {
+        List&lt;TestNode&gt; list = new ArrayList&lt;&gt;();
+    
+        TestNode n1 = new TestNode(1, &quot;node-1&quot;, null);
+        TestNode n2 = new TestNode(2, &quot;node-2&quot;, null);
+        list.add(n1);
+        list.add(n2);
+    
+        TestNode n3 = new TestNode(3, &quot;node-3&quot;, 1);
+        TestNode n4 = new TestNode(4, &quot;node-4&quot;, 1);
+        TestNode n5 = new TestNode(5, &quot;node-5&quot;, 4);
+        TestNode n6 = new TestNode(6, &quot;node-6&quot;, 2);
+        TestNode n7 = new TestNode(7, &quot;node-7&quot;, 5);
+        TestNode n8 = new TestNode(8, &quot;node-8&quot;, 5);
+        TestNode n9 = new TestNode(9, &quot;node-9&quot;, 2);
+        TestNode n10 = new TestNode(10, &quot;node-19&quot;, 2);
+    
+        list.add(n3);
+        list.add(n4);
+        list.add(n5);
+        list.add(n6);
+        list.add(n7);
+        list.add(n8);
+        list.add(n9);
+        list.add(n10);
+    
+        List&lt;TestNode&gt; t = TreeMaker.make(list);
+    
+        // 使用fastjson将列表转为json字符串
+        String treeJson = JSON.toJSONString(t, SerializerFeature.WriteMapNullValue);
+    
+        String path = &quot;/Users/xieshixin/personalplace/demo/treeMaker-demo/tree.json&quot;;
+        write(path, treeJson);
+    }
+    
+    /**
+     * 测试方法2
+     * ---
+     * id/category_name/p_id
+     * ---
+     * 1/数码/-1
+     * 2/服装/-1
+     * 3/手机/1
+     * 4/笔记本/1
+     * 5/耳机/1
+     * 6/外套/2
+     * 7/衬衫/2
+     * 8/牛仔裤/2
+     * 9/休闲裤/2
+     * 10/电器/-1
+     * 11/冰箱/10
+     * 12/电磁炉/10
+     */
+    public static void example2() {
+        List&lt;TestCategory&gt; list = new ArrayList&lt;&gt;();
+        
+        // 根节点
+        TestCategory n1 = new TestCategory(1, &quot;数码&quot;, -1);
+        TestCategory n2 = new TestCategory(2, &quot;服装&quot;, -1);
+        TestCategory n3 = new TestCategory(10, &quot;电器&quot;, -1);
+
+        list.add(n1);
+        list.add(n2);
+        list.add(n3);
+
+        TestCategory n4 = new TestCategory(3, &quot;手机&quot;, 1);
+        TestCategory n5 = new TestCategory(4, &quot;笔记本&quot;, 1);
+        TestCategory n6 = new TestCategory(5, &quot;耳机&quot;, 1);
+        TestCategory n7 = new TestCategory(6, &quot;外套&quot;, 2);
+        TestCategory n8 = new TestCategory(7, &quot;衬衫&quot;, 2);
+        TestCategory n9 = new TestCategory(8, &quot;牛仔裤&quot;, 2);
+        TestCategory n10 = new TestCategory(9, &quot;休闲裤&quot;, 2);
+        TestCategory n11 = new TestCategory(11, &quot;冰箱&quot;, 10);
+        TestCategory n12 = new TestCategory(12, &quot;电磁炉&quot;, 10);
+
+        list.add(n4); list.add(n5); list.add(n6); list.add(n7); list.add(n8); list.add(n9);
+        list.add(n10); list.add(n11); list.add(n12);
+
+        String path = &quot;/Users/xieshixin/personalplace/demo/treeMaker-demo/category-tree.json&quot;;
+
+        List&lt;TestCategory&gt; t = TreeMaker.make(list);
+
+        String treeJson = JSON.toJSONString(t, SerializerFeature.WriteMapNullValue);
+        write(path, treeJson);
+    }
+    
+    public static void write(String path, String data) {
+        Writer writer = null;
+        
+        try {
+            writer = new FileWriter(path);
+            writer.write(data);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (writer != null) {
+                try {
+                    writer.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+}
+</code></pre>
+<p>执行测试类的入口方法后，将会得到以下的数据。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202306/f2985a66f6714bdcb4e1be8c7ebba2a8-257E814066EEAFF865E8D07FCC67A1BF.png" /></p>
+<p><em>图4 结果1</em></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202306/6acf667150ae4012bf0459fbb41c39f3-42E80EB9-090F-4B94-8EBA-48F19B2506E9.png" /></p>
+<p><em>图5 结果2</em></p>
+<hr />
+<p>至此，本篇文章也进入尾声了。</p>
+<p>虽然生成树形结构数据的代码算不上复杂，但是如果平时不注意，总是以硬编码的形式来实现的话，难免会出现很多无用、重复的逻辑，一个项目中出现一两处还可以接受，而几个以上的项目多处出现这种功能相同、实现有差异的代码的话，维护难度是不言而喻的，仅仅是看到都会觉得烦，更别说改了。</p>
+<p>不仅仅是生成树形结构数据的这个功能，其他的模块也会存在相同的情况，因此，想要避免这种情况的发生，必须从日常的点点开始做起，把功能抽象，再抽象，使之变得通用、广泛，这样后期的修改维护和管理，都会变得更简单。</p>
+<p>以上就是本文的所有内容，希望对读者有所帮助。</p>
+
+                        </div>
+                    </div>
+                </article>
+                <div class="comment-wrap">
+                        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+                        <script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+                        <div id="gitalk-container"></div>
+                        <script>
+                            const gitalk = new Gitalk({
+                                clientID: 'ae1422e500a8b19fb1fc',
+                                clientSecret: '9f387db6a84a4945cdf5dc743c16ce25fdef6b76',
+                                repo: 'github-pages',      // The repository of store comments,
+                                owner: 'xxzhiwei',
+                                admin: ['xxzhiwei'],
+                                id: location.pathname,      // Ensure uniqueness and length less than 50
+                                distractionFreeMode: false  // Facebook-like distraction free mode
+                            });
+                            gitalk.render('gitalk-container');
+                        </script>
+                </div>
+            </div>
+            <div class="right">
+            </div>
+        </div>
+    </div>
+    <div class="back">返回</div>
+</div>
+    <script src="../js/dataList.js"></script>
+    <script src="../js/lazy.js"></script>
+    <script src="../js/search.js"></script>
+    <script src="../js/menu.js"></script>
+<script>
+    let back = document.querySelector(".back");
+    back.addEventListener("click", function () {
+        window.history.go(-1);
+    });
+</script>
+</body>
+</html>
