@@ -100,8 +100,13 @@
     void cleanupMultipart(MultipartHttpServletRequest request);
 };
 </code></pre>
-<p>在Spring 3.1以后，Spring提供了两种MultipartResolver接口的实现，一个是<strong>CommonsMultipartResolver</strong>，另一为<strong>StandardServletMultipartResolver</strong>。</p>
-<p>对于CommonsMultipartResolver来说，其本身需要依赖Apache的fileupload和commons-io两个jar包；StandardServletMultipartResolver虽然不需要依赖其他的jar包，但要求Servlet的版本在3.0以上，也就是需要Tomcat的版本在7.0以上（一般java都会使用tomcat作为项目部署的服务器），主要是因为使用到了Servlet 3.0以后才会有的<a href="https://docs.oracle.com/javaee/6/api/javax/servlet/http/HttpServletRequest.html#getParts()">getParts</a>方法，来获取请求中multipart/form-data类型的数据。</p>
+<p>在Spring 3.1以后，Spring提供了两种MultipartResolver接口的实现：</p>
+<ul>
+<li>CommonsMultipartResolver</li>
+<li>StandardServletMultipartResolver</li>
+</ul>
+<p>对于CommonsMultipartResolver来说，其本身需要依赖Apache的fileupload和commons-io两个jar包；</p>
+<p>StandardServletMultipartResolver虽然不需要依赖其他的jar包，但要求Servlet的版本在3.0以上，也就是需要Tomcat的版本在7.0以上（一般java都会使用tomcat作为项目部署的服务器），主要是因为使用到了Servlet 3.0以后才会有的<a href="https://docs.oracle.com/javaee/6/api/javax/servlet/http/HttpServletRequest.html#getParts()">getParts</a>方法，来获取请求中multipart/form-data类型的数据。</p>
 <p>两种实现都有各自的特点，可根据实际的场景选择其中一种方案。</p>
 <h3>一、配置MultipartResolver</h3>
 <p>若想要在spring web项目中用MultipartResolver的文件解析功能，就必须先配置MultipartResolver，可以使用配置文件或注解的形式进行配置实例对象。</p>
@@ -109,20 +114,21 @@
 <p>如下图为使用xml的形式将StandardServletMultipartResolver加入ioc容器。</p>
 <p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202307/0461e1f1ca2a48f7bcd5d9bae816bb76-DETDeev.HoeJPefrAMATBOnORGMAAASAAANSPP.jpg" /></p>
 <p><em>图1 springmvc.xml</em></p>
-<p>同时，根据文档要求，MultipartResolver必须指定上传文件和请求的大小上限，以下为在web.xml中配置了MultipartResolver的参数，同时还配置了接管所有请求的DispatcherServlet。</p>
+<p>同时，根据文档要求，MultipartResolver必须指定上传文件和请求的大小上限，以下为在web.xml中配置了MultipartResolver的参数multipart-config，此外还配置了接管所有请求的DispatcherServlet。</p>
 <p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202307/5b4f58a4983d43e996dfbbd29a134d74-2.png" /></p>
 <p><em>图2 web.xml</em></p>
 <h3>二、MultipartResolver解析请求中的文件数据</h3>
-<p>加入ioc容器的StandardServletMultipartResolver，会在接收到请求的时候被调用，该方法会根据请求头的Content-Type字段是否为”multipart/form-data”，来判断当前是不是上传文件请求，以及解析其中的上传文件数据。</p>
+<p>加入ioc容器的StandardServletMultipartResolver，会在接收到请求的时候被调用，该方法会根据请求头的Content-Type字段是否为“multipart/form-data”，来判断当前是不是上传文件请求，以及解析其中的上传文件数据。</p>
 <p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202307/4f06da78056d4dffbf1bf557cd30dd55-3.jpeg" /></p>
 <p><em>图3 DispatcherServlet#doDispatch方法体</em></p>
 <p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202307/fc57b06bc0b14d189be922501f248a87-4.jpeg" /></p>
 <p><em>图4 checkMutipart方法体</em></p>
+<p><del>目前只需要知道spring调用了方法解析请求中的上传数据即可，至于解析的逻辑，有需要的读者可以自行查看</del></p>
 <h3>三、接收上传文件</h3>
-<p>一般情况下，上传文件是在控制器方法中接收的，与普通方法调用不同的是，spring的控制器方法支持&quot;<strong>任凭开发者定义形参</strong>&quot;，spring会智能自动地传入实参。</p>
+<p>一般情况下，上传文件是在控制器方法中接收的，与普通方法调用不同的是，spring的控制器方法支持“<strong>任凭开发者定义形参</strong>”，spring会智能自动地传入实参。</p>
 <p>事实上，这是spring利用了java的反射机制：首先会获取控制器方法的参数列表类型，再根据参数的类型，在当前请求context中查找对应的数据，最后通过反射调用方法。</p>
 <p>以下为spring调用控制器方法的调用链：</p>
-<p>1、DispaterServlet#doDispatch【&quot;#&quot;前为类，&quot;#&quot;后为方法，&quot;=&gt;&quot;表示在类中的代码】</p>
+<p>1、DispaterServlet#doDispatch【“#”前为类，“#”后为方法，“=&gt;”表示在类中的代码】</p>
 <p>=&gt; ha.handle(processedRequest, response, mappedHandler.getHandler());</p>
 <p>2、AbstractHandlerMethodAdapter#handle</p>
 <p>=&gt; handleInternal(request, response, (HandlerMethod) handler);</p>
@@ -143,18 +149,19 @@
 <p><em>图7 resolveArgument方法体1</em></p>
 <p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202307/2dc224822a784b0c8b8db060125dfe75-B9D6AB1D7AA1FF203029C4EB4D3F3B7F.jpg" /></p>
 <p><em>图7 resolveArgument方法体2</em></p>
-<p>最后在RequestParamMethodArgumentResolver#resolveMultipartArgument方法里获取到上传文件数据，并在upload方法中成功获取到上传的文件。</p>
+<p>最后在RequestParamMethodArgumentResolver#resolveMultipartArgument方法里找到上传文件数据，并在upload方法中成功获取到上传的文件。</p>
 <p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202307/6e11adbeb22f4218aa49f03e747e4bf2-7.jpeg" /></p>
 <p><em>图8 resolveMultipartArgument方法体</em></p>
 <p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202307/52e0bc0730534e6884c68e82f64638a7-AD44462E-484A-4A6A-A6B8-C633385424DA.jpeg" /></p>
 <p><em>图8 upload方法体</em></p>
-<p>通过以上的分析可知道，只要spring存在支持解析控制器方法定义的参数类型，并且该参数类型存在于当前请求context中的话，spring就可以帮助获取到数据，这就是spring支持”任凭”开发者定义形参的原因，不仅如此，spring甚至还支持拓展参数解析器，以适应更多的开发场景。</p>
-<p>但需要提醒的是，文章的代码分析是经过简化的，实际上spring对于文件解析和参数处理的逻辑要复杂得多。spring框架的封装非常复杂，逻辑也很紧密，所以spring很强大，使得开发者爱不释手；但相对的，正因为封装过于复杂，也带来了难理解的问题。</p>
+<p>通过以上的分析可知道，只要spring存在支持解析控制器方法定义的参数类型，并且该参数类型存在于当前请求context中的话，spring就可以帮助获取到数据，这就是spring支持“任凭”开发者定义形参的原因，不仅如此，spring甚至还支持拓展参数解析器，以适应更多的开发场景。</p>
+<p>需要提醒的是，文章的代码分析是经过简化的，实际上spring对于文件解析和参数处理的逻辑要复杂得多，在spring中，类似MultipartResolver这样的组件，还有很多很多，它们共同构成了一套Web的解决方案。</p>
+<p>spring框架的封装非常复杂，逻辑也很紧密，开发中的很多可能遇到的难题，它都着手处理了，所以spring很强大，使用起来也简单，让开发者爱不释手；但相对的，正因为封装过于复杂，也带来了难理解的问题，看不懂也是家常便饭。</p>
 <h3>四、结语</h3>
 <p>一般来说，只要查阅相关的技术文档，就能知道某个方法或函数的调用方式，这其实已经足够应付日常的开发，因此，源码对于开发者来说不是必须的，看了可能还没什么用：平时该怎么开发，看了之后还是该怎么开发。</p>
-<p>但是，在我看来，如果时间允许的话，还是很推荐去阅读源码的，只不过，与其他人不同的是，我只推荐稍微了解一点其中的原理，不需要过于深入，也不用花太多的精力，因为普通的开发者最多只是使用框架，而不是开发框架。</p>
+<p>但是，在我看来，如果时间允许的话，还是很推荐去阅读源码的，只不过，与其他人不同的是，我只推荐稍微阅读一点点，粗略了解其中的原理即可，不需要过于深入，也不用花太多的精力，因为普通的开发者最多只是使用框架，而不是开发框架。</p>
 <p>不过，即使是粗浅的了解，也依然存在好处。</p>
-<p>一方面，在开发过程中出现问题的时候，可以更快速定位并解决问题；另一方面，可以从中”窃取”源码的编程思想，相信哪怕只是学到其中的一点，也能够提升个人的编程水平，同时也拥有了跟别人谈论相关话题的资本。</p>
+<p>一方面，在开发过程中出现问题的时候，可以更快速定位并解决问题；另一方面，可以从中“窃取”源码的编程思想，相信哪怕只是学到其中的一点，也能够提升个人的编程水平，同时也拥有了跟别人谈论相关话题的资本。</p>
 <p><em>（文本所用到的<a href="https://github.com/xxzhiwei/demo/tree/main/springmvc">demo</a>在这里）</em></p>
 <p>以上就是关于MultipartResolver运行原理的全部内容。</p>
 
