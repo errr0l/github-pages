@@ -91,46 +91,54 @@
                                 标签为<a href="javascript:void(0);">树莓派</a>、<a href="javascript:void(0);">装机</a>、<a href="javascript:void(0);">OS</a>
                             </span>
                         </div>
+                            <div class="cover mg-b-10">
+                                <img src="../image/portal/202307/287869bd50ac49d8ae6fe8b1e50645e2-8a3369577c284d40b31a971ddb6cb544.jpeg" alt="">
+                            </div>
                         <div class="content">
-                            <p>最近整理房内物件的时候，发现了几年前买的树莓派静静地躺在角落里，一直在吃灰，我都快忘记有这东西的存在了…</p>
-<p>现在刚好想要一台可以通过公网访问的额外服务器，用于部署系统应用啥的，没有真的不方便，云服务器太贵了，而且买了又没怎么用到，相当浪费… 而树莓派对我来说相当完美，除了有一点点电费之外，就没有其他额外的开销了，很符合我的需求。</p>
-<p>我打算是使用树莓派+内网穿透来打造这个服务器，大概会花两个篇幅来完成。</p>
+                            <p>最近整理房内物件的时候，我发现了一个树莓派静静地躺在角落里...</p>
+<p>回想起来这是几年前在某东上购买的，但一直没有机会玩上，持续吃灰，我都快忘记有这东西的存在了...</p>
+<p>现在刚好想要一台额外的服务器，用于部署系统应用啥的，没有真的不方便，但云服务器买了又没怎么用到，相当浪费，而且续费的时候，非常贵，虽然在活动打折以及首次购买时候，很便宜，但续费就不一样了，这是个坑。树莓派对我来说相当完美，除了本体的费用以及一点点电费之外，就没有其他额外的开销了，加上不用担心服务器稳定性的问题，个人项目流量几乎没有，可以随时“销号跑路”，这很符合我的需求。</p>
+<p>我打算是使用树莓派+内网穿透来打造这个可以对外提供服务的服务器，大概会花两个篇幅来完成。</p>
 <p>当然了，现在的首要任务是为树莓派装上系统，开搞！</p>
-<h2>1、下载系统镜像</h2>
-<p>在树莓派<a href="https://www.raspberrypi.com/software/operating-systems/">官网</a>下载系统镜像，我选择的是官网推荐的<a href="https://downloads.raspberrypi.org/raspios_lite_armhf/images/raspios_lite_armhf-2023-05-03/2023-05-03-raspios-bullseye-armhf-lite.img.xz">Raspberry Pi OS</a>无界面轻量版，这得看个人的选择。</p>
-<h2>2、准备系统u盘</h2>
-<p>这里的sd卡将要作为树莓派的存储设备兼系统启动盘。</p>
-<p>首先要将sd卡格式化，随后再将下载好的系统写入卡内，完成之后，树莓派将会自动从sd卡启动。</p>
+<h2>一、下载系统镜像</h2>
+<p>首先要去树莓派<a href="https://www.raspberrypi.com/software/operating-systems/">官网</a>下载系统镜像，我选择的是官网推荐的<a href="https://downloads.raspberrypi.org/raspios_lite_armhf/images/raspios_lite_armhf-2023-05-03/2023-05-03-raspios-bullseye-armhf-lite.img.xz">Raspberry Pi OS</a>无界面轻量版，至于是否需要界面，这得看个人的选择。</p>
+<h2>二、准备系统u盘</h2>
+<p>准备一张sd卡，将要作为树莓派的存储设备兼系统启动盘。</p>
+<p>先将sd卡格式化，随后再将下载好的系统写入卡内，完成之后，树莓派将会自动从sd卡启动。</p>
 <p><del>以下是在mac下进行操作，事实上只要达到格式化的目的即可，进行了哪些步骤无关紧要</del></p>
-<h3>2.1 格式化sd卡</h3>
+<p><strong>1、格式化sd卡</strong></p>
 <p>使用读卡器将sd卡与电脑连接后，打开磁盘工具，找到sd卡设备，格式选择“Mac OS拓展（日志式）”，方案选择“GUID”分区图，点击“抹掉”。</p>
 <p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202307/34a34a1b2f2041438c314223039bf593-328AF3C88E783E94E66694ECEF0044AD.jpg" /></p>
-<p><strong>特别注意要选择最外层的设备。</strong></p>
 <p><em>图1 磁盘工具</em></p>
-<h3>2.2 烧录系统</h3>
+<blockquote>
+<p>特别注意要选择最外层的设备。</p>
+</blockquote>
+<p><strong>2、烧录系统</strong></p>
 <p>本步骤将会使用dd命令将系统镜像写入sd卡中，也可以使用官方提供的<a href="https://www.raspberrypi.com/software/">Raspberry Pi Imager</a>，按照它提供的步骤来即可，更加简单。</p>
-<p>1、找到sd卡对应的分区</p>
-<p>如下图为“/dev/disk2”（对应大小）。</p>
+<p>1）找到sd卡对应的分区</p>
+<p>如下图为“/dev/disk2”（对应存储空间的大小）。</p>
 <p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202307/9f53c2cc088c45ffb6696e8c9d99ef67-974FAA88C188AE1DD31524F01542F8DA.png" /></p>
 <p><em>图2 使用diskutil命令列出分区</em></p>
-<p>2、将系统镜像写入sd卡</p>
+<p>2）将系统镜像写入sd卡</p>
 <p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202307/c86469f4d36d4c3d9c56ecacb2e3f78f-12EE65CD738BC94BEA54DF7CCCEB337B.jpg" /></p>
 <p><em>图3 使用dd命令写入文件</em></p>
-<p>（注意，of参数的值为“r + 分区名”，“r + 分区名”是原始字符设备，传输速度较快）</p>
-<p>等等几分钟后，应该会看到以下的信息：</p>
+<blockquote>
+<p>注意，of参数的值为“r + 分区名”，“r + 分区名”是原始字符设备，传输速度较快</p>
+</blockquote>
+<p>几分钟后，应该会看到以下的信息，表示成功。</p>
 <p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202307/7b5a7e8d4c66436aafc45f49cf13bf73-E0DDA39ED9E61591F51A3E2C544C8D65.jpg" /></p>
-<p><em>图4 镜像写入成功</em></p>
-<h3>2.3 ssh设置</h3>
+<p><em>图4 执行dd命令的结果</em></p>
+<p>3）ssh设置</p>
 <p>树莓派的ssh默认为关闭状态，因此我们必须要手动开启。</p>
-<p>其实也简单，只要在sd卡根目录下创建一个名为“ssh”的文件即可（没有后缀），随后启动系统时，树莓派就会开启ssh服务。</p>
+<p>其实也简单，只要在sd卡根目录下创建一个名为“ssh”的文件即可（没有后缀），启动系统时，树莓派会开启ssh服务。</p>
 <p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202307/2795cbaca5954313b44466181b73352a-EDBD8B103541EEEE112E2DAAA290C59A.jpg" /></p>
 <p><em>图5 使用df命令列出sd卡挂载的路径</em></p>
-<pre><code class="language-base"># (以下的操作将在该路径下进行）
+<pre><code class="language-base"># 切入sd卡的挂载路径 (以下的操作将在该路径下进行）
 cd /Volumes/bootfs
 # 新建ssh文件
 touch ssh
 </code></pre>
-<h3>2.4 网络设置</h3>
+<p>4）网络设置</p>
 <p>无网线的情况下，一般使用wifi或个人热点，跟上一步是类似的，只需要在sd卡根目录下新建一个名为“wpa_supplicant.conf”的文件即可。</p>
 <pre><code class="language-base"># 新建无线网络配置文件
 touch wpa_supplicant.conf
@@ -145,7 +153,7 @@ network={
     psk=&quot;密码&quot;
 }
 </code></pre>
-<h3>2.5 配置账号</h3>
+<p>5）配置账号</p>
 <p>出于安全问题，现在树莓派已经移除了默认的账号pi，因此我们必须自行配置账号，才可以登录到树莓派。</p>
 <p><del>具体信息可以查看<a href="https://www.raspberrypi.com/news/raspberry-pi-bullseye-update-april-2022/">这里</a>。</del></p>
 <p>配置的方式是在sd卡根目录下添加名为“userconf”或“userconf.txt”的文件，并在里面写入“用户名:加密的密码”格式的数据。</p>
@@ -153,19 +161,19 @@ network={
 touch userconf
 
 # 生成加密的密码
-echo 'abc1023' | openssl passwd -crypt -stdin
+echo '密码（自行替换）' | openssl passwd -crypt -stdin
 
 # 将数据写入userconf
 echo '用户名:生成的密码' &gt; userconf
 </code></pre>
-<h2>3、启动树莓派</h2>
+<h2>三、启动树莓派</h2>
 <p>到这一步准备工作已经完成了。</p>
 <pre><code class="language-base"># 卸载sd卡
 diskutil unmountDisk /dev/disk2s1
 </code></pre>
-<p>将其从读卡器中拔出插入到树莓派卡槽里，然后给树莓派通电。</p>
-<h2>4、通过ssh登陆树莓派</h2>
-<p>如果顺利的话，此时树莓派已经启动成功了，但目前并不知道树莓派的ip地址，因此这里使用扫描工具来获取它的地址信息。（以下为IP Scanner，其他任何一种扫描工具都可以）</p>
+<p>将sd卡从读卡器中拔出并插入到树莓派卡槽里，然后给树莓派通电。</p>
+<h2>四、通过ssh登陆树莓派</h2>
+<p>如果顺利的话，此时树莓派已经启动成功了，但目前并不知道树莓派的ip地址，因此得使用工具来获取它的ip地址信息。（以下为IP Scanner，其他任何一种扫描工具也都可以）</p>
 <p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202307/aaa0bf28d4914f62b303d3494f4ba088-760830FA-CD19-46EB-AC0B-4522796A6605.png" /></p>
 <p><em>图6 IP Scanner</em></p>
 <p>拿到ip地址后，使用配置的账号通过ssh登陆到树莓派。</p>
