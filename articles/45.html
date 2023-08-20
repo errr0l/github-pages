@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>pqt活动文本提取小结 - 小埃的个人博客</title>
+    <link rel="stylesheet" href="../css/reset.css">
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/index.css">
+    <link rel="stylesheet" href="../css/header.css">
+    <link rel="stylesheet" href="../css/mobile.css">
+    <link rel="stylesheet" href="../css/theme-light.css">
+    <link rel="shortcut icon" href="../favicon.ico" type="image/x-icon">
+        <meta name="keywords" content="计划,pqt,日常收菜">
+    <link rel="stylesheet" href="../css/article.css">
+    <link rel="stylesheet" href="../css/markdown/github-markdown.css">
+    <link rel="stylesheet" href="../css/markdown/github-markdown-light.css">
+    <link rel="stylesheet" href="../css/gittalk-cover.css">
+    <link rel="stylesheet"
+          href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</head>
+<body>
+<div id="app">
+    <div id="header">
+    <div id="bar">
+        <div class="container mg-0-auto d-f">
+            <div class="logo">
+                <a href="../" class="nav-link">
+                    <img src="../image/portal/logo.jpg" alt="小埃的个人博客">
+                </a>
+            </div>
+            <div class="right">
+                <ul class="nav f-l">
+                        <li class="nav-item">
+                            <a href="../index.html" class="nav-link active">
+                                <span>首页</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="../category.html" class="nav-link ">
+                                <span>分类</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="../about.html" class="nav-link ">
+                                <span>关于</span>
+                            </a>
+                        </li>
+                </ul>
+                <div class="eb-title">
+                    小埃的个人博客
+                </div>
+                <div id="search">
+                    <input type="text" id="search-input" data-prefix="../" placeholder="搜索" autocomplete="off" />
+                    <span class="search-icon t-a">
+                        <img class="el-icon-search" src="../image/portal/search.png" width="16" height="16">
+                    </span>
+                    <div id="search-result">
+                        <input type="text" class="input-1" id="search-input-2" data-prefix="../" placeholder="请输入" autocomplete="off" />
+                        <div class="content">
+                        </div>
+                        <div class="arrow"></div>
+                    </div>
+                </div>
+                <div class="eb-menu">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-list-ul" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M5 11.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm-3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm0 4a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm0 4a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    <div id="main">
+        <div class="container mg-0-auto pd-t-10">
+            <div class="left">
+                <article class="mg-b-20">
+                    <div class="markdown-body">
+                        <div class="title">pqt活动文本提取小结</div>
+                        <div class="item meta mg-b-10">
+                            <span class="author">由<a href="javascript:void(0);">errol</a>发表于<a href="#">2023-08-20 10:48:15</a></span>
+                            <span>|</span>
+                            <span class="time">
+                            分类为
+                            <a href="../categories/6.html">瞎聊</a></span>
+                            <span>|</span>
+                            <span class="tags">
+                                标签为<a href="javascript:void(0);">计划</a>、<a href="javascript:void(0);">pqt</a>、<a href="javascript:void(0);">日常收菜</a>
+                            </span>
+                        </div>
+                        <div class="content">
+                            <p>目前pqt的活动文本提取程序已经基本完成了。</p>
+<p>一共包含了“约会”、“异世界约会”、“调查”三种活动的文本提取，其中“约会”和“异世界约会”又包含了剧情和问答两部分内容。</p>
+<p>这首先得感谢小群里的一位群友，本来之前“约会”活动的问答文本一直没能提取得出来的（没有找到其中的规律，无法编写程序），是他在最近的一次活动中向我寻求答案，我才抱着再试一试的态度去面对那个填满了密密麻麻符号的源文件，但也没抱有太多的希望，毕竟前面已经尝试过够多了。</p>
+<p>不过，这一次，规律被我找到了...</p>
+<p>于是程序也快马加鞭地赶了出来，同时，这也解开了我之前留下的一个心结，不然我老难受了，再次感谢他。</p>
+<p>在这之后，这个程序剩下的只有优化和修复，基本没什么可做的了，因此，接下来，我打算开启一个新坑...</p>
+<p>由于某些原因，我接手了一位群友的游戏账号，帮忙完成日常收菜（清理日常任务、领取每日资源等），一个账号还好，但现在两个账号每天面对着同样的界面，做着同样的事情，几天下来，就已经感觉有点腻烦了，于是我就想着，能否写一个完成每日收菜的脚本来解放我的双手。</p>
+<p>我看了一下相关的资料，大致的逻辑为：定位-&gt;抓图-&gt;对比-&gt;操作界面，这其实看起来也还算简单。</p>
+<p>但是，有点麻烦的是，需要重新学习python（py的图像处理库比较多，也比较容易使用，大多数自动化脚本也均采用py）。</p>
+<p>处理图像数据这块内容，我个人还是蛮感兴趣的，此前还想抽个时间来捣鼓捣鼓，但苦于没有合适的场景时机，现在它终于来了。</p>
+<p>看看我能否写出这个“收菜脚本”来吧。</p>
+
+                        </div>
+                    </div>
+                </article>
+                <div class="comment-wrap">
+                        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+                        <script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+                        <div id="gitalk-container"></div>
+                        <script>
+                            const gitalk = new Gitalk({
+                                clientID: 'ae1422e500a8b19fb1fc',
+                                clientSecret: '9f387db6a84a4945cdf5dc743c16ce25fdef6b76',
+                                repo: 'github-pages',      // The repository of store comments,
+                                owner: 'xxzhiwei',
+                                admin: ['xxzhiwei'],
+                                id: location.pathname,      // Ensure uniqueness and length less than 50
+                                distractionFreeMode: false  // Facebook-like distraction free mode
+                            });
+                            gitalk.render('gitalk-container');
+                        </script>
+                </div>
+            </div>
+            <div class="right">
+                    <div class="side-card b-s-1 mg-b-10">
+                        <div class="wrapper">
+                            <h2 class="item title">相关文章</h2>
+                            <div class="item content">
+                                    <div class="item1">
+                                        <a href="../articles/29.html">PQT激励奖励“风波”</a>
+                                    </div>
+                                    <div class="item1">
+                                        <a href="../articles/37.html">关于PQT活动文本提取器以及后期的计划安排</a>
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+            </div>
+        </div>
+    </div>
+    <div class="back">返回</div>
+</div>
+    <script src="../js/dataList.js"></script>
+    <script src="../js/lazy.js"></script>
+    <script src="../js/search.js"></script>
+    <script src="../js/menu.js"></script>
+<script>
+    let back = document.querySelector(".back");
+    back.addEventListener("click", function () {
+        window.history.go(-1);
+    });
+</script>
+</body>
+</html>
