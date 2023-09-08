@@ -275,6 +275,32 @@ async function respHandler(resp) {
 <p>现在一次性把这些问题都解决了，心中的烦闷也随之消散，好不痛快！</p>
 <p>中途参考了很多大佬的文章，才得以完成了现在这个自己比较满意的版本，非常感谢他们。</p>
 <p>可能还会存在问题或不合理之处，届时还请不吝赐教。</p>
+<p>=== 20230908更新 ===</p>
+<p>考虑到有一些场景下并不需要重试请求，因此添加了一个表示&quot;是否启用重试&quot;的参数&quot;enableRetrying&quot;，只有当该参数设置为&quot;true&quot;的时候，才会进行重试，以下是代码修改的位置：</p>
+<pre><code class="language-javascript">service.interceptors.response.use(
+    // ...
+    error =&gt; {
+        // ...
+        
+        // 可以拓展更多的需要重发请求的情况
+        if (error.config.enableRetrying &amp;&amp; (error.code === 'ECONNABORTED' || error.message.includes('timeout of'))) {
+            // ...
+        }
+    }
+);
+</code></pre>
+<p>该参数可以在axios全局配置中添加，也可以在特定的请求中添加（会产生覆盖效果）。</p>
+<p>1、全局添加</p>
+<pre><code class="language-javascript">const service = axios.create({
+    baseURL: &quot;http://localhost:8888/&quot;,
+    timeout: 5000,
+    retryingCount: maxRetryingCount,
+    enableRetrying: true // 是否启用重试
+});
+</code></pre>
+<p>2、局部添加</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202309/25892964ced04f6bb7698c5b043535e5-449A09589184B77D79DD64A86BC9B3D2.jpg" /></p>
+<p>图1 请求数据接口（src/api/index.js）</p>
 <hr />
 <p>参考文章：</p>
 <ul>
