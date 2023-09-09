@@ -270,12 +270,8 @@ async function respHandler(resp) {
 <p><video controls autoplay height='100%' width='100%' src='https://xxzhiwei.oss-cn-beijing.aliyuncs.com/large.mov'></video></p>
 <p>2、失败的请求如下</p>
 <p><video controls autoplay height='100%' width='100%' src='https://xxzhiwei.oss-cn-beijing.aliyuncs.com/large-2.mov'></video></p>
-<h2>结语</h2>
-<p>总的来说，重发请求是一个常见且有用的小功能，但由于作者的日常开发中，没有真正遇到过这样的场景（基本上都是直接呼用户重新登陆），因此之前封装的axios总是存在着各种各样的毛病和问题，用起来很别扭，这也是写下本文章的直接原因。</p>
-<p>现在一次性把这些问题都解决了，心中的烦闷也随之消散，好不痛快！</p>
-<p>中途参考了很多大佬的文章，才得以完成了现在这个自己比较满意的版本，非常感谢他们。</p>
-<p>可能还会存在问题或不合理之处，届时还请不吝赐教。</p>
-<p>=== 20230908更新 ===</p>
+<hr />
+<p><strong>=== 20230908更新 ===</strong></p>
 <p>考虑到有一些场景下并不需要重试请求，因此添加了一个表示&quot;是否启用重试&quot;的参数&quot;enableRetrying&quot;，只有当该参数设置为&quot;true&quot;的时候，才会进行重试，以下是代码修改的位置：</p>
 <pre><code class="language-javascript">service.interceptors.response.use(
     // ...
@@ -301,6 +297,11 @@ async function respHandler(resp) {
 <p>2、局部添加</p>
 <p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202309/25892964ced04f6bb7698c5b043535e5-449A09589184B77D79DD64A86BC9B3D2.jpg" /></p>
 <p>图1 请求数据接口（src/api/index.js）</p>
+<h2>结语</h2>
+<p>总的来说，重发请求是一个常见且有用的小功能，但由于作者的日常开发中，没有真正遇到过这样的场景（基本上都是直接呼用户重新登陆），因此之前封装的axios总是存在着各种各样的毛病和问题，用起来很别扭，这也是写下本文章的直接原因。</p>
+<p>现在一次性把这些问题都解决了，心中的烦闷也随之消散，好不痛快！</p>
+<p>中途参考了很多大佬的文章，才得以完成了现在这个自己比较满意的版本，非常感谢他们。</p>
+<p>可能还会存在问题或不合理之处，届时还请不吝赐教。</p>
 <hr />
 <p>参考文章：</p>
 <ul>
