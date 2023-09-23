@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>树莓派装机 - 小埃的个人博客</title>
+    <title>树莓派搭建文件服务器（一）：装机 - 小埃的个人博客</title>
     <link rel="stylesheet" href="../css/reset.css">
     <link rel="stylesheet" href="../css/base.css">
     <link rel="stylesheet" href="../css/index.css">
@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="../css/mobile.css">
     <link rel="stylesheet" href="../css/theme-light.css">
     <link rel="shortcut icon" href="../favicon.ico" type="image/x-icon">
-        <meta name="keywords" content="树莓派,装机,OS">
+        <meta name="keywords" content="树莓派,装机,OS,文件服务器">
     <link rel="stylesheet" href="../css/article.css">
     <link rel="stylesheet" href="../css/markdown/github-markdown.css">
     <link rel="stylesheet" href="../css/markdown/github-markdown-light.css">
@@ -79,7 +79,7 @@
             <div class="left">
                 <article class="mg-b-20">
                     <div class="markdown-body">
-                        <div class="title">树莓派装机</div>
+                        <div class="title">树莓派搭建文件服务器（一）：装机</div>
                         <div class="item meta mg-b-10">
                             <span class="author">由<a href="javascript:void(0);">errol</a>发表于<a href="#">2023-07-23 01:20:36</a></span>
                             <span>|</span>
@@ -88,7 +88,7 @@
                             <a href="../categories/11.html">系统/软件</a></span>
                             <span>|</span>
                             <span class="tags">
-                                标签为<a href="javascript:void(0);">树莓派</a>、<a href="javascript:void(0);">装机</a>、<a href="javascript:void(0);">OS</a>
+                                标签为<a href="javascript:void(0);">树莓派</a>、<a href="javascript:void(0);">装机</a>、<a href="javascript:void(0);">OS</a>、<a href="javascript:void(0);">文件服务器</a>
                             </span>
                         </div>
                             <div class="cover mg-b-10">
@@ -98,7 +98,7 @@
                             <p>最近整理房内物件的时候，发现了一个树莓派静静地躺在角落里...</p>
 <p>回想起来，这是几年前在某东上购入的，但一直没有机会玩上，以至于它只能持续吃灰，我都快忘记有这东西的存在了...</p>
 <p>现在刚好想要一台额外的服务器，用于部署系统应用啥的，没有真的不方便，但云服务器买了又没怎么用到，相当浪费，而且续费的时候，非常贵：虽然在活动打折以及首次购买时候，很便宜，但续费就不一样了，这是个坑。树莓派对我来说相当完美，除了本体的费用以及一点点电费之外，就没有其他额外的开销了，加上不用担心服务器稳定性的问题，可以随时“销号跑路”（几乎没有流量），这很符合我的需求。</p>
-<p>我打算是使用树莓派+内网穿透来打造这个可以对外提供服务的服务器，大概会花两个篇幅来完成。</p>
+<p>我打算是使用树莓派+FastDfs+Nginx+内网穿透来打造这个可以对外提供服务的服务器，大概会花两个篇幅来完成。</p>
 <p>当然了，现在的首要任务是为树莓派装上系统，开搞！</p>
 <h2>一、下载系统镜像</h2>
 <p>首先要去树莓派<a href="https://www.raspberrypi.com/software/operating-systems/">官网</a>下载系统镜像，我选择的是官网推荐的<a href="https://downloads.raspberrypi.org/raspios_lite_armhf/images/raspios_lite_armhf-2023-05-03/2023-05-03-raspios-bullseye-armhf-lite.img.xz">Raspberry Pi OS</a>无界面轻量版，至于是否需要界面，这得看个人的选择。</p>
@@ -207,6 +207,16 @@ diskutil unmountDisk /dev/disk2s1
                 </div>
             </div>
             <div class="right">
+                    <div class="side-card b-s-1 mg-b-10">
+                        <div class="wrapper">
+                            <h2 class="item title">相关文章</h2>
+                            <div class="item content">
+                                    <div class="item1">
+                                        <a href="../articles/50.html">树莓派搭建文件服务器（二）：安装fastdfs及其依赖的基础软件</a>
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
             </div>
         </div>
     </div>
