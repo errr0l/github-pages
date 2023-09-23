@@ -189,7 +189,7 @@ PIDFile=/home/errol/data/dev/fastdfs/storage/data/fdfs_storaged.pid
 systemctl restart fdfs_tracked
 systemctl restart fdfs_storaged
 </code></pre>
-<p>6、测试服务</p>
+<p>7、测试文件上传</p>
 <p>fdfs_tracked和fdfs_storaged服务启动成功后，可使用预设的脚本测试服务功能。</p>
 <blockquote>
 <p>vi /etc/fdfs/client.conf</p>
@@ -229,7 +229,7 @@ make &amp;&amp; make install
 <blockquote>
 <p>vi /usr/local/nginx-1.24.0/conf/nginx.conf</p>
 </blockquote>
-<pre><code class="language-bash"># 在监听80端口的服务器中，添加如下信息
+<pre><code class="language-bash"># 在监听80端口的服务器区块中，添加如下信息
 
 location ~/group([0-9])/M00 {
     root /home/errol/data/dev/fastdfs/storage_data;
@@ -237,6 +237,7 @@ location ~/group([0-9])/M00 {
 }
 </code></pre>
 <p>3、将配置文件拷贝到/etc/fdfs目录下</p>
+<p>这些文件会在服务启动的时候读取。</p>
 <pre><code class="language-bash">cp /usr/local/fastdfs-6.9.5/conf/mime.types /etc/fdfs/
 cp /usr/local/fastdfs-6.9.5/conf/http.conf /etc/fdfs/
 cp /usr/local/fastdfs-nginx-module-1.23/src/mod_fastdfs.conf /etc/fdfs/
