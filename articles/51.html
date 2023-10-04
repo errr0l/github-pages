@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>pqt活动文本提取器重构 - 小埃的个人博客</title>
+    <link rel="stylesheet" href="../css/reset.css">
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/index.css">
+    <link rel="stylesheet" href="../css/header.css">
+    <link rel="stylesheet" href="../css/mobile.css">
+    <link rel="stylesheet" href="../css/theme-light.css">
+    <link rel="shortcut icon" href="../favicon.ico" type="image/x-icon">
+        <meta name="keywords" content="pqt,重构">
+    <link rel="stylesheet" href="../css/article.css">
+    <link rel="stylesheet" href="../css/markdown/github-markdown.css">
+    <link rel="stylesheet" href="../css/markdown/github-markdown-light.css">
+    <link rel="stylesheet" href="../css/gittalk-cover.css">
+    <link rel="stylesheet"
+          href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</head>
+<body>
+<div id="app">
+    <div id="header">
+    <div id="bar">
+        <div class="container mg-0-auto d-f">
+            <div class="logo">
+                <a href="../" class="nav-link">
+                    <img src="../image/portal/logo.jpg" alt="小埃的个人博客">
+                </a>
+            </div>
+            <div class="right">
+                <ul class="nav f-l">
+                        <li class="nav-item">
+                            <a href="../index.html" class="nav-link active">
+                                <span>首页</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="../category.html" class="nav-link ">
+                                <span>分类</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="../about.html" class="nav-link ">
+                                <span>关于</span>
+                            </a>
+                        </li>
+                </ul>
+                <div class="eb-title">
+                    小埃的个人博客
+                </div>
+                <div id="search">
+                    <input type="text" id="search-input" data-prefix="../" placeholder="搜索" autocomplete="off" />
+                    <span class="search-icon t-a">
+                        <img class="el-icon-search" src="../image/portal/search.png" width="16" height="16">
+                    </span>
+                    <div id="search-result">
+                        <input type="text" class="input-1" id="search-input-2" data-prefix="../" placeholder="请输入" autocomplete="off" />
+                        <div class="content">
+                        </div>
+                        <div class="arrow"></div>
+                    </div>
+                </div>
+                <div class="eb-menu">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-list-ul" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M5 11.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm-3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm0 4a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm0 4a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    <div id="main">
+        <div class="container mg-0-auto pd-t-10">
+            <div class="left">
+                <article class="mg-b-20">
+                    <div class="markdown-body">
+                        <div class="title">pqt活动文本提取器重构</div>
+                        <div class="item meta mg-b-10">
+                            <span class="author">由<a href="javascript:void(0);">errol</a>发表于<a href="#">2023-10-04 07:33:51</a></span>
+                            <span>|</span>
+                            <span class="time">
+                            分类为
+                            <a href="../categories/6.html">瞎聊</a></span>
+                            <span>|</span>
+                            <span class="tags">
+                                标签为<a href="javascript:void(0);">pqt</a>、<a href="javascript:void(0);">重构</a>
+                            </span>
+                        </div>
+                        <div class="content">
+                            <p>这两天把pqt活动文本提取器进行重构了，理由也很简单，纯粹就是程序不好使...</p>
+<p>就跟前面说的那样，程序的启动极其复杂、笨重，必须要人力干预，用肉眼查看、搜索定位”锚点“，还要保证其唯一性，否则根本无法运行，真的给“程序”这个词蒙羞了。</p>
+<p>更离谱的是，这次游戏新出的角色活动中，当我花费了大力气在源数据文件中查找到了锚点，把它们输入程序，并点击运行的时候，我没能得到想要的结果…</p>
+<p>此刻，我不禁陷入沉思，虽然只是这种程度的东西，但还是花费了不少时间才产出来的…</p>
+<p>回头看了一眼代码，确实能感觉到很烂，根本就没个样，总觉得下一秒就会散架，简陋到爆炸，当时确实没有考虑到程序设计问题，写得很随意，怎么快怎么来，只想着赶紧得到结果。</p>
+<p>一想到这是一堆啰里八嗦、毫无编程思想可言的东西，就对现在的这种情况感到释怀了，有时候甚至觉得它能正常运行过都是件不可思议的事情。</p>
+<p>以上就是本次重构的前提，目前工作已经做的七七八八，下面大致介绍一些主要的改动和思路。</p>
+<h3>一、改动的地方</h3>
+<p>相较于先前的版本，本次注重的是代码设计，更多地考虑拓展性、可维护性、易用性，简单的来说，就是采用了面向对象思想进行编程，并把输入进行了配置化，即现在把一些固定的数据写入配置文件就可以运行程序了。</p>
+<p>在逻辑判断方面，我为程序重新寻找了锚点，如起始锚点均采用了角色通用的标识，如角色id、角色名称，而结尾锚点则采用了一些固定的位置，这是可配置化的基础。</p>
+<p>此外，还把翻译程序也整合了进来，如果需要的话，可以在配置文件中指定。也就是说改版之后的程序具有两个功能：文本提取和文本翻译。</p>
+<p>程序主要运行逻辑如下：</p>
+<p>1）根据配置文件的活动名称获取对应的活动处理器，并通过反射实例化；</p>
+<p>2）运行活动处理器的process()，把结果写入输出文件中；</p>
+<p>3）尝试从配置文件中读取要翻译的文件名，如果存在时，则翻译该文件，并把翻译结果写入到当前文件所在的目录。</p>
+<p>1、配置文件</p>
+<pre><code class="language-bash"># 角色名称
+pet-name=Violet
+# 活动名称【以及dating、simgirl】
+activity-name=girlswatch
+# 数据源路径
+source-file=pqt-workshop/src/main/resources/source-file/20230927-config.data
+# 输出文件路径【文件格式为'角色'-'活动'-of.txt，'output-file'用于存储活动文本，'output-file2'用户存储答案（如果活动有问答的话）】
+output-file=pqt-workshop/output/%s-%s-of.txt
+#output-file2=pqt-workshop/output/%s-%s-of-2.txt
+# 需要翻译的文件
+translating-file=output-file
+# 翻译接口实现类【目前只有百度翻译，有道翻译挂了】
+translator-class-name=com.errol.pqtworkshop.translator.impl.BaiduTranslator
+</code></pre>
+<p>2、启动类的main方法</p>
+<pre><code class="language-java">public static void main(String[] args) {
+    String className = processorClassNameMap.get(activityName);
+    try {
+        Class&lt;?&gt; clazz = Class.forName(className);
+        # 通过反射实例化活动处理器
+        ActivityProcessor activityProcessor = (ActivityProcessor) clazz.newInstance();
+        System.out.println(&quot;&gt;&gt;&gt; &quot;+ Application.class.getSimpleName() +&quot; started: &quot; + System.currentTimeMillis());
+        System.out.println(&quot;&gt;&gt;&gt;&gt; &quot;+ activityProcessor.getClass().getSimpleName() +&quot; started: &quot; + System.currentTimeMillis());
+        # 调用process()把结果输出到指定的文件中
+        activityProcessor.process(petName, activityName, sourceFilePath, outputFilePath, petConfig);
+        System.out.println(&quot;&gt;&gt;&gt;&gt; &quot;+ activityProcessor.getClass().getSimpleName() +&quot; ended: &quot; + System.currentTimeMillis());
+
+        String translatingFileName = petConfig.get(&quot;translating-file&quot;);
+        String[] translatingFileNames = translatingFileName == null || translatingFileName.trim().isEmpty() ? new String[]{} : translatingFileName.split(&quot;,&quot;);
+        if (translatingFileNames.length &gt; 0) {
+            for (String fileName : translatingFileNames) {
+                # 如果需要翻译的文件则使用指定的翻译器翻译文件
+                    activityProcessor.translate(petConfig.get(fileName), petConfig);
+            }
+        }
+        System.out.println(&quot;&gt;&gt;&gt; &quot;+ Application.class.getSimpleName() +&quot; finished: &quot; + System.currentTimeMillis());
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+}
+</code></pre>
+<p>3、项目结构</p>
+<p>除了filter和handler两个包是翻译器（translator）专用的之外，其他的包&amp;文件，活动处理器（ActivityProcessor）均有直接或间接依赖到。</p>
+<pre><code class="language-bash">└── main
+    ├── java
+    │   └── com
+    │       └── errol
+    │           └── pqtworkshop
+    │               ├── Application.java
+    │               ├── decider # 锚点接口
+    │               │   └── Decider.java
+    │               ├── entity 
+    │               │   └── Position.java
+    │               ├── filter # 文本过滤接口
+    │               │   ├── TextFilter.java
+    │               │   └── impl # 接口实现类
+    │               │       └── CommonTextFilter.java
+    │               ├── handler # 文本处理接口
+    │               │   ├── PreHandler.java
+    │               │   ├── TextHandler.java
+    │               │   └── impl
+    │               │       └── CommonTextHandler.java
+    │               ├── processor # 活动处理接口
+    │               │   ├── ActivityProcessor.java
+    │               │   └── impl
+    │               │       ├── DatingProcessor.java
+    │               │       ├── GirlsWatchProcessor.java
+    │               │       └── SimGirlProcessor.java
+    │               ├── resolver # 文件解析接口
+    │               │   ├── AbsResolver.java
+    │               │   ├── FileResolver.java
+    │               │   ├── Resolver.java
+    │               │   └── impl
+    │               │       ├── ChapterResolver.java
+    │               │       ├── DaysResolver.java
+    │               │       ├── DetectiveResolver.java
+    │               │       ├── StoryResolver.java
+    │               │       └── TalkingResolver.java
+    │               ├── translator # 翻译接口
+    │               │   ├── AbsTranslator.java
+    │               │   ├── ActivityTranslator.java
+    │               │   └── impl
+    │               │       └── BaiduTranslator.java
+    │               └── util # 工具类
+    └── resources
+        ├── META-INF
+        │   └── MANIFEST.MF
+        ├── application.properties
+        ├── dating # 活动1配置文件
+        │   ├── EXAMPLE.txt # 配置文件示例
+        │   └── SummerLadies.txt
+        ├── girlswatch # 活动2配置文件
+        │   ├── EXAMPLE.txt
+        │   └── Violet.txt
+        ├── simgirl # 活动3配置文件
+        │   ├── Alizee.txt
+        │   └── EXAMPLE.txt
+        └── source-file # 数据源文件
+            └── 20230927-config.data
+</code></pre>
+<p>ActivityProcessor主要有两个方法：</p>
+<p>1）process()方法用于处理提取目标文本；</p>
+<p>2）translate()方法用于翻译指定的文本文件。</p>
+<pre><code class="language-java">public interface ActivityProcessor {
+    # 处理文件的方法
+    void process(String petName, String activityName, String sourceFilePath, String outputFilePath, Map&lt;String, String&gt; petConfig);
+    # 翻译文件的方法
+    default void translate(String filePath, Map&lt;String, String&gt; petConfig) {
+        // ... 略
+    }
+}
+</code></pre>
+<p>该接口一种有三个实现类，分别为DatingProcessor、GirlsWatchProcessor、SimGirlProcessor，与活动的名称一一对应。</p>
+<p>在具体的处理器中，依赖了不同的文件解析器，用于解析数据源文件中的不同位置的文本（文本并不是连续的），它们的关系如下：</p>
+<ul>
+<li>DatingProcessor
+<ul>
+<li>ChapterResolver</li>
+</ul>
+</li>
+<li>GirlsWatchProcessor
+<ul>
+<li>StoryResolver</li>
+<li>DaysResolver</li>
+<li>DetectiveResolver</li>
+</ul>
+</li>
+<li>SimGirlProcessor
+<ul>
+<li>StoryResolver</li>
+<li>TalkingResolver</li>
+</ul>
+</li>
+</ul>
+<p>其中文件解析器中又包含了具体的文本提取规则，它们与处理器一起共同完成提取文本的工作。</p>
+<p>4、活动配置文件</p>
+<p>其中属于dating活动需要修改的地方比较少，仅需改动一处；其次是simgirl，需要改动两处；最后是girlwatch，需要改动三处。标有'固定'注释处不需要改动。</p>
+<p>1）dating活动</p>
+<pre><code class="language-bash"># 输入[第一章的标题]
+chapterPosition-starting=[第一章的标题]
+# 固定
+chapterPosition-ending=next_idending_waypoint
+</code></pre>
+<p>2）girlwatch活动</p>
+<pre><code class="language-bash"># 修改PET_NAME，如mina【删除'[]'】
+storyPosition.starting=[PET_NAME] LG AVG
+# 固定
+storyPosition.ending=timeslot_detail,girl_watch_message_detail_settings
+# 修改PET_ID，如1090【可以到Android/data/com.ignite.qt/files/Assets/character】目录对照查看
+detectivePosition.starting=hint_spinelens[PET_ID]_bg1_item1_hint.png
+# 固定
+detectivePosition.ending=Day4.unity3d
+# 修改PET_ID
+daysPosition.starting=girl_watch_message_detail_settings,LensAvg[PET_ID]
+# 固定
+daysPosition.ending=Day 4,ending_message_dataending_waypoint
+</code></pre>
+<p>3）simgirl活动</p>
+<pre><code class="language-bash"># 修改PET_NAME
+storyPosition.starting=[PET_NAME] MD AVG
+# 固定
+storyPosition.ending=quiz_dating_level_settings,topic
+# 输入[第一句对白]
+talkingPosition.starting=[第一句对白]
+# 固定
+talkingPosition.ending=timeslot_type,timeslot_detail
+</code></pre>
+<h3>二、小结</h3>
+<p>程序在重构之后，已经从原来的“脚本代码”升级为“小程序”了，大量使用到面向对象、接口、抽象、配置、反射等概念，把变化与不变抽取分离，使得程序具有一定的可维护性与拓展性，用法也比之前简单得多。</p>
+<p>打包丢给别人使用也是可以的，除了目录文件之外，其他均没有变化，当然，肯定还需要jre环境，不然无法运行java。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202310/9a74dc67382f4a7b84101d39d7cafb2b-image-20231004110506064.png" /></p>
+<p><em>图1 打包后程序的目录结构</em></p>
+<p>总的来说，这个程序已经基本符合<a href="https://xxzhiwei.github.io/github-pages/articles/37.html">当初的设想</a>了。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202310/7965b2b5760d46358c4074cfd4d216be-image-20231004113246878.png" /></p>
+<p><em>图2 之前一篇文章中的片段</em></p>
+<p>目前程序的稳定性也还算可以，已经测试了好几个角色，均能得到正确的结果，相信只要数据源文件的结构不发生变动，程序就能正常运行下去。关于这一点，之前也有提到过，就跟web爬虫一样，如果目标网站的html结构有变化，原来的抓取逻辑就不再生效，需要重新编码，这是不可抗拒的因素。</p>
+<p>所以我希望它永远都不要变动...</p>
+<p>就看接下来重构后的程序能否适用于最新的活动事件了。（应该可以吧？）</p>
+<hr />
+<p>整个过程还是蛮有趣的，尤其是在思考程序设计的时候，好像有一种无形的东西引领着自己前进：或快或慢，脑里总会浮现某种想法、点子，来指导自己接下来如何编写代码。回想起来，类似的像这样经历过去也常常出现，或许这就是强类型语言的魅力？它会强迫使用者绞尽脑汁进行思考，否则无法写出简单易用的代码？</p>
+<p>所以这是不是证明了系统项目都采用强类型语言进行编写比较好呢？（开玩笑的）</p>
+
+                        </div>
+                    </div>
+                </article>
+                <div class="comment-wrap">
+                        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+                        <script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+                        <div id="gitalk-container"></div>
+                        <script>
+                            const gitalk = new Gitalk({
+                                clientID: 'ae1422e500a8b19fb1fc',
+                                clientSecret: '9f387db6a84a4945cdf5dc743c16ce25fdef6b76',
+                                repo: 'github-pages',      // The repository of store comments,
+                                owner: 'xxzhiwei',
+                                admin: ['xxzhiwei'],
+                                id: location.pathname,      // Ensure uniqueness and length less than 50
+                                distractionFreeMode: false  // Facebook-like distraction free mode
+                            });
+                            gitalk.render('gitalk-container');
+                        </script>
+                </div>
+            </div>
+            <div class="right">
+                    <div class="side-card b-s-1 mg-b-10">
+                        <div class="wrapper">
+                            <h2 class="item title">相关文章</h2>
+                            <div class="item content">
+                                    <div class="item1">
+                                        <a href="../articles/29.html">PQT激励奖励“风波”</a>
+                                    </div>
+                                    <div class="item1">
+                                        <a href="../articles/37.html">关于PQT活动文本提取器以及后期的计划安排</a>
+                                    </div>
+                                    <div class="item1">
+                                        <a href="../articles/45.html">pqt活动文本提取小结</a>
+                                    </div>
+                                    <div class="item1">
+                                        <a href="../articles/49.html">pqt退出（切换）游戏账号的解决方案</a>
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+            </div>
+        </div>
+    </div>
+    <div class="back">返回</div>
+</div>
+    <script src="../js/dataList.js"></script>
+    <script src="../js/lazy.js"></script>
+    <script src="../js/search.js"></script>
+    <script src="../js/menu.js"></script>
+<script>
+    let back = document.querySelector(".back");
+    back.addEventListener("click", function () {
+        window.history.go(-1);
+    });
+</script>
+</body>
+</html>
