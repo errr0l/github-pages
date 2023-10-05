@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>关于运行jar时，报“没有主清单属性”的问题 - 小埃的个人博客</title>
+    <link rel="stylesheet" href="../css/reset.css">
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/index.css">
+    <link rel="stylesheet" href="../css/header.css">
+    <link rel="stylesheet" href="../css/mobile.css">
+    <link rel="stylesheet" href="../css/theme-light.css">
+    <link rel="shortcut icon" href="../favicon.ico" type="image/x-icon">
+        <meta name="keywords" content="java,打包,没有主清单属性,MANIFEST.MF">
+    <link rel="stylesheet" href="../css/article.css">
+    <link rel="stylesheet" href="../css/markdown/github-markdown.css">
+    <link rel="stylesheet" href="../css/markdown/github-markdown-light.css">
+    <link rel="stylesheet" href="../css/gittalk-cover.css">
+    <link rel="stylesheet"
+          href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</head>
+<body>
+<div id="app">
+    <div id="header">
+    <div id="bar">
+        <div class="container mg-0-auto d-f">
+            <div class="logo">
+                <a href="../" class="nav-link">
+                    <img src="../image/portal/logo.jpg" alt="小埃的个人博客">
+                </a>
+            </div>
+            <div class="right">
+                <ul class="nav f-l">
+                        <li class="nav-item">
+                            <a href="../index.html" class="nav-link active">
+                                <span>首页</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="../category.html" class="nav-link ">
+                                <span>分类</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="../about.html" class="nav-link ">
+                                <span>关于</span>
+                            </a>
+                        </li>
+                </ul>
+                <div class="eb-title">
+                    小埃的个人博客
+                </div>
+                <div id="search">
+                    <input type="text" id="search-input" data-prefix="../" placeholder="搜索" autocomplete="off" />
+                    <span class="search-icon t-a">
+                        <img class="el-icon-search" src="../image/portal/search.png" width="16" height="16">
+                    </span>
+                    <div id="search-result">
+                        <input type="text" class="input-1" id="search-input-2" data-prefix="../" placeholder="请输入" autocomplete="off" />
+                        <div class="content">
+                        </div>
+                        <div class="arrow"></div>
+                    </div>
+                </div>
+                <div class="eb-menu">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-list-ul" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M5 11.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm-3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm0 4a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm0 4a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    <div id="main">
+        <div class="container mg-0-auto pd-t-10">
+            <div class="left">
+                <article class="mg-b-20">
+                    <div class="markdown-body">
+                        <div class="title">关于运行jar时，报“没有主清单属性”的问题</div>
+                        <div class="item meta mg-b-10">
+                            <span class="author">由<a href="javascript:void(0);">errol</a>发表于<a href="#">2023-10-05 11:20:47</a></span>
+                            <span>|</span>
+                            <span class="time">
+                            分类为
+                            <a href="../categories/1.html">编程</a></span>
+                            <span>|</span>
+                            <span class="tags">
+                                标签为<a href="javascript:void(0);">java</a>、<a href="javascript:void(0);">打包</a>、<a href="javascript:void(0);">没有主清单属性</a>、<a href="javascript:void(0);">MANIFEST.MF</a>
+                            </span>
+                        </div>
+                        <div class="content">
+                            <p>主要是因为jar中“<strong>缺少MANIFEST.MF文件</strong>”或者是“<strong>MANIFEST.MF文件中未包含有主类的路径</strong>”，补充完善MANIFEST.MF文件后就能正常运行。</p>
+<p>MANIFEST.MF的基本结构如下：</p>
+<pre><code class="language-bash"># 其他属性...
+Manifest-Version: 1.0
+Main-Class: com.xxx.xxx.Application
+</code></pre>
+<p>要处理这个问题也简单，在打包前后都可以进行。</p>
+<p><strong>1、打包前</strong></p>
+<p>1）spring-boot-maven-plugin插件</p>
+<p>如果是maven项目的话，可以考虑使用spring-boot-maven-plugin（即使不是spring项目也可以），该插件可以自动在jar中生成MANIFEST.MF文件。</p>
+<p>在pom文件中添加如下配置：</p>
+<pre><code class="language-xml">&lt;build&gt;
+    &lt;plugins&gt;
+        &lt;plugin&gt;
+            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-boot-maven-plugin&lt;/artifactId&gt;
+            &lt;version&gt;3.0.11&lt;/version&gt;
+            &lt;executions&gt;
+                &lt;execution&gt;
+                    &lt;id&gt;repackage&lt;/id&gt;
+                    &lt;configuration&gt;
+                        &lt;attach&gt;false&lt;/attach&gt;
+                    &lt;/configuration&gt;
+                &lt;/execution&gt;
+            &lt;/executions&gt;
+        &lt;/plugin&gt;
+    &lt;/plugins&gt;
+&lt;/build&gt;
+</code></pre>
+<p>2）手动创建MANIFEST.MF + maven-jar-plugin插件（同样是maven工程）</p>
+<p>可以考虑先手动创建MANIFEST.MF文件（META-INF/MANIFEST.MF），再通过maven-jar-plugin指定该文件。</p>
+<p>如：</p>
+<pre><code class="language-xml">&lt;build&gt;
+    &lt;plugins&gt;
+        &lt;plugin&gt;
+            &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;
+            &lt;artifactId&gt;maven-jar-plugin&lt;/artifactId&gt;
+            &lt;version&gt;3.2.2&lt;/version&gt;
+            &lt;configuration&gt;
+                &lt;archive&gt;
+                    &lt;manifestEntries&gt;
+                        &lt;build-time&gt;${maven.build.timestamp}&lt;/build-time&gt;
+                    &lt;/manifestEntries&gt;
+                    &lt;manifestFile&gt;src/main/resources/META-INF/MANIFEST.MF&lt;/manifestFile&gt;
+                &lt;/archive&gt;
+            &lt;/configuration&gt;
+        &lt;/plugin&gt;
+    &lt;/plugins&gt;
+&lt;/build&gt;
+</code></pre>
+<p>3）使用idea生成MANIFEST.MF文件</p>
+<p>（此处为macos，windows应该也是类似的）</p>
+<p>3.1 菜单栏 -&gt; File -&gt; Project Structure</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202310/18e0b50fdd6c4379ac93b55a3c5abb89-04658B093BE4699911D68DD95F170318.jpg" /></p>
+<p>3.2 Project Settings -&gt; Artifacts -&gt; “+”</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202310/a0d7ac35d4de40329ac654d98976080d-640880426E5FA3D81314C5BDF1098450.jpg" /></p>
+<p>3.3 JAR -&gt; From modules with dependencies</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202310/979780998af94d14bd641570026bb657-FAE3E5FA160A8975895AFB4F82DE8FE6.jpg" /></p>
+<p>3.4 填写主类以及MANIFEST.MF文件生成的位置</p>
+<p>点击Main Class右侧的菜单图标选择主类；MANIFEST.MF文件生成的位置选择项目的src目录下即可，填写完毕后点击ok。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202310/a91e9f0d531a47d8be1b9161a5c34dc7-3B9EA4D85F8CFE38852EAFF21BECD21A_2.png" /></p>
+<p>在完成了以上的操作后，打包为jar时，里面应该就含有MANIFEST.MF文件以及主类的路径了。</p>
+<p><strong>2、打包后（不推荐）</strong></p>
+<p>通过第一点也不难看出，其实MANIFEST.MF是一个很简单的配置文件，自己创建并添加至jar，或修改jar里面的MANIFEST.MF文件也是可以的。</p>
+<p>如可以使用“360压缩”打开jar，利用360压缩不会立即解压，可以查看或修改里面的文件的特性，将MANIFEST.MF添加或修改，保存后运行即可。</p>
+<p>但不推荐这种方式，很麻烦，每次都要修改。</p>
+<hr />
+<p>刚开始接触打包java项目的时候，确实常常遇到这个问题，多碰到几次就熟悉了。</p>
+
+                        </div>
+                    </div>
+                </article>
+                <div class="comment-wrap">
+                        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+                        <script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+                        <div id="gitalk-container"></div>
+                        <script>
+                            const gitalk = new Gitalk({
+                                clientID: 'ae1422e500a8b19fb1fc',
+                                clientSecret: '9f387db6a84a4945cdf5dc743c16ce25fdef6b76',
+                                repo: 'github-pages',      // The repository of store comments,
+                                owner: 'xxzhiwei',
+                                admin: ['xxzhiwei'],
+                                id: location.pathname,      // Ensure uniqueness and length less than 50
+                                distractionFreeMode: false  // Facebook-like distraction free mode
+                            });
+                            gitalk.render('gitalk-container');
+                        </script>
+                </div>
+            </div>
+            <div class="right">
+                    <div class="side-card b-s-1 mg-b-10">
+                        <div class="wrapper">
+                            <h2 class="item title">相关文章</h2>
+                            <div class="item content">
+                                    <div class="item1">
+                                        <a href="../articles/40.html">探究MultipartResolver的运行原理</a>
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+            </div>
+        </div>
+    </div>
+    <div class="back">返回</div>
+</div>
+    <script src="../js/dataList.js"></script>
+    <script src="../js/lazy.js"></script>
+    <script src="../js/search.js"></script>
+    <script src="../js/menu.js"></script>
+<script>
+    let back = document.querySelector(".back");
+    back.addEventListener("click", function () {
+        window.history.go(-1);
+    });
+</script>
+</body>
+</html>
