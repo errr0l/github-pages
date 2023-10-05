@@ -94,37 +94,31 @@
                         <div class="content">
                             <p>这两天把pqt活动文本提取器进行重构了，理由也很简单，纯粹就是程序不好使...</p>
 <p>就跟前面说的那样，程序的启动极其复杂、笨重，必须要人力干预，用肉眼查看、搜索定位”锚点“，还要保证其唯一性，否则根本无法运行，真的给“程序”这个词蒙羞了。</p>
-<p>更离谱的是，这次游戏新出的角色活动中，当我花费了大力气在源数据文件中查找到了锚点，把它们输入程序，并点击运行的时候，我没能得到想要的结果…</p>
-<p>此刻，我不禁陷入沉思，虽然只是这种程度的东西，但还是花费了不少时间才产出来的。</p>
+<p>更离谱的是，这次游戏新出的角色活动中，当我花费了大力气在源数据文件中查找到了锚点，并把它们输入程序，然后点击运行的时候，我没能得到想要的结果。</p>
+<p>虽然只是这种程度的东西，毕竟还是自己花费了不少时间才产出来的，此刻，我不禁陷入沉思...</p>
 <p>回头看了一眼代码，确实能感觉到很烂，根本就没个样，总觉得下一秒就会散架，简陋到爆炸，当时确实没有考虑到程序设计问题，写得很随意，怎么快怎么来，只想着赶紧得到结果。</p>
-<p>一想到这是一堆啰里八嗦、毫无编程思想可言的东西，就对现在的这种情况感到释怀了，有时甚至觉得它之前能正常运行都是件不可思议的事情...</p>
-<p>以上就是本次重构的前提，目前工作已经做的七七八八，下面大致介绍一些主要的改动和思路。</p>
-<h3>一、改动的地方</h3>
-<p>相较于先前的版本，本次注重的是代码设计，更多地考虑拓展性、可维护性、易用性，简单的来说，就是采用了面向对象思想进行编程，并把输入进行了配置化，即现在运行程序仅需要修改些许配置文件。</p>
-<p>在逻辑判断方面，为程序重新寻找了锚点，如起始锚点均采用了角色通用的标识，如角色id、角色名称，而结尾锚点则采用了一些固定的位置，这是可配置化的基础。</p>
-<p>此外，还把翻译程序也整合了进来，如果需要的话，可以在配置文件中指定。也就是说改版之后的程序具有两个功能：文本提取和文本翻译。</p>
-<p>程序主要运行逻辑如下：</p>
+<p>现在一想到这是一堆啰里八嗦、毫无编程思想可言的东西，就对出现的这种情况感到释怀了，有时甚至觉得它之前能正常运行都是件不可思议的事情...</p>
+<p>以上就是本次重构的前提，目前工作已经完成了个七七八八，下面大致介绍一下主要的改动以及思路。</p>
+<h3>一、改动&amp;思路</h3>
+<p>相较于先前的版本，本次注重的是代码设计，更多地考虑拓展性、可维护性、易用性。</p>
+<p>在代码层面，全面采用面向对象编程思想，并对程序输入进行了配置化，达到了减少冗余和动静分离的效果。</p>
+<p>在逻辑判断方面，为程序重新寻找了锚点：起始锚点均采用了角色通用的标识，如角色id、角色名称，而结尾锚点则采用了固定点位，这是可配置化的基础。</p>
+<p>此外，还把翻译程序也整合了进来，可以根据需要在配置文件中指定翻译的文本文件。</p>
+<p>也就是说改版之后的程序具有两个功能：文本提取和文本翻译。</p>
+<p>程序的运行逻辑如下：</p>
 <p>1）根据配置文件的活动名称获取对应的活动处理器，并通过反射实例化；</p>
 <p>2）运行活动处理器的process()，把结果写入输出文件中；</p>
 <p>3）尝试从配置文件中读取要翻译的文件名，如果存在时，则翻译该文件，并把翻译结果写入到当前文件所在的目录。</p>
-<p>1、配置文件</p>
-<p>下面主配置文件的含义是，提取名为“Violet”角色的“girlswatch”活动的文本，同时，还应该存在“/[活动]/[角色].txt”的角色配置文件，当前则为“/girlswatch/Violet.txt”，格式按实例文件创建即可。</p>
-<pre><code class="language-bash"># 角色名称
-pet-name=Violet
-# 活动名称【以及dating、simgirl】
-activity-name=girlswatch
-# 数据源路径
-source-file=pqt-workshop/src/main/resources/source-file/20230927-config.data
-# 输出文件路径【文件格式为'角色'-'活动'-of.txt，'output-file'用于存储活动文本，'output-file2'用户存储答案（如果活动有问答的话）】
-output-file=pqt-workshop/output/%s-%s-of.txt
-#output-file2=pqt-workshop/output/%s-%s-of-2.txt
-# 需要翻译的文件
-translating-file=output-file
-# 翻译接口实现类【目前只有百度翻译，有道翻译挂了】
-translator-class-name=com.errol.pqtworkshop.translator.impl.BaiduTranslator
-</code></pre>
-<p>2、启动类的main方法</p>
-<pre><code class="language-java">public static void main(String[] args) {
+<p>这个逻辑基于oop的多态特性，处于启动类的main方法中。</p>
+<pre><code class="language-java">// ...
+static {
+    processorClassNameMap.put(&quot;dating&quot;, &quot;com.errol.pqtworkshop.processor.impl.DatingProcessor&quot;);
+    processorClassNameMap.put(&quot;girlswatch&quot;, &quot;com.errol.pqtworkshop.processor.impl.GirlsWatchProcessor&quot;);
+    processorClassNameMap.put(&quot;simgirl&quot;, &quot;com.errol.pqtworkshop.processor.impl.SimGirlProcessor&quot;);
+}
+// ...
+public static void main(String[] args) {
+    # 根据活动名称获取对应的活动处理器全类名
     String className = processorClassNameMap.get(activityName);
     try {
         Class&lt;?&gt; clazz = Class.forName(className);
@@ -132,7 +126,7 @@ translator-class-name=com.errol.pqtworkshop.translator.impl.BaiduTranslator
         ActivityProcessor activityProcessor = (ActivityProcessor) clazz.newInstance();
         System.out.println(&quot;&gt;&gt;&gt; &quot;+ Application.class.getSimpleName() +&quot; started: &quot; + System.currentTimeMillis());
         System.out.println(&quot;&gt;&gt;&gt;&gt; &quot;+ activityProcessor.getClass().getSimpleName() +&quot; started: &quot; + System.currentTimeMillis());
-        # 调用process()把结果输出到指定的文件中
+        # 调用process()方法把结果输出到指定的文件中
         activityProcessor.process(petName, activityName, sourceFilePath, outputFilePath, petConfig);
         System.out.println(&quot;&gt;&gt;&gt;&gt; &quot;+ activityProcessor.getClass().getSimpleName() +&quot; ended: &quot; + System.currentTimeMillis());
 
@@ -150,15 +144,53 @@ translator-class-name=com.errol.pqtworkshop.translator.impl.BaiduTranslator
     }
 }
 </code></pre>
-<p>3、项目结构</p>
-<p>除了filter和handler两个包是翻译器（translator）专用的之外，其他的包&amp;文件，活动处理器（ActivityProcessor）均有直接或间接依赖到。</p>
+<p>DatingProcessor，GirlsWatchProcessor和SimGirlProcessor，分别是对应活动名称的处理器，任何一个都实现了ActivityProcessor接口，这也是它们能向上转型的原因，ActivityProcessor接口主要有两个方法：</p>
+<p>1）process()方法用于处理提取目标文本；</p>
+<p>2）translate()方法用于翻译指定的文本文件。</p>
+<pre><code class="language-java">public interface ActivityProcessor {
+    void process(String petName, String activityName, String sourceFilePath, String outputFilePath, Map&lt;String, String&gt; petConfig);
+    default void translate(String filePath, Map&lt;String, String&gt; petConfig) {
+        // 翻译逻辑略...
+    }
+}
+</code></pre>
+<p>在具体的ActivityProcessor中，依赖了不同的文件解析器，用于解析数据源文件中的不同位置的文本（文本并不是连续的），它们的关系如下：</p>
+<ul>
+<li>DatingProcessor
+<ul>
+<li>ChapterResolver</li>
+</ul>
+</li>
+<li>GirlsWatchProcessor
+<ul>
+<li>StoryResolver</li>
+<li>DaysResolver</li>
+<li>DetectiveResolver</li>
+</ul>
+</li>
+<li>SimGirlProcessor
+<ul>
+<li>StoryResolver</li>
+<li>TalkingResolver</li>
+</ul>
+</li>
+</ul>
+<p>其中文件解析器中又包含了具体的文本提取规则，它们与处理器一起共同完成提取文本的工作。</p>
+<pre><code class="language-java"># 解析器接口，具体就不再展开了...
+public interface FileResolver extends Resolver&lt;String, StringBuilder&gt; {
+    StringBuilder resolve(String filePath);
+}
+</code></pre>
+<h3>二、项目结构</h3>
+<p>在介绍了主要的改动和设计思路后，再来了解项目的构成。（其实主要是配置文件）</p>
+<p>除了filter和handler两个包是翻译器（translator）专用的之外，其他的包&amp;文件，活动处理器（ActivityProcessor）均有直接或间接使用到。</p>
 <pre><code class="language-bash">└── main
     ├── java
     │   └── com
     │       └── errol
     │           └── pqtworkshop
     │               ├── Application.java
-    │               ├── decider # 锚点接口
+    │               ├── decider # 锚点定位判断接口
     │               │   └── Decider.java
     │               ├── entity 
     │               │   └── Position.java
@@ -193,15 +225,20 @@ translator-class-name=com.errol.pqtworkshop.translator.impl.BaiduTranslator
     │               │   └── impl
     │               │       └── BaiduTranslator.java
     │               └── util # 工具类
+    │                   ├── CommonUtil.java
+    │                   ├── HttpUtil.java
+    │                   └── Md5Util.java
     └── resources
         ├── META-INF
         │   └── MANIFEST.MF
         ├── application.properties
         ├── dating # 活动1配置文件
         │   ├── EXAMPLE.txt # 配置文件示例
+        │   ├── Katherine.txt
         │   └── SummerLadies.txt
         ├── girlswatch # 活动2配置文件
         │   ├── EXAMPLE.txt
+        │   ├── Kaia.txt
         │   └── Violet.txt
         ├── simgirl # 活动3配置文件
         │   ├── Alizee.txt
@@ -209,43 +246,24 @@ translator-class-name=com.errol.pqtworkshop.translator.impl.BaiduTranslator
         └── source-file # 数据源文件
             └── 20230927-config.data
 </code></pre>
-<p>ActivityProcessor主要有两个方法：</p>
-<p>1）process()方法用于处理提取目标文本；</p>
-<p>2）translate()方法用于翻译指定的文本文件。</p>
-<pre><code class="language-java">public interface ActivityProcessor {
-    # 处理文件的方法
-    void process(String petName, String activityName, String sourceFilePath, String outputFilePath, Map&lt;String, String&gt; petConfig);
-    # 翻译文件的方法
-    default void translate(String filePath, Map&lt;String, String&gt; petConfig) {
-        // ... 略
-    }
-}
+<p>1、配置文件</p>
+<p>下面主配置文件的含义是，提取名为“Violet”角色的“girlswatch”活动的文本，同时，还应该存在“/[活动]/[角色].txt”的角色配置文件，以当前的配置文件为例，则为“/girlswatch/Violet.txt”，该配置文件会在启动类处读取，格式按实例文件创建即可。</p>
+<pre><code class="language-bash"># 角色名称
+pet-name=Violet
+# 活动名称【以及dating、simgirl】
+activity-name=girlswatch
+# 数据源路径
+source-file=pqt-workshop/src/main/resources/source-file/20230927-config.data
+# 输出文件路径【文件格式为'角色'-'活动'-of.txt，'output-file'用于存储活动文本，'output-file2'用户存储答案（如果活动有问答的话）】
+output-file=pqt-workshop/output/%s-%s-of.txt
+#output-file2=pqt-workshop/output/%s-%s-of-2.txt
+# 需要翻译的文件
+translating-file=output-file
+# 翻译接口实现类【目前只有百度翻译，有道翻译挂了】
+translator-class-name=com.errol.pqtworkshop.translator.impl.BaiduTranslator
 </code></pre>
-<p>该接口一种有三个实现类，分别为DatingProcessor、GirlsWatchProcessor、SimGirlProcessor，与活动的名称一一对应。</p>
-<p>在具体的处理器中，依赖了不同的文件解析器，用于解析数据源文件中的不同位置的文本（文本并不是连续的），它们的关系如下：</p>
-<ul>
-<li>DatingProcessor
-<ul>
-<li>ChapterResolver</li>
-</ul>
-</li>
-<li>GirlsWatchProcessor
-<ul>
-<li>StoryResolver</li>
-<li>DaysResolver</li>
-<li>DetectiveResolver</li>
-</ul>
-</li>
-<li>SimGirlProcessor
-<ul>
-<li>StoryResolver</li>
-<li>TalkingResolver</li>
-</ul>
-</li>
-</ul>
-<p>其中文件解析器中又包含了具体的文本提取规则，它们与处理器一起共同完成提取文本的工作。</p>
-<p>4、活动配置文件</p>
-<p>dating活动需要修改的地方比较少，仅需改动一处；其次是simgirl，需要改动两处；最后是girlwatch，需要改动三处，而标有'固定'注释的属性不需要改动。</p>
+<p>2、角色配置文件</p>
+<p>dating活动需要修改的地方比较少，仅需改动一处；其次是simgirl，需要改动两处；最后是girlwatch，需要改动三处。标有'固定'注释的属性不需要改动。</p>
 <p>1）dating活动</p>
 <pre><code class="language-bash"># 输入[第一章的标题]
 chapterPosition-starting=[第一章的标题]
@@ -276,7 +294,8 @@ talkingPosition.starting=[第一句对白]
 # 固定
 talkingPosition.ending=timeslot_type,timeslot_detail
 </code></pre>
-<h3>二、小结</h3>
+<p>玩家用户需要做的是，正确地填写配置信息，然后运行程序，程序会根据这两种配置文件来输出不同的结果。</p>
+<h3>三、小结</h3>
 <p>程序在重构之后，已经从原来的“脚本代码”升级为“小程序”了，大量使用到面向对象、接口、抽象、配置、反射等概念，把变化与不变抽取分离，使得程序具有一定的可维护性与拓展性，用法也比之前简单得多。</p>
 <p>打包丢给别人使用也是可以的，除了目录文件之外，其他均没有变化，当然，肯定还需要jre环境，不然无法运行java。</p>
 <p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202310/9a74dc67382f4a7b84101d39d7cafb2b-image-20231004110506064.png" /></p>
