@@ -144,13 +144,13 @@ Main-Class: com.xxx.xxx.Application
 </code></pre>
 <p>3）使用idea生成MANIFEST.MF文件</p>
 <p>（此处为macos，windows应该也是类似的）</p>
-<p>3.1 菜单栏 -&gt; File -&gt; Project Structure</p>
+<p>第一步：菜单栏 -&gt; File -&gt; Project Structure</p>
 <p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202310/18e0b50fdd6c4379ac93b55a3c5abb89-04658B093BE4699911D68DD95F170318.jpg" /></p>
-<p>3.2 Project Settings -&gt; Artifacts -&gt; “+”</p>
+<p>第二步：Project Settings -&gt; Artifacts -&gt; “+”</p>
 <p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202310/a0d7ac35d4de40329ac654d98976080d-640880426E5FA3D81314C5BDF1098450.jpg" /></p>
-<p>3.3 JAR -&gt; From modules with dependencies</p>
+<p>第三步：JAR -&gt; From modules with dependencies</p>
 <p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202310/979780998af94d14bd641570026bb657-FAE3E5FA160A8975895AFB4F82DE8FE6.jpg" /></p>
-<p>3.4 填写主类以及MANIFEST.MF文件生成的位置</p>
+<p>第四步：填写主类以及MANIFEST.MF文件生成的位置</p>
 <p>点击Main Class右侧的菜单图标选择主类；MANIFEST.MF文件生成的位置选择项目的src目录下即可，填写完毕后点击ok。</p>
 <p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202310/a91e9f0d531a47d8be1b9161a5c34dc7-3B9EA4D85F8CFE38852EAFF21BECD21A_2.png" /></p>
 <p>在完成了以上的操作后，打包为jar时，里面应该就含有MANIFEST.MF文件以及主类的路径了。</p>
@@ -159,7 +159,7 @@ Main-Class: com.xxx.xxx.Application
 <p>如可以使用“360压缩”打开jar，利用360压缩不会立即解压，可以查看或修改里面的文件的特性，将MANIFEST.MF添加或修改，保存后运行即可。</p>
 <p>但不推荐这种方式，很麻烦，每次都要修改。</p>
 <hr />
-<p>刚开始接触打包java项目的时候，确实常常遇到这个问题，多碰到几次就熟悉了。</p>
+<p>刚开始接触打包java项目的时候，确实常常遇到这种问题，不过这只是个小坑，踩一遍就好。</p>
 
                         </div>
                     </div>
