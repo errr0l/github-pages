@@ -260,10 +260,10 @@ url_have_group_name = true # 在当前版本下，默认值为false，及url中�
 <pre><code class="language-bash">/usr/local/nginx-1.24.0/sbin/nginx
 </code></pre>
 <p>在浏览器打开树莓派的ip地址，不出意外的话，应该可以看到nginx的默认页面。</p>
-<p><img src="../image/portal/loading.gif" alt="image" data-src="/easyblog/image/portal/202309/52abaa7810c24b0d8e8b519a04f661ff-image-20230923104746868.png" /></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202309/52abaa7810c24b0d8e8b519a04f661ff-image-20230923104746868.png" /></p>
 <p><em>图1 nginx默认显示页面</em></p>
 <p>此时可以在ip地址后加上先前上传文件时返回的路径信息：'/group1/M00/00/00/wKgDH2UKwl-ASsN6AAAABFqC_Qg190.txt'，可以看到已经可以成功访问文件了。</p>
-<p><img src="../image/portal/loading.gif" alt="image" data-src="/easyblog/image/portal/202309/80ecad2e1f8c4365982072194c445209-77CE803057C60581541112F935544942.png" /></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202309/80ecad2e1f8c4365982072194c445209-77CE803057C60581541112F935544942.png" /></p>
 <p><em>图2 访问test.txt文件</em></p>
 <h3>三、安装内网穿透软件</h3>
 <p>到目前为此，已经可以通过在外部浏览器访问树莓派中存储的文件了，但这仅限于局域网内，而不能通过外部网络进行访问，这就是需要内外穿透的原因。</p>
@@ -287,7 +287,7 @@ mv /home/errol/client shenzhuo/
 <pre><code class="language-bash">./client [神桌互联账号] [密码]
 </code></pre>
 <p>在这之后，就可以通过神桌互联提供的地址访问文件了（可能会有一定的延迟）。</p>
-<p><img src="../image/portal/loading.gif" alt="image" data-src="/easyblog/image/portal/202309/ef727acf83794c2382d29a34aeb992b3-7F7A8A409173016D7FA5502A9B9147E3.jpg" /></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202309/ef727acf83794c2382d29a34aeb992b3-7F7A8A409173016D7FA5502A9B9147E3.jpg" /></p>
 <p><em>图3 通过映射地址（公网）访问文件</em></p>
 <hr />
 <p>至此，关于使用树莓派搭建文件服务器的篇章就告一段落了。</p>

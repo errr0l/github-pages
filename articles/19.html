@@ -167,10 +167,10 @@ export default {
 }
 </code></pre>
 <p>最后别忘了将属性绑在表单元素上。</p>
-<p><img src="../image/portal/loading.gif" alt="image" data-src="/easyblog/image/portal/202304/f13d0eb2c5814767a3f9e9394eeda573-d.png" /></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202304/f13d0eb2c5814767a3f9e9394eeda573-d.png" /></p>
 <p>在编写了上述简单的代码后，我们已经成功实现了离开当前路由组件时提示保存的功能，
 由于填写了数据又没保存，所以点击返回时，应用弹出了提示对话框。</p>
-<p><img src="../image/portal/loading.gif" alt="image" data-src="/easyblog/image/portal/202304/0ca85b9f9e3c4c3cb6f6ac2c99ab4bbf-720C90F2B0798C32F40B1BB40649F3F4.jpg" /></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202304/0ca85b9f9e3c4c3cb6f6ac2c99ab4bbf-720C90F2B0798C32F40B1BB40649F3F4.jpg" /></p>
 <p><strong>但有一点需要注意的地方。</strong></p>
 <p>插件的router.go(n)方法，类似于window.history.go(n)，是在浏览器的history记录中向前或者后退，并不经过vue-router。所以使用该方法返回上一个路由组件时，会出现钩子逻辑不能正常运行的现象，因此想要正常触发提示保存功能，就不能使用这个函数，可以使用push()或者replace()作为代替。</p>
 <h2>添加侦听器监听beforeunload事件</h2>
@@ -201,11 +201,11 @@ export default {
 <blockquote>
 <p>未保存数据，点击刷新页面时的提示信息</p>
 </blockquote>
-<p><img src="../image/portal/loading.gif" alt="image" data-src="/easyblog/image/portal/202304/7d2b140e55c44c14b920fb47c64ce898-a.png" /></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202304/7d2b140e55c44c14b920fb47c64ce898-a.png" /></p>
 <blockquote>
 <p>未保存数据，关闭标签页时的提示信息</p>
 </blockquote>
-<p><img src="../image/portal/loading.gif" alt="image" data-src="/easyblog/image/portal/202304/6822b988f6c4416f88de1ca9564e8429-c.png" /></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202304/6822b988f6c4416f88de1ca9564e8429-c.png" /></p>
 <p>目前，我们已经为所有的情况添加了提示保存功能：离开当前路由组件、关闭标签页、刷新页面，原理和实现还是比较简单的，唯一要注意的是，检测数据是否发生改动的方法很可能会因项目而异，有的比较简单（如文中的示例），有的就比较复杂，可能是因为属性多，或者属性的结构复杂等等，这需要根据项目的实际的情况来实现该方法。</p>
 <p>此外，还可以考虑把以上的逻辑都抽为一个模块，随后在需要提示保存功能的地方引入相关的方法和数据即可，这样无论是从维护角度还是使用角度来说，都是比较方便的。</p>
 <p>以上就是本篇文章的全部内容，希望对你有所帮助。</p>

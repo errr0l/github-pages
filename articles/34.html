@@ -295,7 +295,7 @@ async function respHandler(resp) {
 });
 </code></pre>
 <p>2、局部添加</p>
-<p><img src="../image/portal/loading.gif" alt="image" data-src="/easyblog/image/portal/202309/25892964ced04f6bb7698c5b043535e5-449A09589184B77D79DD64A86BC9B3D2.jpg" /></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202309/25892964ced04f6bb7698c5b043535e5-449A09589184B77D79DD64A86BC9B3D2.jpg" /></p>
 <p>图1 请求数据接口（src/api/index.js）</p>
 <p><strong>=== 20231021更新 ===</strong></p>
 <p>（事实上，这个不属于重发请求的内容，但由于与之相关，也一并写在这里了）</p>
@@ -398,7 +398,7 @@ notice(2, resp);
 <p>在经过上述的改造后，请求工具已经具备了静默处理请求的能力。</p>
 <p>在默认情况下，如果访问令牌和刷新令牌同时过期了的情况下向服务器获取数据时，应该会跳出要求登陆的提示框。</p>
 <p>如以下为双令牌过期时，点击'非静默获取数据[查看控制面板]'按钮的情况。</p>
-<p><img src="../image/portal/loading.gif" alt="image" data-src="/easyblog/image/portal/202310/864bc4e08df844b2962f5eaf09099bbd-6D98AFE1F3A74A279139FCF6EC39E93B.jpg" /></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202310/864bc4e08df844b2962f5eaf09099bbd-6D98AFE1F3A74A279139FCF6EC39E93B.jpg" /></p>
 <p>图2 登陆提示弹窗</p>
 <p>而在设置了silence属性后，请求会被静默处理：点击'静默获取数据[查看控制面板]'按钮，并配合控制台进行查看。</p>
 <p>以上就是本次的更新改动，代码已经上传至<a href="https://github.com/xxzhiwei/demo/tree/main/axios-refreshingToken-demo">github</a>。</p>

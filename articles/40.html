@@ -112,16 +112,16 @@
 <p>若想要在spring web项目中用MultipartResolver的文件解析功能，就必须先配置MultipartResolver，可以使用配置文件或注解的形式进行配置实例对象。</p>
 <p><em>本文使用的是StandardServletMultipartResolver方案，因为是spring-webmvc自带的，用起来比较方便。</em></p>
 <p>如下图为使用xml的形式将StandardServletMultipartResolver加入ioc容器。</p>
-<p><img src="../image/portal/loading.gif" alt="image" data-src="/easyblog/image/portal/202307/0461e1f1ca2a48f7bcd5d9bae816bb76-DETDeev.HoeJPefrAMATBOnORGMAAASAAANSPP.jpg" /></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202307/0461e1f1ca2a48f7bcd5d9bae816bb76-DETDeev.HoeJPefrAMATBOnORGMAAASAAANSPP.jpg" /></p>
 <p><em>图1 springmvc.xml</em></p>
 <p>同时，根据文档要求，MultipartResolver必须指定上传文件和请求的大小上限，以下为在web.xml中配置了MultipartResolver的参数multipart-config，此外还配置了接管所有请求的DispatcherServlet。</p>
-<p><img src="../image/portal/loading.gif" alt="image" data-src="/easyblog/image/portal/202307/5b4f58a4983d43e996dfbbd29a134d74-2.png" /></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202307/5b4f58a4983d43e996dfbbd29a134d74-2.png" /></p>
 <p><em>图2 web.xml</em></p>
 <h3>二、MultipartResolver解析请求中的文件数据</h3>
 <p>加入ioc容器的StandardServletMultipartResolver，会在接收到请求的时候被调用，该方法会根据请求头的Content-Type字段是否为“multipart/form-data”，来判断当前是不是上传文件请求，以及解析其中的上传文件数据。</p>
-<p><img src="../image/portal/loading.gif" alt="image" data-src="/easyblog/image/portal/202307/4f06da78056d4dffbf1bf557cd30dd55-3.jpeg" /></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202307/4f06da78056d4dffbf1bf557cd30dd55-3.jpeg" /></p>
 <p><em>图3 DispatcherServlet#doDispatch方法体</em></p>
-<p><img src="../image/portal/loading.gif" alt="image" data-src="/easyblog/image/portal/202307/fc57b06bc0b14d189be922501f248a87-4.jpeg" /></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202307/fc57b06bc0b14d189be922501f248a87-4.jpeg" /></p>
 <p><em>图4 checkMutipart方法体</em></p>
 <p><del>目前只需要知道spring调用了方法解析请求中的上传数据即可，至于解析的逻辑，有需要的读者可以自行查看</del></p>
 <h3>三、接收上传文件</h3>
@@ -139,20 +139,20 @@
 <p>=&gt; Object returnValue = invokeForRequest(webRequest, mavContainer, providedArgs);</p>
 <p>5、InvocableHandlerMethod#invokeForRequest</p>
 <p>经过漫长的调用，终于来到了控制器方法参数获取、调用的逻辑。</p>
-<p><img src="../image/portal/loading.gif" alt="image" data-src="/easyblog/image/portal/202307/1c377d9cfb4749bdb470753ec463af70-5.jpeg" /></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202307/1c377d9cfb4749bdb470753ec463af70-5.jpeg" /></p>
 <p><em>图5 invokeForRequestt方法体</em></p>
 <p>在getMethodArgumentValues方法里，首先会获取控制器方法的参数列表，接着使用参数解析器循环判断是否支持解析当前参数类型，如果支持就使用参数解析器获取对应的数据。</p>
-<p><img src="../image/portal/loading.gif" alt="image" data-src="/easyblog/image/portal/202307/35890df5b3ac47bdbf6a01f70b06dc07-6.jpeg" /></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202307/35890df5b3ac47bdbf6a01f70b06dc07-6.jpeg" /></p>
 <p><em>图6 getMethodArgumentValues方法体</em></p>
 <p>当前的上传文件方法的参数类型为MultipartFile，通过断点调试，得知MultipartFile类型的参数解析器为RequestParamMethodArgumentResolver。</p>
-<p><img src="../image/portal/loading.gif" alt="image" data-src="/easyblog/image/portal/202307/9a6363132e6041b6ae2a4c405b8093f4-647DCD3AAEA9D4E7D7134676C12035BA.jpg" /></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202307/9a6363132e6041b6ae2a4c405b8093f4-647DCD3AAEA9D4E7D7134676C12035BA.jpg" /></p>
 <p><em>图7 resolveArgument方法体1</em></p>
-<p><img src="../image/portal/loading.gif" alt="image" data-src="/easyblog/image/portal/202307/2dc224822a784b0c8b8db060125dfe75-B9D6AB1D7AA1FF203029C4EB4D3F3B7F.jpg" /></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202307/2dc224822a784b0c8b8db060125dfe75-B9D6AB1D7AA1FF203029C4EB4D3F3B7F.jpg" /></p>
 <p><em>图8 resolveArgument方法体2</em></p>
 <p>最后在RequestParamMethodArgumentResolver#resolveMultipartArgument方法里找到上传文件数据，并在upload方法中成功获取到上传的文件。</p>
-<p><img src="../image/portal/loading.gif" alt="image" data-src="/easyblog/image/portal/202307/6e11adbeb22f4218aa49f03e747e4bf2-7.jpeg" /></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202307/6e11adbeb22f4218aa49f03e747e4bf2-7.jpeg" /></p>
 <p><em>图9 resolveMultipartArgument方法体</em></p>
-<p><img src="../image/portal/loading.gif" alt="image" data-src="/easyblog/image/portal/202307/52e0bc0730534e6884c68e82f64638a7-AD44462E-484A-4A6A-A6B8-C633385424DA.jpeg" /></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202307/52e0bc0730534e6884c68e82f64638a7-AD44462E-484A-4A6A-A6B8-C633385424DA.jpeg" /></p>
 <p><em>图10 upload方法体</em></p>
 <p>通过以上的分析可知道，只要spring存在支持解析控制器方法定义的参数类型，并且该参数类型存在于当前请求context中的话，spring就可以帮助获取到数据，这就是spring支持“任凭”开发者定义形参的原因，不仅如此，spring甚至还支持拓展参数解析器，以适应更多的开发场景。</p>
 <p>需要提醒的是，文章的代码分析是经过简化的，实际上spring对于文件解析和参数处理的逻辑要复杂得多，在spring中，类似MultipartResolver这样的组件，还有很多很多，它们共同构成了一套Web的解决方案。</p>
