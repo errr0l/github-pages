@@ -81,7 +81,7 @@
                     <div class="markdown-body">
                         <div class="title">mysql查询相关联的前n条记录</div>
                         <div class="item meta mg-b-10">
-                            <span class="author">由<a href="javascript:void(0);">errol</a>发表于<a href="#">2023-04-18 04:28:37</a></span>
+                            <span class="author">由<a href="javascript:void(0);">errol</a>发表于<a href="#">2023-04-18 09:28:37</a></span>
                             <span>|</span>
                             <span class="time">
                             分类为
@@ -92,7 +92,7 @@
                             </span>
                         </div>
                             <div class="cover mg-b-10">
-                                <img src="../image/portal/202304/cover/0b7666aca7dc4912926dcb3a6208d231-a83e71765e2d741980648be7454bdf57.jpeg" alt="">
+                                <img src="../easyblog/image/portal/202304/cover/0b7666aca7dc4912926dcb3a6208d231-a83e71765e2d741980648be7454bdf57.jpeg" alt="">
                             </div>
                         <div class="content">
                             <p>如题，目前有这样的一个需求：</p>
@@ -105,16 +105,16 @@
 <blockquote>
 <p>标签表记录</p>
 </blockquote>
-<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202304/7de9e3c7e16b4e6faac7f63a5463938a-E7B2603136742B5507323B2804127401.jpg" /></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="/easyblog/image/portal/202304/7de9e3c7e16b4e6faac7f63a5463938a-E7B2603136742B5507323B2804127401.jpg" /></p>
 <blockquote>
 <p>文章表记录</p>
 </blockquote>
 <p><del>由于其他字段不是很重要，只截了id和标题。</del></p>
-<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202304/af583e200d964bb098f28970d89c79e5-9331536AB5FAB31F01D294D9F83B764F.jpg" /></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="/easyblog/image/portal/202304/af583e200d964bb098f28970d89c79e5-9331536AB5FAB31F01D294D9F83B764F.jpg" /></p>
 <blockquote>
 <p>文章&amp;标签关联表记录</p>
 </blockquote>
-<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202304/10b7fb0ae369432e9802917696ce413c-AFDFF839D4A2E24473AE68AB7CD1E263.jpg" /></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="/easyblog/image/portal/202304/10b7fb0ae369432e9802917696ce413c-AFDFF839D4A2E24473AE68AB7CD1E263.jpg" /></p>
 <p><strong>要实现这一需求，首先是通过关联表查询出目标文章的标签id。</strong></p>
 <pre><code class="language-sql">select t2.tag_id 
 from test.article t1 
@@ -122,7 +122,7 @@ join test.article_tag t2 on t2.article_id = t1.id
 where t1.id = 1;
 </code></pre>
 <p>查询结果如下。</p>
-<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202304/4d529481622d4f919a52076d7e334c84-1F74FFA587483FB7F926FB1E84F980E2.jpg" /></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="/easyblog/image/portal/202304/4d529481622d4f919a52076d7e334c84-1F74FFA587483FB7F926FB1E84F980E2.jpg" /></p>
 <p><strong>再把上一条sql当作子查询语句，来获取文章的id。</strong></p>
 <pre><code class="language-sql">select article_id, count(tag_id) count
 from test.article_tag
@@ -130,7 +130,7 @@ where article_id != 1 and tag_id in (select t2.tag_id from test.article t1 join 
 group by article_id order by count desc;
 </code></pre>
 <p>其中，count就是id为1的文章与其他文章的相关度量化，查询结果如下。</p>
-<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202304/d04b4ea6caf64f579d6ad56ac3e2a6df-B5B26E66A507AE58780132ECD4507DAB.jpg" /></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="/easyblog/image/portal/202304/d04b4ea6caf64f579d6ad56ac3e2a6df-B5B26E66A507AE58780132ECD4507DAB.jpg" /></p>
 <p>这个结果说明，其他两条文章记录都与id为1的文章有关联（可以翻到上面查看文章标签关联表对比查询结果）。</p>
 <p><strong>最后在通过上个查询得到的文章id，便查询出最终的需要的数据。</strong></p>
 <p>到此为止可以看出，通过关联表查询的优缺点都很明显，虽然比较简单，但是却非常的繁琐，一共需要使用三条sql语句，才能获取到最终的结果。</p>
@@ -183,7 +183,7 @@ from article where id = 19;
 </code></pre>
 <p><del>mysql当然可以进行简单的四则运算。</del></p>
 <p>执行的结果为：</p>
-<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202304/17289bfc91f44681b60cc13651b69c33-DC73E844B5DBD8236627492D558A0836.jpg" /></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="/easyblog/image/portal/202304/17289bfc91f44681b60cc13651b69c33-DC73E844B5DBD8236627492D558A0836.jpg" /></p>
 <p>其中matched就是传入的标签vue、vue-router、abc和id为19的文章标签的匹配个数，<strong>这个查询结果证明当前方式是行得通的。</strong></p>
 <p><strong>所以，是时候把该sql语句应用于项目的查询了。</strong></p>
 <p>假设我想要查询与id为19的文章关联的其他文章，则sql如下。</p>
@@ -195,9 +195,9 @@ where id != 19 and state not in (2, 3)
 order by tagMatched desc;
 </code></pre>
 <p>从查询结果里可以看到，只有一条数据是跟id为19的文章相关联，而且只有一个标签匹配，其他记录都不相关。</p>
-<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202304/2bd85cdfbbb8496cbc9c30954d9cbd51-3A77F4BD2C9F18E6FF137E9F4FBF44C8.jpg" /></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="/easyblog/image/portal/202304/2bd85cdfbbb8496cbc9c30954d9cbd51-3A77F4BD2C9F18E6FF137E9F4FBF44C8.jpg" /></p>
 <p>可以验证一下这一查询结果。</p>
-<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202304/28e234fbe625419e9212a8dde82961ae-F768A8A312BBEFB242DA022439003A2E.jpg" /></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="/easyblog/image/portal/202304/28e234fbe625419e9212a8dde82961ae-F768A8A312BBEFB242DA022439003A2E.jpg" /></p>
 <p>但有时候我们很可能并不需要那些不匹配的记录，关于这一点，我们可以在sql语句中加入正则表达式来过滤数据，于是<strong>最终的sql</strong>出现了。</p>
 <p><del>默认情况下，mysql的正则表达式是大小写不敏感的。</del></p>
 <pre><code class="language-sql">select id, title,
@@ -207,7 +207,7 @@ where id != 19 and state not in (2, 3) and tag regexp '(vue|提示保存|vue-rou
 order by tagMatched desc limit 5;
 </code></pre>
 <p>结果如下，可以看到，不相关联的记录被过滤掉了。</p>
-<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202304/ed139e23b651455994102551ae7b7849-15EDA2F84405A2BD4871361F42FE7E0A.jpg" /></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="/easyblog/image/portal/202304/ed139e23b651455994102551ae7b7849-15EDA2F84405A2BD4871361F42FE7E0A.jpg" /></p>
 <p>当然，这种方式的缺点也很容易看出：需要动态生成查询语句，而且当标签较多的时候，sql会变得很长，查询速度也会慢下来。</p>
 <p>关于动态sql，考虑到现在的持久层框架都是支持这一特性的，所以这并不是什么问题，而对于标签较多的话，解决方法还是有的，可以对标签的长度做限制，减少标签的数量（都不知道这算不算一个方法）。</p>
 <p>如我使用mybatis时，该sql的格式为：</p>

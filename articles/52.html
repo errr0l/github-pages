@@ -81,7 +81,7 @@
                     <div class="markdown-body">
                         <div class="title">关于运行jar时，报“没有主清单属性”的问题</div>
                         <div class="item meta mg-b-10">
-                            <span class="author">由<a href="javascript:void(0);">errol</a>发表于<a href="#">2023-10-05 11:20:47</a></span>
+                            <span class="author">由<a href="javascript:void(0);">errol</a>发表于<a href="#">2023-10-05 04:20:47</a></span>
                             <span>|</span>
                             <span class="time">
                             分类为
@@ -145,14 +145,14 @@ Main-Class: com.xxx.xxx.Application
 <p>3）使用idea生成MANIFEST.MF文件</p>
 <p>（此处为macos，windows应该也是类似的）</p>
 <p>第一步：菜单栏 -&gt; File -&gt; Project Structure</p>
-<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202310/18e0b50fdd6c4379ac93b55a3c5abb89-04658B093BE4699911D68DD95F170318.jpg" /></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="/easyblog/image/portal/202310/18e0b50fdd6c4379ac93b55a3c5abb89-04658B093BE4699911D68DD95F170318.jpg" /></p>
 <p>第二步：Project Settings -&gt; Artifacts -&gt; “+”</p>
-<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202310/a0d7ac35d4de40329ac654d98976080d-640880426E5FA3D81314C5BDF1098450.jpg" /></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="/easyblog/image/portal/202310/a0d7ac35d4de40329ac654d98976080d-640880426E5FA3D81314C5BDF1098450.jpg" /></p>
 <p>第三步：JAR -&gt; From modules with dependencies</p>
-<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202310/979780998af94d14bd641570026bb657-FAE3E5FA160A8975895AFB4F82DE8FE6.jpg" /></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="/easyblog/image/portal/202310/979780998af94d14bd641570026bb657-FAE3E5FA160A8975895AFB4F82DE8FE6.jpg" /></p>
 <p>第四步：填写主类以及MANIFEST.MF文件生成的位置</p>
 <p>点击Main Class右侧的菜单图标选择主类；MANIFEST.MF文件生成的位置选择项目的src目录下即可，填写完毕后点击ok。</p>
-<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202310/a91e9f0d531a47d8be1b9161a5c34dc7-3B9EA4D85F8CFE38852EAFF21BECD21A_2.png" /></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="/easyblog/image/portal/202310/a91e9f0d531a47d8be1b9161a5c34dc7-3B9EA4D85F8CFE38852EAFF21BECD21A_2.png" /></p>
 <p>在完成了以上的操作后，打包为jar时，里面应该就含有MANIFEST.MF文件以及主类的路径了。</p>
 <p><strong>2、打包后（不推荐）</strong></p>
 <p>通过第一点也不难看出，其实MANIFEST.MF是一个很简单的配置文件，自己创建并添加至jar，或修改jar里面的MANIFEST.MF文件也是可以的。</p>

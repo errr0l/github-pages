@@ -81,7 +81,7 @@
                     <div class="markdown-body">
                         <div class="title">axios重发设计方案</div>
                         <div class="item meta mg-b-10">
-                            <span class="author">由<a href="javascript:void(0);">errol</a>发表于<a href="#">2023-06-17 11:46:38</a></span>
+                            <span class="author">由<a href="javascript:void(0);">errol</a>发表于<a href="#">2023-06-17 04:46:38</a></span>
                             <span>|</span>
                             <span class="time">
                             分类为
@@ -92,7 +92,7 @@
                             </span>
                         </div>
                             <div class="cover mg-b-10">
-                                <img src="../image/portal/202306/a4526b56530d4182b380c30c46171583-7899e59abab5e08a2271fa31444f58ff.jpeg" alt="">
+                                <img src="../easyblog/image/portal/202306/a4526b56530d4182b380c30c46171583-7899e59abab5e08a2271fa31444f58ff.jpeg" alt="">
                             </div>
                         <div class="content">
                             <p>axios是现如今web前端领域中比较流行的一个http客户端，它基于promise封装，不仅体积小巧、简单易用，还具有很强的拓展性，使得它非常灵活多变，可以适应不同的环境场景。因此，axios深得web前端开发者的喜爱，已经成为前端web项目中的&quot;标配&quot;。</p>
@@ -295,8 +295,113 @@ async function respHandler(resp) {
 });
 </code></pre>
 <p>2、局部添加</p>
-<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202309/25892964ced04f6bb7698c5b043535e5-449A09589184B77D79DD64A86BC9B3D2.jpg" /></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="/easyblog/image/portal/202309/25892964ced04f6bb7698c5b043535e5-449A09589184B77D79DD64A86BC9B3D2.jpg" /></p>
 <p>图1 请求数据接口（src/api/index.js）</p>
+<p><strong>=== 20231021更新 ===</strong></p>
+<p>（事实上，这个不属于重发请求的内容，但由于与之相关，也一并写在这里了）</p>
+<p>在某些时候，我们可能会想让某个请求是静默的，也就是说请求不会有任何提示：用户之前登陆过了，但现在凭证已过期，而在某个无需登录的页面下，使用该过期的凭证向服务器发起请求，如果在未改动的情况下，会出现用户登录已过期的弹窗提示。</p>
+<p>这样是不合理的，因为当前用户处于非必须登陆的界面，不应该强制用户重新登陆。</p>
+<p>比较好的做法应该是对当前请求做静默处理，并删除相关的数据，只有当用户操作必须处于登录状态才能继续的页面或功能时，才强制让用户重新登录。</p>
+<p>1、将提示功能封装为一个方法，以更方便调用</p>
+<pre><code class="language-javascript">/**
+ * 通知方法
+ * @param {Number} type - 通知类型；1=gotoLoginPage，2=Message.error
+ * @param {Object} resp - 响应对象
+ * @returns 
+ */
+ const notice = (type, resp) =&gt; {
+    if (resp.config &amp;&amp; resp.config.silence) {
+        return;
+    }
+
+    const data = resp.data;
+    // 目前只有两种通知类型：1=前往登陆提示，2=默认提示
+    if (type == 1) {
+        gotoLoginPage(data.message, router.app.$route);
+    }
+    else if (type == 2) {
+        Message.error(data.message || &quot;系统发生异常&quot;);
+    }
+}
+</code></pre>
+<p>2、新增silenceInterceptor拦截器</p>
+<p>该拦截器会在请求前检查指定的存储对象，如localStorage、sessionStorage、vuex等，如果其中的silence属性为true，就把silence移到config；</p>
+<pre><code class="language-javascript">// 静默拦截器；
+// 此处使用localStorage、vuex（vue）作为代替也是可以的；
+const silenceInterceptor = config =&gt; {
+    if (!config.silence) {
+        const silence = sessionStorage.getItem('silence');
+        if (silence) {
+            config.silence = true;
+        }
+    }
+    return config;
+}
+</code></pre>
+<p>应用拦截器：</p>
+<pre><code class="language-javascript">// ...
+// 设置请求拦截器
+service.interceptors.request.use(
+    tokenInterceptor,
+    // ...
+);
+service.interceptors.request.use(silenceInterceptor);
+// ...
+</code></pre>
+<p>3、修改respHandler中的逻辑</p>
+<p>在switch语句中的'case 40101'、'case 40198'、'default'应用一下修改。</p>
+<p>1）case 40101</p>
+<pre><code class="language-javascript">// ...
+if (!refreshToken) {
+    //MessageBox(&quot;请先登录&quot;, &quot;提示&quot;, { confirmButtonText: '确定' }).then(() =&gt; {});
+    notice(1, resp);
+    // ...
+}
+// ...
+</code></pre>
+<p>2）case 40198</p>
+<pre><code class="language-javascript">// ...
+bus.$emit('clear:token', { refreshToken: true });
+// _Message.error(data.message || &quot;请重新登陆&quot;);
+notice(1, resp);
+// ...
+</code></pre>
+<p>3）default</p>
+<pre><code class="language-javascript">//  _Message.error(data.message || &quot;系统发生异常&quot;);
+notice(2, resp);
+</code></pre>
+<p>4、设置silence属性</p>
+<p>有两种方式可以为请求设置silence属性，一种是在请求方法中直接添加，另一种只在指定的存储对象中添加。</p>
+<p>1）在请求方法中直接添加</p>
+<p>如果某个方法总是需要静默处理时，可选用这种添加方式。</p>
+<pre><code class="language-js">export function getTestData2(data) {
+    return request({
+        url: '/api/test2',
+        method: 'get',
+        params: data,
+        silence: true // 在axios实例对象中直接添加
+    });
+}
+</code></pre>
+<p>2）在调用请求方法时动态添加</p>
+<p>设置的属性会被silenceInterceptor拦截器所拦截，并将silence设置到axios的config中。</p>
+<pre><code class="language-javascript">async getTestData3() {
+    sessionStorage.setItem('silence', true);
+    const resp = await getTestData();
+    if (resp.code === 0) {
+        this.$message.success(&quot;操作成功&quot;);
+        this.testData = JSON.stringify(resp.data);
+    }
+    sessionStorage.setItem('silence', false);
+}
+</code></pre>
+<p>在经过上述的改造后，请求工具已经具备了静默处理请求的能力。</p>
+<p>在默认情况下，如果访问令牌和刷新令牌同时过期了的情况下向服务器获取数据时，应该会跳出要求登陆的提示框。</p>
+<p>如以下为双令牌过期时，点击'非静默获取数据[查看控制面板]'按钮的情况。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="/easyblog/image/portal/202310/280199dc4cf44e799ab2deac6bfeffc9-6D98AFE1F3A74A279139FCF6EC39E93B.jpg" /></p>
+<p>图2 登陆提示弹窗</p>
+<p>而在设置了silence属性后，请求会被静默处理：点击'静默获取数据[查看控制面板]'按钮，并配合控制台进行查看。</p>
+<p>以上就是本次的更新改动，代码已经上传至<a href="https://github.com/xxzhiwei/demo/tree/main/axios-refreshingToken-demo">github</a>。</p>
 <h2>结语</h2>
 <p>总的来说，重发请求是一个常见且有用的小功能，但由于作者的日常开发中，没有真正遇到过这样的场景（基本上都是直接呼用户重新登陆），因此之前封装的axios总是存在着各种各样的毛病和问题，用起来很别扭，这也是写下本文章的直接原因。</p>
 <p>现在一次性把这些问题都解决了，心中的烦闷也随之消散，好不痛快！</p>

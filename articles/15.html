@@ -81,7 +81,7 @@
                     <div class="markdown-body">
                         <div class="title">兼容部署在Github Pages与其他服务器的应用引入资源的解决方案</div>
                         <div class="item meta mg-b-10">
-                            <span class="author">由<a href="javascript:void(0);">errol</a>发表于<a href="#">2023-04-07 11:03:58</a></span>
+                            <span class="author">由<a href="javascript:void(0);">errol</a>发表于<a href="#">2023-04-07 04:03:58</a></span>
                             <span>|</span>
                             <span class="time">
                             分类为
@@ -92,14 +92,14 @@
                             </span>
                         </div>
                             <div class="cover mg-b-10">
-                                <img src="../image/portal/202304/cover/3d1e234ec548474aa029e07874aa6ed3-d6a08501caac287b7d89c5cc5206ffce.jpg" alt="">
+                                <img src="../easyblog/image/portal/202304/cover/3d1e234ec548474aa029e07874aa6ed3-d6a08501caac287b7d89c5cc5206ffce.jpg" alt="">
                             </div>
                         <div class="content">
                             <p>原本该项目是使用绝对路径的方式来加载静态资源，这种方式的优势在于简单明了、易维护，直接从项目的根目录下加载资源，在开发环境与部署在其他服务器下都运行良好，但是，当将该项目上传至Github Pages之后，则出现了静态资源404的问题。</p>
 <p>以link标签为例，原加载css文件的源码如下。</p>
-<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202304/a27b4185ab26416195ddd2646f8bb078-CEE0CEC6C1A7D43EA48EBA01571B6CD7.jpg" /></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="/easyblog/image/portal/202304/a27b4185ab26416195ddd2646f8bb078-CEE0CEC6C1A7D43EA48EBA01571B6CD7.jpg" /></p>
 <p>而将项目部署到Github Pages之后，则出现了无法加载文件的问题。</p>
-<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202304/30a947122e894683902075217827da80-0AD5F18A875E15542BC431320E9F212B.jpg" /></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="/easyblog/image/portal/202304/30a947122e894683902075217827da80-0AD5F18A875E15542BC431320E9F212B.jpg" /></p>
 <p><strong>究其原因是Github Pages所提供的静态站点路径问题。</strong></p>
 <blockquote>
 <p>https://xxzhiwei.github.io/github-pages/</p>
@@ -113,7 +113,7 @@
 </blockquote>
 <h2>以相对路径的方式引入资源</h2>
 <p>这同时也是当前项目使用的方式，顾名思义就是以当前文件为参考对象，来引入其他路径下的资源。</p>
-<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202304/06ae8aeb5ec6475b9257b3a28a3a9578-438580D24EA7A4523B3A9DE08FD01C8C.jpg" /></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="/easyblog/image/portal/202304/06ae8aeb5ec6475b9257b3a28a3a9578-438580D24EA7A4523B3A9DE08FD01C8C.jpg" /></p>
 <blockquote>
 <p>./css/reset.css, ../css/theme-light.css</p>
 </blockquote>
@@ -124,7 +124,7 @@
 <p>所以，在结构复杂的项目中不推荐使用相对路径的方式来引入资源。</p>
 <h2>以网络路径的方式引入资源</h2>
 <p>还有一种好用且常见的方式，就是使用网络路径从第三方服务器来加载资源。</p>
-<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202304/6e47148d2b1d4dbc82e25a82d20112c8-76EDA8773F9E863863D0ED8B7190B273.jpg" /></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="/easyblog/image/portal/202304/6e47148d2b1d4dbc82e25a82d20112c8-76EDA8773F9E863863D0ED8B7190B273.jpg" /></p>
 <p>这种方式的优势在于，只要第三方服务器能正常提供服务时，不仅完全不需要考虑引用资源路径的问题，还能减少当前服务器的负载，相对的是需要连接外网。</p>
 <p>但同时也还有一些问题需要考虑，比方说项目的文件是不是常常变动，如果以网络路径的方式来引入常变动的文件，那就意味着每次迭代项目，都要在第三方服务器更新引用的文件，这相对来说也是挺麻烦的；资源提供方是否能稳定提供服务...</p>
 <h2>混合使用</h2>
