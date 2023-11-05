@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>关于个人支付 - 小埃的个人博客</title>
+    <link rel="stylesheet" href="../css/reset.css">
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/index.css">
+    <link rel="stylesheet" href="../css/header.css">
+    <link rel="stylesheet" href="../css/mobile.css">
+    <link rel="stylesheet" href="../css/theme-light.css">
+    <link rel="shortcut icon" href="../favicon.ico" type="image/x-icon">
+        <meta name="keywords" content="商场,支付">
+    <link rel="stylesheet" href="../css/article.css">
+    <link rel="stylesheet" href="../css/markdown/github-markdown.css">
+    <link rel="stylesheet" href="../css/markdown/github-markdown-light.css">
+    <link rel="stylesheet" href="../css/gittalk-cover.css">
+    <link rel="stylesheet"
+          href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</head>
+<body>
+<div id="app">
+    <div id="header">
+    <div id="bar">
+        <div class="container mg-0-auto d-f">
+            <div class="logo">
+                <a href="../" class="nav-link">
+                    <img src="../image/portal/logo.jpg" alt="小埃的个人博客">
+                </a>
+            </div>
+            <div class="right">
+                <ul class="nav f-l">
+                        <li class="nav-item">
+                            <a href="../index.html" class="nav-link active">
+                                <span>首页</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="../category.html" class="nav-link ">
+                                <span>分类</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="../about.html" class="nav-link ">
+                                <span>关于</span>
+                            </a>
+                        </li>
+                </ul>
+                <div class="eb-title">
+                    小埃的个人博客
+                </div>
+                <div id="search">
+                    <input type="text" id="search-input" data-prefix="../" placeholder="搜索" autocomplete="off" />
+                    <span class="search-icon t-a">
+                        <img class="el-icon-search" src="../image/portal/search.png" width="16" height="16">
+                    </span>
+                    <div id="search-result">
+                        <input type="text" class="input-1" id="search-input-2" data-prefix="../" placeholder="请输入" autocomplete="off" />
+                        <div class="content">
+                        </div>
+                        <div class="arrow"></div>
+                    </div>
+                </div>
+                <div class="eb-menu">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-list-ul" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M5 11.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm-3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm0 4a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm0 4a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    <div id="main">
+        <div class="container mg-0-auto pd-t-10">
+            <div class="left">
+                <article class="mg-b-20">
+                    <div class="markdown-body">
+                        <div class="title">关于个人支付</div>
+                        <div class="item meta mg-b-10">
+                            <span class="author">由<a href="javascript:void(0);">errol</a>发表于<a href="#">2023-11-04 03:12:09</a></span>
+                            <span>|</span>
+                            <span class="time">
+                            分类为
+                            <a href="../categories/6.html">瞎聊</a></span>
+                            <span>|</span>
+                            <span class="tags">
+                                标签为<a href="javascript:void(0);">商场</a>、<a href="javascript:void(0);">支付</a>
+                            </span>
+                        </div>
+                        <div class="content">
+                            <p>商城项目已经接近尾声（？），只差最后的支付功能，不过由于并没有真正接触过支付这方面的内容，不知道怎么入手，很苦恼。</p>
+<p>虽然此前有对接过支付宝，但其实那只是给了别人提供的全部数据，然后跟着别人重复一遍而已，也就是说，支付代码并不是事，而是支付资格难以获取到。</p>
+<p>根据资料了解到，一般个体是申请不到官方支付的（指的是支付宝、微信支付等这种具备信誉保障的平台），需要营业执照、营业许可证等材料，提交审核并通过后，支付官方才会授予资格，因此，个人对接官方支付这种方式在最开始的材料阶段已经被按死了。</p>
+<p>也正是因为这个原因，市面上衍生出了一批小平台、小作坊支付（？），姑且把它们称为第四方支付，其原理就是封装，即将官方支付封装了一层后对外提供服务，如虎皮椒、payjs、7pay、易支付、蓝兔支付等等（非常多）。</p>
+<p>但相对的，门槛低带来的则是“双高”。</p>
+<p>1）风险高</p>
+<p>使用四方支付得承担平台卷钱跑路的风险；有很多四方支付会先把资金放在自己的账户上，然后再结算给用户，这种最容易跑路。</p>
+<p>2）费率高</p>
+<p>除了官方的基础费率之外，四方支付还会额外收取一定比例的金额，作为平台的盈利来源（不然赔本生意谁会做...），有的平台可能还存在会员、开通费等付费机制。</p>
+<p>比较严谨一点的四方支付还会要求网站进行备案，以及网站有实际的销售商品，有的甚至还要将商品类型提交审核，用起来也是挺麻烦的。</p>
+<p>所以，我感觉自己也不具备对接四方支付的条件，先不说双高的问题，仅仅是要求网站备案和提前付费这两点就已经把我劝退了，目前不具备做正规网站的条件，也没有稳定的流量来源。</p>
+<p>因此，我就想，如果有一种既不需要签约&amp;备案，也不需要营业证件的支付方式的话，那该多好，如果还不用担心跑路，也不违规的话，那就完美了...</p>
+<p>出乎预料的是，这样的支付方式竟然真的存在，但稍微有点特殊。</p>
+<p>这种近乎“完美”的方式并不由谁提供，它仅仅是组合了“收款码转账”和“转账通知”这种自然而然的机制。</p>
+<p>简单地描述它的流程：</p>
+<p>1）准备一个手机，并登录支付宝（或微信），以及导出收款码，同时打开监听app；</p>
+<p>2）网站用户扫描收款码，并支付；</p>
+<p>3）支付宝（或微信）收到通知，被监听app捕获到，随后通知服务器。</p>
+<p>可以看到，它就是一种绕过了官方渠道而达成的变相支付通知方式，原理相当简单，也没有门槛。</p>
+<p>不过缺点也很明显，这种方式的运作是极其不稳定的，手机需要7x24小时持续监听通知，电量、发热、闪退、网络等问题都将会是影响它稳定运行的因素。</p>
+<p>我想要的是一种更简单、更稳定的方式...</p>
+<p>稍微考虑了一下，因为个人网站的流量真的很少，更何况是我这个“商场”，很可能常年都不会有人光顾，因此根本不需要及时的支付回调。</p>
+<p>综合考虑之下，我决定采用人工处理的方式，其原理还是“收款码转账”和“转账通知”，但使用人工处理来代替app监听通知，在1-3个工作日内处理完毕；而如果订单确实比较紧急的话，则可以通过微信&amp;qq等联系方式提前处理，在流量很少的情况下，可以应付得过来，主要是足够稳定简单。</p>
+<p>理论上应该行得通。</p>
+
+                        </div>
+                    </div>
+                </article>
+                <div class="comment-wrap">
+                        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+                        <script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+                        <div id="gitalk-container"></div>
+                        <script>
+                            const gitalk = new Gitalk({
+                                clientID: 'ae1422e500a8b19fb1fc',
+                                clientSecret: '9f387db6a84a4945cdf5dc743c16ce25fdef6b76',
+                                repo: 'github-pages',      // The repository of store comments,
+                                owner: 'xxzhiwei',
+                                admin: ['xxzhiwei'],
+                                id: location.pathname,      // Ensure uniqueness and length less than 50
+                                distractionFreeMode: false  // Facebook-like distraction free mode
+                            });
+                            gitalk.render('gitalk-container');
+                        </script>
+                </div>
+            </div>
+            <div class="right">
+            </div>
+        </div>
+    </div>
+    <div class="back">返回</div>
+</div>
+    <script src="../js/dataList.js"></script>
+    <script src="../js/lazy.js"></script>
+    <script src="../js/search.js"></script>
+    <script src="../js/menu.js"></script>
+<script>
+    let back = document.querySelector(".back");
+    back.addEventListener("click", function () {
+        window.history.go(-1);
+    });
+</script>
+</body>
+</html>
