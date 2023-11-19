@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>解耦在JS中的应用 - 小埃的个人博客</title>
+    <link rel="stylesheet" href="../css/reset.css">
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/index.css">
+    <link rel="stylesheet" href="../css/header.css">
+    <link rel="stylesheet" href="../css/mobile.css">
+    <link rel="stylesheet" href="../css/theme-light.css">
+    <link rel="shortcut icon" href="../favicon.ico" type="image/x-icon">
+        <meta name="keywords" content="js,解耦">
+    <link rel="stylesheet" href="../css/article.css">
+    <link rel="stylesheet" href="../css/markdown/github-markdown.css">
+    <link rel="stylesheet" href="../css/markdown/github-markdown-light.css">
+    <link rel="stylesheet" href="../css/gittalk-cover.css">
+    <link rel="stylesheet"
+          href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</head>
+<body>
+<div id="app">
+    <div id="header">
+    <div id="bar">
+        <div class="container mg-0-auto d-f">
+            <div class="logo">
+                <a href="../" class="nav-link">
+                    <img src="../image/portal/logo.jpg" alt="小埃的个人博客">
+                </a>
+            </div>
+            <div class="right">
+                <ul class="nav f-l">
+                        <li class="nav-item">
+                            <a href="../index.html" class="nav-link active">
+                                <span>首页</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="../category.html" class="nav-link ">
+                                <span>分类</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="../about.html" class="nav-link ">
+                                <span>关于</span>
+                            </a>
+                        </li>
+                </ul>
+                <div class="eb-title">
+                    小埃的个人博客
+                </div>
+                <div id="search">
+                    <input type="text" id="search-input" data-prefix="../" placeholder="搜索" autocomplete="off" />
+                    <span class="search-icon t-a">
+                        <img class="el-icon-search" src="../image/portal/search.png" width="16" height="16">
+                    </span>
+                    <div id="search-result">
+                        <input type="text" class="input-1" id="search-input-2" data-prefix="../" placeholder="请输入" autocomplete="off" />
+                        <div class="content">
+                        </div>
+                        <div class="arrow"></div>
+                    </div>
+                </div>
+                <div class="eb-menu">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-list-ul" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M5 11.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm-3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm0 4a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm0 4a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    <div id="main">
+        <div class="container mg-0-auto pd-t-10">
+            <div class="left">
+                <article class="mg-b-20">
+                    <div class="markdown-body">
+                        <div class="title">解耦在JS中的应用</div>
+                        <div class="item meta mg-b-10">
+                            <span class="author">由<a href="javascript:void(0);">errol</a>发表于<a href="#">2023-11-18 12:39:24</a></span>
+                            <span>|</span>
+                            <span class="time">
+                            分类为
+                            <a href="../categories/1.html">编程</a></span>
+                            <span>|</span>
+                            <span class="tags">
+                                标签为<a href="javascript:void(0);">js</a>、<a href="javascript:void(0);">解耦</a>
+                            </span>
+                        </div>
+                        <div class="content">
+                            <blockquote>
+<p>软件工程中，耦合（Coupling）表示两个子系统（或类）之间的关联程度，当一个子系统（或类）发生变化时对另一个子系统（或类）的影响很小，则称它们是松散耦合的；反之，如果变化的影响很大时，则称它们是紧密耦合的。</p>
+</blockquote>
+<p>以上是<a href="https://baike.baidu.com/item/%E8%80%A6%E5%90%88/2821124">百度百科</a>中关于耦合的描述。</p>
+<p>代码解耦一直以来都是编程中的重要课题，许多编程概念、思想、技术，本质上就是为了划分职责，降低模块（系统、类、方法等）之间的关联度的，模块之间的关联度越低，项目系统的可维护性与拓展性就越高，反之则越低。我们也经常接触到相关的术语，如面向对象、分层架构（mvc、mvvm等）、控制反转[IoC]/依赖注入[DI]、设计模式（订阅发布、策略等）、面向切面编程[AOP]等等。</p>
+<p>但由于各种各样的众所周知的原因，许多人包括我在内，在平时写程序的时候，都不太注重代码耦合度问题。</p>
+<p>尤其是在前端开发领域，由于尚未形成行业规范，导致没有一种可遵循规章制度，程序员们都只能按照自己的理解认知来完成开发任务，这或许就是前端项目系统比较参差不齐的原因。</p>
+<p>一般情况下，我们会不假思索地把业务与非业务逻辑代码混杂在一起，因为确实没有谁指导或提供将二者分离的代码编写方式，而且这样也确实能更快实现功能并看到成果，大多数人都乐于采用这样的方式。</p>
+<p>例如，比较典型的是接口调用和接口参数校验逻辑的耦合。</p>
+<p>不过，这很可能会留下隐患（虽然暂时看不出来）...</p>
+<p>在随后的项目迭代中，耦合的开发方式无疑会对现存的功能进行改动，而这种“改动”很可能会导致新问题的出现（不改动就不会有问题）；不仅如此，这种“改动”还很可能会在原来的基础上不断增加代码量，比如，某一天需求发生了变更：除了要校验参数外，还要禁止频繁点击，并且后续可能还有其他别的需求... 久而久之，一个难以名状的“庞然大物”形成了。</p>
+<p>此时，无论是从维护的角度，还是从拓展的角度，都是非常难以入手的（俗称“祖传代码”），因此，开发当中应该要极力避免这种局面。</p>
+<p>相信没有人会想看到这样的事情，但<em>苦于不知道从何处、怎么开始，缺少一种实际落地的简单有效的方法手段。</em></p>
+<p><strong>而今天就是针对这一问题，为大家带来新的思路角度。</strong></p>
+<blockquote>
+<p>ps：文中的示例代码将会用到<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/bind">Function.prototype.bind()</a>、<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/apply">Function.prototype.apply()</a>接口，此外，还用到了<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise">promise</a>和<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/async_function">async function</a>，用于处理异步流程。</p>
+</blockquote>
+<h3>一、思路预热</h3>
+<p>我们在日常生活中都看到、接触过洋葱，知道它由多个层级构成，每两层之间互相连接，而这种结构与调用栈十分相近，从外层到内层就像是一次函数/方法的调用：调用最外层的函数，紧接着调用次外层的函数（嵌套），... ，直到调用最内层的函数，此时调用开始返回。</p>
+<p>本文章的灵感正是来源于此。</p>
+<p><strong>在这种结构中，将非核心业务代码分发交给各层处理，把最内层作为核心业务层，这样也就达成了解藕的效果。</strong></p>
+<h3>二、解耦核心代码</h3>
+<p>applyingInterceptors函数接收两个参数，fn为核心业务方法，而interceptors是一组被称为“拦截器”的对象，拦截器对象内含有在核心业务方法执行前后运行的方法，可以拦截某一次执行核心业务方法的动作。</p>
+<pre><code class="language-js">// 拦截器对象
+export const exampleInterceptor = {
+    // 在执行核心方法前执行
+    preHandle(ctx) {},
+    // 在执行核心方法后执行
+    postHandle(ctx) {},
+    // 执行核心方法出现异常的时候执行
+    rollback(ctx) {},
+    // 其他属性...
+};
+</code></pre>
+<p>调用applyingInterceptors()后，首先会对拦截器进行初始化，包括分组和判断对应的拦截器方法是否存在，最后返回一个匿名函数，同时也是解耦的核心逻辑。</p>
+<p>依次执行group1、group2中的拦截器，如果出现错误则抛出异常；或者返回中断信号则返回调用，停止往下执行。</p>
+<pre><code class="language-js">export const applyingInterceptors = (fn, interceptors=[]) =&gt; {
+    const group1 = [];
+    const group2 = [];
+    // 对所有的拦截器进行初始化
+    for (const interceptor of interceptors) {
+        if (!interceptor.group || interceptor.group == 1) {
+            group1.push(interceptor);
+        }
+        else if (interceptor.group == 2) {
+            group2.push(interceptor);
+        }
+        interceptor.isPreHandleFunction = typeof interceptor.preHandle == 'function';
+        interceptor.isPostHandleFunction = typeof interceptor.postHandle == 'function';
+        interceptor.isRollbackFunction = typeof interceptor.rollback == 'function';
+    }
+    return async function(...args) {
+	const errors = [];
+        let _this = this;
+        // 执行_run()时，如果返回了0，则表示不再继续往下执行；
+        let continued = await _run(group1, args, _this, errors);
+        if (errors.length) {
+            throw new CustomException('执行过程出现错误', errors);
+        }
+        let result;
+        try {
+            if (continued === 0) {
+                return;
+            }
+            continued = await _run(group2, args, _this, errors);
+            if (continued === 0) {
+                return;
+            }
+		    result = await fn.apply(_this, args);
+            // 如果调用fn()没有出现异常，则调用_run2，即postHandle；
+            _run2(group2, args, _this);
+            _run2(group1, args, _this);
+        } catch (e) {
+            console.log(&quot;[applyingInterceptors]执行方法/函数出现异常：&quot; + e.message);
+            // 如果调用fn()出现异常，则调用_run3，即rollback；
+            _run3(group1, args, _this);
+            _run3(group2, args, _this);
+        }
+        return result;
+    }
+}
+</code></pre>
+<p>执行拦截器对象方法的代码如下（主要是为了方便调用而抽取的函数）。</p>
+<p>其中run()函数接收四个参数（run2、run3为三个），分别为拦截器数组、匿名函数参数列表、this对象、错误信息容器，它们将会作为调用拦截器方法的参数。</p>
+<pre><code class="language-js">// 执行preHandle()
+const _run = async (interceptors, args, _this, errors) =&gt; {
+    let continued;
+    for (const interceptor of interceptors) {
+        if (!interceptor.isPreHandleFunction) {
+            continue;
+        }
+        continued = await interceptor.preHandle({ args, _this, interceptor, errors });
+        if (continued === 0) {
+            break;
+        }
+    }
+    return continued;
+}
+// 执行postHandle()
+const _run2 = (interceptors, args, _this) =&gt; {
+    for (let i=interceptors.length - 1; i&gt;0; i--) {
+        const interceptor = interceptors[i];
+        if (!interceptor.isPostHandleFunction) {
+            continue;
+        }
+        interceptor.postHandle({ args, _this, interceptor });
+    }
+}
+// 执行rollback()
+const _run3 = (interceptors, args, _this) =&gt; {
+    for (const interceptor of interceptors) {
+        if (!interceptor.isRollbackFunction) {
+            continue;
+        }
+        interceptor.rollback({ args, _this, interceptor });
+    }
+}
+</code></pre>
+<h3>三、代码解耦</h3>
+<p>在这一小节中，我们将会模拟一个简单的场景：账号注册；在提交数据前，需要对参数进行校验，并且期间禁止用户频繁发送验证码。</p>
+<p>在这个过程中，向服务器提交数据注册账号就是核心业务，其他的都属于非核心业务。</p>
+<p>0、模拟接口</p>
+<p><del>偷懒了，反正也不重要。。</del></p>
+<pre><code class="language-js">// 注册
+function register(params) {
+    console.log('--- 模拟注册账号 ---');
+    for (const key in params) {
+        console.log(`${key}：${params[key]}`);
+    }
+    console.log('---');
+    return { code: 0 };
+}
+
+// 发送验证码
+function sendEmailVerifyCode(params) {
+    console.log('--- 模拟发送验证码 ---');
+    for (const key in params) {
+        console.log(`${key}：${params[key]}`);
+    }
+    console.log('---');
+    return { code: 0 };
+}
+</code></pre>
+<p>1、编写拦截器</p>
+<p>首先得先编写好拦截器，才能应用于核心业务方法中。</p>
+<pre><code class="language-js">// 注册接口拦截器
+const interceptors = [
+    {
+        preHandle({ args, errors }) {
+            const { username, password, password2, email, captcha } = args[0];
+            if (!username) {
+                errors.push(&quot;账号不能为空&quot;);
+            }
+            if (!password || !password2) {
+                errors.push(&quot;（二次）密码不能为空&quot;);
+            }
+            else {
+                if (password &amp;&amp; password2 &amp;&amp; (password != password2)) {
+                    errors.push(&quot;二次密码输入不正确&quot;);
+                }
+            }
+            if (!email) {
+                errors.push(&quot;邮箱不能为空&quot;);
+            }
+            else {
+                if (!emailRule.test(email)) {
+                    errors.push(&quot;邮箱格式不正确&quot;);
+                }
+            }
+            if (!captcha) {
+                errors.push(&quot;验证码不能为空&quot;);
+            }
+        }
+    }
+];
+
+// 发送验证码接口拦截器
+const interceptors2 = [
+    {
+	preHandle({ args, errors }) {
+	    const { email } = args[0];
+	    if (!email) {
+		errors.push(&quot;邮箱不能为空&quot;);
+	    }
+	    else {
+		if (!emailRule.test(email)) {
+		    errors.push(&quot;邮箱格式不正确&quot;);
+		}
+	    }
+	}
+    },
+    {
+        group: 2,
+	preHandle({_this }) {
+            if (_this.cd != CD) {
+                return 0;
+            }
+	    let timer = setInterval(() =&gt; {
+                _this.cd = _this.cd - 1;
+                _this.btnText = `${_this.cd}秒后重试`;
+                if (_this.cd === 0) {
+                    _this.cd = CD;
+                    _this.btnText = defaultBtnText;
+                    clearInterval(timer);
+                }
+            }, 1000);
+        }
+    }
+];
+</code></pre>
+<p>2、应用拦截器</p>
+<p>需要注意的是，由于发送验证码接口拦截器中需要用到this对象，因此它需要在组件的生命周期中调用方法【demo中使用的是vue】。</p>
+<pre><code class="language-js">register = applyingInterceptors(register, interceptors);
+
+// vue组件的created钩子
+created() {
+    sendEmailVerifyCode = applyingInterceptors(sendEmailVerifyCode, interceptors2).bind(this);
+}
+</code></pre>
+<p>3、核心业务代码</p>
+<p>可以明显地看到，代码量非常少，因为非核心业务代码已经通过拦截器分发出去了，这时，两个模块之间的关联度相对较低，即使其中一边发生了改动，对另一边的影响是比较小的。</p>
+<pre><code class="language-js">methods: {
+    async register() {
+        try {
+            const resp = await register(this.formData);
+            if (resp &amp;&amp; resp.code == 0) {
+                this.$message.success(&quot;注册成功&quot;);
+            }
+        } catch (error) {
+            console.log(error);
+            if (error instanceof CustomException) {
+                this.$message.error(error.defaultErrorMessage);
+            }
+        }
+    },
+    async sendEmailVerifyCode() {
+        try {
+            const params = {
+                email: this.formData.email
+            };
+            const resp = await sendEmailVerifyCode(params);
+            if (resp &amp;&amp; resp.code == 0) {
+                this.$message.success(&quot;发送成功&quot;);
+            }
+        } catch (error) {
+            console.log(error);
+            if (error instanceof CustomException) {
+                this.$message.error(error.defaultErrorMessage);
+            }
+        }
+    }
+}
+</code></pre>
+<h3>四、前端界面及运行效果</h3>
+<p>本文章所用到的<a href="https://github.com/xxzhiwei/demo/tree/main/decoupling-4-js-demo">demo</a>存放在这里，需要的读者可以自行下载测试。</p>
+<p>1、获取验证码运行效果</p>
+<p><video controls autoplay height='100%' width='100%' src='http://xxzhiwei.oss-cn-beijing.aliyuncs.com/v2%20-%20Compressed%20with%20FlexClip.mp4'></video></p>
+<p>2、注册账号运行效果</p>
+<p><video controls autoplay height='100%' width='100%' src='http://xxzhiwei.oss-cn-beijing.aliyuncs.com/v1%20-%20Compressed%20with%20FlexClip.mp4'></video></p>
+<hr />
+<p>到目前为止，已经成功地实现代码解耦了。</p>
+<p>总的来说，这种实现解耦的方法并不算复杂，只有少量的几行代码组成，不需要具备丰富的理论知识也能自行实现。</p>
+<p>不过这并不是最重要的，我真正想说的是，js这门语言，利用其动态性（将函数作为参数传递，以及动态绑定&amp;调用等特性），可以完成一些比较复杂的功能。</p>
+<p>以上就是本篇文章的全部内容了，希望对读者有所帮助，如若存在不足之处或有好的建议想法，还请不吝赐教。</p>
+
+                        </div>
+                    </div>
+                </article>
+                <div class="comment-wrap">
+                        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+                        <script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+                        <div id="gitalk-container"></div>
+                        <script>
+                            const gitalk = new Gitalk({
+                                clientID: 'ae1422e500a8b19fb1fc',
+                                clientSecret: '9f387db6a84a4945cdf5dc743c16ce25fdef6b76',
+                                repo: 'github-pages',      // The repository of store comments,
+                                owner: 'xxzhiwei',
+                                admin: ['xxzhiwei'],
+                                id: location.pathname,      // Ensure uniqueness and length less than 50
+                                distractionFreeMode: false  // Facebook-like distraction free mode
+                            });
+                            gitalk.render('gitalk-container');
+                        </script>
+                </div>
+            </div>
+            <div class="right">
+                    <div class="side-card b-s-1 mg-b-10">
+                        <div class="wrapper">
+                            <h2 class="item title">相关文章</h2>
+                            <div class="item content">
+                                    <div class="item1">
+                                        <a href="../articles/15.html">兼容部署在Github Pages与其他服务器的应用引入资源的解决方案</a>
+                                    </div>
+                                    <div class="item1">
+                                        <a href="../articles/19.html">为vue单页面应用添加提示保存功能</a>
+                                    </div>
+                                    <div class="item1">
+                                        <a href="../articles/22.html">为静态站点添加搜索功能</a>
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+            </div>
+        </div>
+    </div>
+    <div class="back">返回</div>
+</div>
+    <script src="../js/dataList.js"></script>
+    <script src="../js/lazy.js"></script>
+    <script src="../js/search.js"></script>
+    <script src="../js/menu.js"></script>
+<script>
+    let back = document.querySelector(".back");
+    back.addEventListener("click", function () {
+        window.history.go(-1);
+    });
+</script>
+</body>
+</html>
