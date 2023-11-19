@@ -160,7 +160,7 @@ export const exampleInterceptor = {
             if (continued === 0) {
                 return;
             }
-		    result = await fn.apply(_this, args);
+            result = await fn.apply(_this, args);
             // 如果调用fn()没有出现异常，则调用_run2，即postHandle；
             _run2(group2, args, _this);
             _run2(group1, args, _this);
@@ -353,8 +353,9 @@ created() {
 <p><video controls autoplay height='100%' width='100%' src='http://xxzhiwei.oss-cn-beijing.aliyuncs.com/v1%20-%20Compressed%20with%20FlexClip.mp4'></video></p>
 <hr />
 <p>到目前为止，已经成功地实现代码解耦了。</p>
+<p>当然也还没有“完全”解耦，比方说，在拦截器方法中传入了this对象，这样一来，双方都可以读写this对象，会互相产生影响，这不是个好的设计，但奈何只有使用this时才比较方便，目前还没找到好的解决方式。</p>
 <p>总的来说，这种实现解耦的方法并不算复杂，只有少量的几行代码组成，不需要具备丰富的理论知识也能自行实现。</p>
-<p>不过这并不是最重要的，我真正想说的是，js这门语言，利用其动态性（将函数作为参数传递，以及动态绑定&amp;调用等特性），可以完成一些比较复杂的功能。</p>
+<p>然而，这并不是最重要的，我真正想说的是，js这门语言，如果能有效利用其动态性（将函数作为参数传递，动态绑定&amp;动态调用等特性），就可以完成一些比较复杂的功能。</p>
 <p>以上就是本篇文章的全部内容了，希望对读者有所帮助，如若存在不足之处或有好的建议想法，还请不吝赐教。</p>
 
                         </div>
