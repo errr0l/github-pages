@@ -98,14 +98,14 @@
 <p>以上是<a href="https://baike.baidu.com/item/%E8%80%A6%E5%90%88/2821124">百度百科</a>中关于耦合的描述。</p>
 <p>代码解耦一直以来都是编程中的重要课题，许多编程概念、思想、技术，本质上就是为了划分职责，降低模块（系统、类、方法等）之间的关联度的，模块之间的关联度越低，项目系统的可维护性与拓展性就越高，反之则越低。我们也经常接触到相关的术语，如面向对象、分层架构（mvc、mvvm等）、控制反转[IoC]/依赖注入[DI]、设计模式（订阅发布、策略等）、面向切面编程[AOP]等等。</p>
 <p>但由于各种各样的众所周知的原因，许多人包括我在内，在平时写程序的时候，都不太注重代码耦合度问题。</p>
-<p>尤其是在前端开发领域，由于尚未形成行业规范，导致没有一种可遵循规章制度，程序员们都只能按照自己的理解认知来完成开发任务，这或许就是前端项目系统比较参差不齐的原因。</p>
+<p>特别是在前端开发领域，由于还“很年轻”，尚未形成行业规范，导致没有一种可遵循规章制度，程序员们都只能按照自己的理解认知来完成开发任务，或许就是前端项目系统比较参差不齐的原因。</p>
 <p>一般情况下，我们会不假思索地把业务与非业务逻辑代码混杂在一起，因为确实没有谁指导或提供将二者分离的代码编写方式，而且这样也确实能更快实现功能并看到成果，大多数人都乐于采用这样的方式。</p>
-<p>例如，比较典型的是接口调用和接口参数校验逻辑的耦合。</p>
+<p>例如，前端开发中，向服务器请求数据是必不可少的，在这里就产生了比较典型的接口调用和接口参数校验逻辑的耦合。</p>
 <p>不过，这很可能会留下隐患（虽然暂时看不出来）...</p>
 <p>在随后的项目迭代中，耦合的开发方式无疑会对现存的功能进行改动，而这种“改动”很可能会导致新问题的出现（不改动就不会有问题）；不仅如此，这种“改动”还很可能会在原来的基础上不断增加代码量，比如，某一天需求发生了变更：除了要校验参数外，还要禁止频繁点击，并且后续可能还有其他别的需求... 久而久之，一个难以名状的“庞然大物”形成了。</p>
 <p>此时，无论是从维护的角度，还是从拓展的角度，都是非常难以入手的（俗称“祖传代码”），因此，开发当中应该要极力避免这种局面。</p>
 <p>相信没有人会想看到这样的事情，但<em>苦于不知道从何处、怎么开始，缺少一种实际落地的简单有效的方法手段。</em></p>
-<p><strong>而今天就是针对这一问题，为大家带来新的思路角度。</strong></p>
+<p><strong>而今天就是针对这一问题，为大家带来新的思考角度。</strong></p>
 <blockquote>
 <p>ps：文中的示例代码将会用到<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/bind">Function.prototype.bind()</a>、<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/apply">Function.prototype.apply()</a>接口，此外，还用到了<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise">promise</a>和<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/async_function">async function</a>，用于处理异步流程。</p>
 </blockquote>
@@ -114,7 +114,7 @@
 <p>本文章的灵感正是来源于此。</p>
 <p><strong>在这种结构中，将非核心业务代码分发交给各层处理，把最内层作为核心业务层，这样也就达成了解藕的效果。</strong></p>
 <h3>二、解耦核心代码</h3>
-<p>applyingInterceptors函数接收两个参数，fn为核心业务方法，而interceptors是一组被称为“拦截器”的对象，拦截器对象内含有在核心业务方法执行前后运行的方法，可以拦截某一次执行核心业务方法的动作。</p>
+<p>以下声明了一个名为applyingInterceptors的函数，它接收两个参数，fn为核心业务方法，而interceptors是一组被称为“拦截器”的对象，拦截器对象内含有在fn执行前后运行的方法，可以拦截某一次执行fn的动作。</p>
 <pre><code class="language-js">// 拦截器对象
 export const exampleInterceptor = {
     // 在执行核心方法前执行
@@ -211,8 +211,9 @@ const _run3 = (interceptors, args, _this) =&gt; {
 }
 </code></pre>
 <h3>三、代码解耦</h3>
-<p>在这一小节中，我们将会模拟一个简单的场景：账号注册；在提交数据前，需要对参数进行校验，并且期间禁止用户频繁发送验证码。</p>
-<p>在这个过程中，向服务器提交数据注册账号就是核心业务，其他的都属于非核心业务。</p>
+<p>在这一小节中，我们将会模拟一个简单的场景：账号注册。</p>
+<p>提交数据前，需要对参数进行校验，并且期间禁止用户频繁发送验证码。</p>
+<p>在这个过程中，发送验证码和注册账号就是核心业务，其他的都属于非核心业务。</p>
 <p>0、模拟接口</p>
 <p><del>偷懒了，反正也不重要。。</del></p>
 <pre><code class="language-js">// 注册
@@ -222,6 +223,7 @@ function register(params) {
         console.log(`${key}：${params[key]}`);
     }
     console.log('---');
+    // 返回0模拟接口调用成功
     return { code: 0 };
 }
 
@@ -238,72 +240,67 @@ function sendEmailVerifyCode(params) {
 <p>1、编写拦截器</p>
 <p>首先得先编写好拦截器，才能应用于核心业务方法中。</p>
 <pre><code class="language-js">// 注册接口拦截器
-const interceptors = [
-    {
-        preHandle({ args, errors }) {
-            const { username, password, password2, email, captcha } = args[0];
-            if (!username) {
-                errors.push(&quot;账号不能为空&quot;);
-            }
-            if (!password || !password2) {
-                errors.push(&quot;（二次）密码不能为空&quot;);
-            }
-            else {
-                if (password &amp;&amp; password2 &amp;&amp; (password != password2)) {
-                    errors.push(&quot;二次密码输入不正确&quot;);
-                }
-            }
-            if (!email) {
-                errors.push(&quot;邮箱不能为空&quot;);
-            }
-            else {
-                if (!emailRule.test(email)) {
-                    errors.push(&quot;邮箱格式不正确&quot;);
-                }
-            }
-            if (!captcha) {
-                errors.push(&quot;验证码不能为空&quot;);
+const interceptors = [{
+    preHandle({ args, errors }) {
+        const { username, password, password2, email, captcha } = args[0];
+        if (!username) {
+            errors.push(&quot;账号不能为空&quot;);
+        }
+        if (!password || !password2) {
+            errors.push(&quot;（二次）密码不能为空&quot;);
+        }
+        else {
+            if (password &amp;&amp; password2 &amp;&amp; (password != password2)) {
+                errors.push(&quot;二次密码输入不正确&quot;);
             }
         }
+        if (!email) {
+            errors.push(&quot;邮箱不能为空&quot;);
+        }
+        else {
+            if (!emailRule.test(email)) {
+                errors.push(&quot;邮箱格式不正确&quot;);
+            }
+        }
+        if (!captcha) {
+            errors.push(&quot;验证码不能为空&quot;);
+        }
     }
-];
+}];
 
 // 发送验证码接口拦截器
-const interceptors2 = [
-    {
-	preHandle({ args, errors }) {
-	    const { email } = args[0];
-	    if (!email) {
-		errors.push(&quot;邮箱不能为空&quot;);
-	    }
-	    else {
-		if (!emailRule.test(email)) {
-		    errors.push(&quot;邮箱格式不正确&quot;);
-		}
-	    }
-	}
-    },
-    {
-        group: 2,
-	preHandle({_this }) {
-            if (_this.cd != CD) {
-                return 0;
+const interceptors2 = [{
+    preHandle({ args, errors }) {
+        const { email } = args[0];
+        if (!email) {
+            errors.push(&quot;邮箱不能为空&quot;);
+        }
+        else {
+            if (!emailRule.test(email)) {
+                errors.push(&quot;邮箱格式不正确&quot;);
             }
-	    let timer = setInterval(() =&gt; {
-                _this.cd = _this.cd - 1;
-                _this.btnText = `${_this.cd}秒后重试`;
-                if (_this.cd === 0) {
-                    _this.cd = CD;
-                    _this.btnText = defaultBtnText;
-                    clearInterval(timer);
-                }
-            }, 1000);
         }
     }
-];
+}, {
+    group: 2,
+    preHandle({_this }) {
+        if (_this.cd != CD) {
+            return 0;
+        }
+        let timer = setInterval(() =&gt; {
+            _this.cd = _this.cd - 1;
+            _this.btnText = `${_this.cd}秒后重试`;
+            if (_this.cd === 0) {
+                _this.cd = CD;
+                _this.btnText = defaultBtnText;
+                clearInterval(timer);
+            }
+        }, 1000);
+    }
+}];
 </code></pre>
 <p>2、应用拦截器</p>
-<p>需要注意的是，由于发送验证码接口拦截器中需要用到this对象，因此它需要在组件的生命周期中调用方法【demo中使用的是vue】。</p>
+<p>需要注意的是，由于发送验证码接口拦截器中需要用到this对象，因此它需要在组件的生命周期中调用方法，将this绑定到匿名方法【demo中使用的是vue】。</p>
 <pre><code class="language-js">register = applyingInterceptors(register, interceptors);
 
 // vue组件的created钩子
@@ -356,6 +353,7 @@ created() {
 <p>当然也还没有“完全”解耦，比方说，在拦截器方法中传入了this对象，这样一来，双方都可以读写this对象，会互相产生影响，这不是个好的设计，但奈何只有使用this时才比较方便，目前还没找到好的解决方式。</p>
 <p>总的来说，这种实现解耦的方法并不算复杂，只有少量的几行代码组成，不需要具备丰富的理论知识也能自行实现。</p>
 <p>然而，这并不是最重要的，我真正想说的是，js这门语言，如果能有效利用其动态性（将函数作为参数传递，动态绑定&amp;动态调用等特性），就可以完成一些比较复杂的功能。</p>
+<p>当然，文中的示例只是一个比较简单的功能，所以还得读者根据自己的实际情况挖掘开发。</p>
 <p>以上就是本篇文章的全部内容了，希望对读者有所帮助，如若存在不足之处或有好的建议想法，还请不吝赐教。</p>
 
                         </div>
