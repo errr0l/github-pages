@@ -12,6 +12,15 @@
     <link rel="stylesheet" href="../css/mobile.css">
     <link rel="stylesheet" href="../css/theme-light.css">
     <link rel="shortcut icon" href="../favicon.ico" type="image/x-icon">
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?d1fc0144cbb354a3f8442b7ba568bc2f";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
         <meta name="keywords" content="nextcloud,私人网盘,php,apache">
     <link rel="stylesheet" href="../css/article.css">
     <link rel="stylesheet" href="../css/markdown/github-markdown.css">
@@ -109,9 +118,11 @@
 <p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202312/5a10b4426dd741a0b1ce5b5df046dca2-0DE0C071C85027748DDF4347D66EAB14.jpg" /></p>
 <p><em>图2 web端</em></p>
 <p>其中我感觉最方便的就是<strong>同步功能</strong>，<em>它允许本地文件夹与nextcloud进行同步</em>，以及<strong>实时保存功能</strong>，<em>支持将应用中的文件直接保存至nextcloud中</em>，这很大程度上解决了我手机存储空间不足的问题。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202312/79b74c373ac34e8c950392569c9d860b-EF45180858C93263B8C2EF0CB66876FC.jpg" /></p>
+<p><em>图3 文件夹同步功能</em></p>
 <p>速度也不错，按我的使用情况来看，一般在6-8m/s之间，峰值可以达到10m/s，如果网络顺畅的话，几乎可以跑满，比xx盘强了不是一点半点...</p>
 <p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202312/0e43d2f8d4b748f383196a603d5548aa-8E3810B29C19FA27FD34808675FCD4C1.jpg" /></p>
-<p><em>图3 下载</em></p>
+<p><em>图4 下载</em></p>
 <p>而至于nextcloud存储空间，则是根据部署服务器的硬盘来决定的，并不是说它只有截图所示这点存储空间（用于部署的树莓派所使用的tf卡，只有64g），理论上没有限制。</p>
 <p>但需要注意，以上的使用体验都是在内网中进行的，在外网使用的话（即使用内网穿透映射），效果就没那么好了，究其原因，是由于白嫖来的内网穿透带宽只有1Mbps，换算成上传/下载速度约为128kb/s...</p>
 <p><del>（不过感觉也比得上某些时候的百度云盘了，它们的速度就是这么离谱...）</del></p>
