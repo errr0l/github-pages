@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>nextcloud插件的折腾 - 小埃的个人博客</title>
+    <link rel="stylesheet" href="../css/reset.css">
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/index.css">
+    <link rel="stylesheet" href="../css/header.css">
+    <link rel="stylesheet" href="../css/mobile.css">
+    <link rel="stylesheet" href="../css/theme-light.css">
+    <link rel="shortcut icon" href="../favicon.ico" type="image/x-icon">
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?d1fc0144cbb354a3f8442b7ba568bc2f";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+        <meta name="keywords" content="nextcloud,插件">
+    <link rel="stylesheet" href="../css/article.css">
+    <link rel="stylesheet" href="../css/markdown/github-markdown.css">
+    <link rel="stylesheet" href="../css/markdown/github-markdown-light.css">
+    <link rel="stylesheet" href="../css/gittalk-cover.css">
+    <link rel="stylesheet"
+          href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</head>
+<body>
+<div id="app">
+    <div id="header">
+    <div id="bar">
+        <div class="container mg-0-auto d-f">
+            <div class="logo">
+                <a href="../" class="nav-link">
+                    <img src="../image/portal/logo.jpg" alt="小埃的个人博客">
+                </a>
+            </div>
+            <div class="right">
+                <ul class="nav f-l">
+                        <li class="nav-item">
+                            <a href="../index.html" class="nav-link active">
+                                <span>首页</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="../category.html" class="nav-link ">
+                                <span>分类</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="../about.html" class="nav-link ">
+                                <span>关于</span>
+                            </a>
+                        </li>
+                </ul>
+                <div class="eb-title">
+                    小埃的个人博客
+                </div>
+                <div id="search">
+                    <input type="text" id="search-input" data-prefix="../" placeholder="搜索" autocomplete="off" />
+                    <span class="search-icon t-a">
+                        <img class="el-icon-search" src="../image/portal/search.png" width="16" height="16">
+                    </span>
+                    <div id="search-result">
+                        <input type="text" class="input-1" id="search-input-2" data-prefix="../" placeholder="请输入" autocomplete="off" />
+                        <div class="content">
+                        </div>
+                        <div class="arrow"></div>
+                    </div>
+                </div>
+                <div class="eb-menu">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-list-ul" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M5 11.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm-3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm0 4a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm0 4a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    <div id="main">
+        <div class="container mg-0-auto pd-t-10">
+            <div class="left">
+                <article class="mg-b-20">
+                    <div class="markdown-body">
+                        <div class="title">nextcloud插件的折腾</div>
+                        <div class="item meta mg-b-10">
+                            <span class="author">由<a href="javascript:void(0);">errol</a>发表于<a href="#">2023-12-27 08:42:04</a></span>
+                            <span>|</span>
+                            <span class="time">
+                            分类为
+                            <a href="../categories/11.html">系统/软件</a></span>
+                            <span>|</span>
+                            <span class="tags">
+                                标签为<a href="javascript:void(0);">nextcloud</a>、<a href="javascript:void(0);">插件</a>
+                            </span>
+                        </div>
+                        <div class="content">
+                            <p>在<a href="https://xxzhiwei.github.io/github-pages/articles/56.html">上一篇文章</a>中提到过，在内网中使用nextcloud进行文件分享时，存在<em>生成的链接以内网主机地址开头的问题</em>，导致将链接给其他人使用之前，还得手动修改地址，这显得很麻烦。</p>
+<p>现在就是针对这一情况，为nextcloud开发了一个新的功能，即一个“插件”，更准确来说，是“插件的插件”，使其可以生成“正确的分享链接”，从而省去手动修改的麻烦。</p>
+<p>插件机制是nextcloud中的一种重要概念，它提供了插件的运行环境，即安装、运行、卸载，极大地提升了系统的灵活性与可拓展性。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202312/e939d1fdc1d948c595f5d7c214f810c2-D6A2A93EF4E6BE7D363F4C0D50ED4E74.jpg" /></p>
+<p><em>图1 nextcloud插件列表</em></p>
+<p>默认情况下，nextcloud已经启用了一些插件。</p>
+<p>而插件具体的表现为系统中的某个模块或部件，如下图中，“文件（files）”是一个插件，仪表盘也是一个插件。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202312/5fd1405112254f48bf5565ebbf72b9e2-52EF4CE86C8A7E1DD39E48ED48E56A4D.jpg" /></p>
+<p><em>图2 文件</em></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202312/724263aa186346a4b3bcf5eb02d40490-A842C00B95D2B7222AD6B251FCC13106.jpg" /></p>
+<p><em>图3 仪表盘</em></p>
+<p>通常情况下，可以把插件当做平时所接触的模块页面，不过也存在一些不同，比如本次开发的插件。</p>
+<p>它的重点并不在于页面展示，而是对现存的插件（files）进行拓展，这也文章开头称它为“插件的插件”的原因。</p>
+<p>因此，可以对nextcloud的插件做一个分类，一种是以页面展示为主的视觉型插件，另一种是以拓展其他插件为主的功能型插件。</p>
+<p>鉴于<a href="https://docs.nextcloud.com/server/latest/developer_manual/app_development/index.html">nextcloud文档</a>已经给出了较为详细的<a href="https://cloud.nextcloud.com/s/iyNGp8ryWxc7Efa?path=%2F">插件开发案例</a>了，本文也不再过多累赘，仅对当前插件的主要功能进行说明。</p>
+<p><strong>1、插件概览（仅为前端部分）</strong></p>
+<p><a href="https://github.com/xxzhiwei/customizing-download-urls?tab=readme-ov-file#%E4%B8%80%E5%AE%89%E8%A3%85%E5%90%AF%E7%94%A8%E6%8F%92%E4%BB%B6">安装&amp;启用插件</a>后，在files插件加载完成时，指定的js文件中的代码将会被执行，主要有以下两个动作。</p>
+<p>1）获取自定义地址</p>
+<pre><code class="language-js">var customUrl = window.sessionStorage.getItem(&quot;customUrl&quot;);
+if (!customUrl) {
+    $.ajax({
+        url: '/nextcloud/index.php/apps/customizing_download_urls/getUrl',
+        method: &quot;GET&quot;,
+        dataType: &quot;json&quot;,
+        contentType: &quot;application/json&quot;,
+        success: function(resp) {
+            customUrl = resp.data.url;
+            window.sessionStorage.setItem(&quot;customUrl&quot;, customUrl);
+        }
+    });
+}
+</code></pre>
+<p>2）新增下拉菜单</p>
+<p>通过nextcloud提供的接口注册菜单的同时，并绑定点击事件；触发事件时，会将上一步中获取到的地址与原有的分享链接进行拼接，并复制到粘贴板中。</p>
+<pre><code class="language-js">window.addEventListener('DOMContentLoaded', () =&gt; {
+    if (OCA.Sharing &amp;&amp; OCA.Sharing.ExternalShareActions) {
+        var _instance;
+        OCA.Sharing.ExternalShareActions.registerAction({
+            id: &quot;copy my custom url&quot;,
+            data: function(instance) {
+                _instance = instance; // instance是一个vue组件实例；
+                return {
+                    is: instance.$parent.$children[0].$options.components.NcActionButton, // 引用NcActionButton组件；通过vue内置的component组件渲染（查看nextcloud源码得知）
+                    text: &quot;复制自定义链接&quot;,
+                    icon: &quot;icon-external&quot;
+                }
+            },
+            shareType: [3],
+            handlers: {
+                click: function() {
+                    var url = &quot;&quot;;
+                    if (_instance) {
+                        var _share = _instance._props.share._share;
+                        // 在分享链接后拼接'/download/文件名'就是完整的下载链接
+                        url = _share.url + &quot;/download&quot; + _share.file_target;
+                    }
+      				_instance.$parent.$parent.$parent.$parent.$parent.$options._parentListeners['update:open'](false);
+                    copyHandler(customUrl, url);
+                }                
+            }
+        });
+    }
+});
+</code></pre>
+<p>3）定义地址</p>
+<p>第一步中，获取地址前首先得定义地址。</p>
+<p>在浏览器打开下方链接，可看到插件的管理界面。</p>
+<blockquote>
+<p>http://域名/nextcloud/index.php/apps/customizing_download_urls/</p>
+</blockquote>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202312/bbac37f2dfd44a37b783483a0e940858-2231EE9C113A4D75E3A40BA35B64FFA0.jpg" /></p>
+<p><em>图4 Customizing Download Urls管理面板</em></p>
+<p><strong>2、插件运行效果</strong></p>
+<p>1）创建分享链接后，可看到下拉菜单中新增一个“复制我的自定义链接”选项</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202312/457080c1d64244f39c4e6a678e77368a-7A1DF5F98326D557E1B354937E379B7F.jpg" /></p>
+<p><em>图5 新增的下来选项</em></p>
+<p>2）点击将链接复制到粘贴板</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202312/e2d15b5e5b9b46df8fe4521f0573b1c5-AA48C7DCA0102CB6C9FF60AA5F0C1775.jpg" /></p>
+<p><em>图6 复制链接成功</em></p>
+<hr />
+<p>以上就是该插件主要功能的说明，有需要的读者可在<a href="https://github.com/xxzhiwei/customizing_download_urls">此处</a>获取插件源码。</p>
+<p>虽然插件本身比较简单，但在开发的过程中还是遇到了不少的坑。</p>
+<p>首先是对php不熟悉，每走一步几乎都需要依靠搜索引擎，好在nextcloud提供有现成的插件模板，加上涉及到的只是一些比较简单的语句，比较容易查找得到。</p>
+<p>其次是相关文档和资料较少，虽然官网有一个<a href="https://cloud.nextcloud.com/s/iyNGp8ryWxc7Efa?path=%2F2%20Developing%20a%20simple%20files%20plugin%20%5BDEPRECATED%5D">类似的案例</a>，但并不能实现自己的需求，只能查看nextcloud前端部分源码，并经过反复的调试后，才发现了分享下拉菜单的接口，也就是OCA.Sharing.ExternalShareActions.registerAction()。</p>
+<p>就这样兜兜转转下来，最后发现也花了不少的时间。</p>
+<p>另外需要注意的是，这种插件只能在web中使用，在其他客户端是不生效的...</p>
+<p>只能后续尝试往安卓端中也加入这个功能。不过话说回来，如果说自己对web还算熟悉的话，那对安卓真可谓是一窍不通了。</p>
+<p>爬完一座山后，发现前方还有一座更高的山，这就是我此时此刻的感受。</p>
+
+                        </div>
+                    </div>
+                </article>
+                <div class="comment-wrap">
+                        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+                        <script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+                        <div id="gitalk-container"></div>
+                        <script>
+                            const gitalk = new Gitalk({
+                                clientID: 'ae1422e500a8b19fb1fc',
+                                clientSecret: '9f387db6a84a4945cdf5dc743c16ce25fdef6b76',
+                                repo: 'github-pages',      // The repository of store comments,
+                                owner: 'xxzhiwei',
+                                admin: ['xxzhiwei'],
+                                id: location.pathname,      // Ensure uniqueness and length less than 50
+                                distractionFreeMode: false  // Facebook-like distraction free mode
+                            });
+                            gitalk.render('gitalk-container');
+                        </script>
+                </div>
+            </div>
+            <div class="right">
+                    <div class="side-card b-s-1 mg-b-10">
+                        <div class="wrapper">
+                            <h2 class="item title">相关文章</h2>
+                            <div class="item content">
+                                    <div class="item1">
+                                        <a href="../articles/56.html">nextcloud的折腾&体验</a>
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+            </div>
+        </div>
+    </div>
+    <div class="back">返回</div>
+</div>
+    <script src="../js/dataList.js"></script>
+    <script src="../js/lazy.js"></script>
+    <script src="../js/search.js"></script>
+    <script src="../js/menu.js"></script>
+<script>
+    let back = document.querySelector(".back");
+    back.addEventListener("click", function () {
+        window.history.go(-1);
+    });
+</script>
+</body>
+</html>
