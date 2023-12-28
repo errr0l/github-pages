@@ -133,7 +133,7 @@ if (!customUrl) {
 }
 </code></pre>
 <p>2）新增下拉菜单</p>
-<p>通过nextcloud提供的接口注册菜单的同时，并绑定点击事件；触发事件时，会将上一步中获取到的地址与原有的分享链接进行拼接，并复制到粘贴板中。</p>
+<p>以下代码通过nextcloud提供的接口向分享菜单注册了一个名为“复制我的自定义链接”的按钮选项，同时绑定了handlers点击事件；触发事件时，会将获取到的地址与原有的分享链接进行拼接，并复制到粘贴板中。</p>
 <pre><code class="language-js">window.addEventListener('DOMContentLoaded', () =&gt; {
     if (OCA.Sharing &amp;&amp; OCA.Sharing.ExternalShareActions) {
         var _instance;
@@ -143,7 +143,7 @@ if (!customUrl) {
                 _instance = instance; // instance是一个vue组件实例；
                 return {
                     is: instance.$parent.$children[0].$options.components.NcActionButton, // 引用NcActionButton组件；通过vue内置的component组件渲染（查看nextcloud源码得知）
-                    text: &quot;复制自定义链接&quot;,
+                    text: &quot;复制我的自定义链接&quot;,
                     icon: &quot;icon-external&quot;
                 }
             },
@@ -172,11 +172,11 @@ if (!customUrl) {
 </blockquote>
 <p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202312/bbac37f2dfd44a37b783483a0e940858-2231EE9C113A4D75E3A40BA35B64FFA0.jpg" /></p>
 <p><em>图4 Customizing Download Urls管理面板</em></p>
-<p>输入后点击保存即可，返回files插件时，将会通过ajax获取该地址。</p>
+<p>输入后点击保存即可，随后将会通过ajax请求获取该地址。</p>
 <p><strong>2、插件运行效果</strong></p>
-<p>1）创建分享链接后，可看到下拉菜单中新增一个“复制我的自定义链接”选项</p>
+<p>1）创建分享链接后，可看到下拉菜单中新增的选项</p>
 <p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202312/457080c1d64244f39c4e6a678e77368a-7A1DF5F98326D557E1B354937E379B7F.jpg" /></p>
-<p><em>图5 新增的下来选项</em></p>
+<p><em>图5 新增的选项</em></p>
 <p>2）点击将链接复制到粘贴板</p>
 <p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202312/e2d15b5e5b9b46df8fe4521f0573b1c5-AA48C7DCA0102CB6C9FF60AA5F0C1775.jpg" /></p>
 <p><em>图6 复制链接成功</em></p>
@@ -185,12 +185,11 @@ if (!customUrl) {
 </blockquote>
 <hr />
 <p>以上就是该插件主要功能的说明，有需要的读者可在<a href="https://github.com/xxzhiwei/customizing_download_urls">此处</a>获取插件源码。</p>
-<p>虽然插件本身比较简单，但在开发的过程中还是遇到了不少的坑。</p>
-<p>首先是对php不熟悉，每走一步几乎都需要依靠搜索引擎，好在nextcloud提供有现成的插件模板，加上涉及到的只是一些比较简单的语句，比较容易查找得到。</p>
-<p>其次是相关文档和资料较少，虽然官网有一个<a href="https://cloud.nextcloud.com/s/iyNGp8ryWxc7Efa?path=%2F2%20Developing%20a%20simple%20files%20plugin%20%5BDEPRECATED%5D">类似的案例</a>，但并不能实现自己的需求，只能查看nextcloud前端部分源码，并经过反复的调试后，才发现了分享下拉菜单的接口，也就是OCA.Sharing.ExternalShareActions.registerAction()。</p>
-<p>就这样兜兜转转下来，最后发现也花了不少的时间。</p>
-<p>另外需要注意的是，这种插件只能在web中使用，在其他客户端是不生效的...</p>
-<p>只能后续尝试往安卓端中也加入这个功能。不过话说回来，如果说自己对web还算熟悉的话，那对安卓真可谓是一窍不通了。</p>
+<p>虽然插件本身比较简单，但在开发的过程中并不是那么顺利，遇到了不少的坑。</p>
+<p>比如对php不熟悉，什么语法、语句都不懂，每一步几乎都需要百度&amp;谷歌，好在nextcloud提供有现成的插件模板，加上涉及到的只是一些比较简单的逻辑语句，比较容易查找得到；</p>
+<p>还有就是是相关文档和资料较少，并且很琐碎，虽然官网有一个<a href="https://cloud.nextcloud.com/s/iyNGp8ryWxc7Efa?path=%2F2%20Developing%20a%20simple%20files%20plugin%20%5BDEPRECATED%5D">类似的案例</a>，但它并不能实现自己的需求，只能查看nextcloud前端部分源码，一点点地研究和调试，兜兜转转下来也花了不少的时间。</p>
+<p>而且比较难受的是，这种插件只能在web中使用，在其他客户端是不生效的...（其实想想也知道，使用js编写的代码怎么可能会在安卓或其他客户端中生效呢）</p>
+<p>这样只能后续再尝试往安卓端中也加入这个功能了。不过话说回来，如果说自己对web还算熟悉的话，那对安卓真可谓是一窍不通。</p>
 <p>爬完一座山后，发现前方还有一座更高的山，这就是我此时此刻的感受。</p>
 
                         </div>
