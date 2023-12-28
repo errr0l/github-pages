@@ -101,22 +101,21 @@
                             </span>
                         </div>
                         <div class="content">
-                            <p>在<a href="https://xxzhiwei.github.io/github-pages/articles/56.html">上一篇文章</a>中提到过，在内网中使用nextcloud进行文件分享时，存在<em>生成的链接以内网主机地址开头的问题</em>，导致将链接给其他人使用之前，还得手动修改地址，这显得很麻烦。</p>
-<p>现在就是针对这一情况，为nextcloud开发了一个新的功能，即一个“插件”，更准确来说，是“插件的插件”，使其可以生成“正确的分享链接”，从而省去手动修改的麻烦。</p>
-<p>插件机制是nextcloud中的一种重要概念，它提供了插件的运行环境，即安装、运行、卸载，极大地提升了系统的灵活性与可拓展性。</p>
+                            <p><a href="https://xxzhiwei.github.io/github-pages/articles/56.html">上一篇文章</a>中提到过，在内网中使用nextcloud进行文件分享时，存在<em>生成的链接以内网主机地址开头的问题</em>，导致将链接给其他人使用之前，还得手动修改链接，这显得很麻烦。</p>
+<p>针对这一情况，本文为nextcloud开发了一个新的功能，它可以让nextcloud生成“正确的分享链接”，从而免去手动修改的麻烦。</p>
+<p>这个新功能，依赖于nextcloud的插件机制：插件机制是nextcloud中的一种重要概念，它提供了插件的运行环境，即安装、运行、卸载，极大地提升了系统的灵活性与可拓展性。</p>
 <p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202312/e939d1fdc1d948c595f5d7c214f810c2-D6A2A93EF4E6BE7D363F4C0D50ED4E74.jpg" /></p>
 <p><em>图1 nextcloud插件列表</em></p>
-<p>默认情况下，nextcloud已经启用了一些插件。</p>
-<p>而插件具体的表现为系统中的某个模块或部件，如下图中，“文件（files）”是一个插件，仪表盘也是一个插件。</p>
+<p>默认情况下，nextcloud已经启用了一些插件，它们具体的表现为系统中的某个模块或部件，如下图中，“文件（files）”是一个插件，仪表盘也是一个插件。</p>
 <p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202312/5fd1405112254f48bf5565ebbf72b9e2-52EF4CE86C8A7E1DD39E48ED48E56A4D.jpg" /></p>
 <p><em>图2 文件</em></p>
 <p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202312/724263aa186346a4b3bcf5eb02d40490-A842C00B95D2B7222AD6B251FCC13106.jpg" /></p>
 <p><em>图3 仪表盘</em></p>
 <p>通常情况下，可以把插件当做平时所接触的模块页面，不过也存在一些不同，比如本次开发的插件。</p>
-<p>它的重点并不在于页面展示，而是对现存的插件（files）进行拓展，这也文章开头称它为“插件的插件”的原因。</p>
-<p>因此，可以对nextcloud的插件做一个分类，一种是以页面展示为主的视觉型插件，另一种是以拓展其他插件为主的功能型插件。</p>
-<p>鉴于<a href="https://docs.nextcloud.com/server/latest/developer_manual/app_development/index.html">nextcloud文档</a>已经给出了较为详细的<a href="https://cloud.nextcloud.com/s/iyNGp8ryWxc7Efa?path=%2F">插件开发案例</a>了，本文也不再过多累赘，仅对当前插件的主要功能进行说明。</p>
-<p><strong>1、插件概览（仅为前端部分）</strong></p>
+<p>它的重点并不在于页面展示，而是对现存的插件（files）进行拓展，因此，更准确的来说，它是“插件的插件”。</p>
+<p>现在我们知道了，nextcloud有两种类型的插件，一种是以页面展示为主的视觉型插件，另一种是以拓展其他插件为主的功能型插件。</p>
+<p>下面开始对本插件的主要功能和机制进行简要说明（仅为前端部分）。</p>
+<p><strong>1、插件概览</strong></p>
 <p><a href="https://github.com/xxzhiwei/customizing-download-urls?tab=readme-ov-file#%E4%B8%80%E5%AE%89%E8%A3%85%E5%90%AF%E7%94%A8%E6%8F%92%E4%BB%B6">安装&amp;启用插件</a>后，在files插件加载完成时，指定的js文件中的代码将会被执行，主要有以下两个动作。</p>
 <p>1）获取自定义地址</p>
 <pre><code class="language-js">var customUrl = window.sessionStorage.getItem(&quot;customUrl&quot;);
@@ -173,6 +172,7 @@ if (!customUrl) {
 </blockquote>
 <p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202312/bbac37f2dfd44a37b783483a0e940858-2231EE9C113A4D75E3A40BA35B64FFA0.jpg" /></p>
 <p><em>图4 Customizing Download Urls管理面板</em></p>
+<p>输入后点击保存即可，返回files插件时，将会通过ajax获取该地址。</p>
 <p><strong>2、插件运行效果</strong></p>
 <p>1）创建分享链接后，可看到下拉菜单中新增一个“复制我的自定义链接”选项</p>
 <p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202312/457080c1d64244f39c4e6a678e77368a-7A1DF5F98326D557E1B354937E379B7F.jpg" /></p>
@@ -180,6 +180,9 @@ if (!customUrl) {
 <p>2）点击将链接复制到粘贴板</p>
 <p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202312/e2d15b5e5b9b46df8fe4521f0573b1c5-AA48C7DCA0102CB6C9FF60AA5F0C1775.jpg" /></p>
 <p><em>图6 复制链接成功</em></p>
+<blockquote>
+<p>http://g0wg60y8.shenzhuo.vip:60332/nextcloud/index.php/s/xFZ23P9YXBCqnSZ/download/163C595C581D72F9E5BA0D977AC4E144.jpg</p>
+</blockquote>
 <hr />
 <p>以上就是该插件主要功能的说明，有需要的读者可在<a href="https://github.com/xxzhiwei/customizing_download_urls">此处</a>获取插件源码。</p>
 <p>虽然插件本身比较简单，但在开发的过程中还是遇到了不少的坑。</p>
