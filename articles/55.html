@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>解耦在JS中的应用 - 小埃的个人博客</title>
+    <title>解耦在js中的应用 - 小埃的个人博客</title>
     <link rel="stylesheet" href="../css/reset.css">
     <link rel="stylesheet" href="../css/base.css">
     <link rel="stylesheet" href="../css/index.css">
@@ -88,7 +88,7 @@
             <div class="left">
                 <article class="mg-b-20">
                     <div class="markdown-body">
-                        <div class="title">解耦在JS中的应用</div>
+                        <div class="title">解耦在js中的应用</div>
                         <div class="item meta mg-b-10">
                             <span class="author">由<a href="javascript:void(0);">errol</a>发表于<a href="#">2023-11-18 12:39:24</a></span>
                             <span>|</span>
@@ -109,7 +109,7 @@
 <p>但由于各种各样的众所周知的原因，许多人包括我在内，在平时写程序的时候，都不太注重代码耦合度问题。</p>
 <p>特别是在前端开发领域，由于还“很年轻”，尚未形成行业规范，导致没有一种可遵循规章制度，程序员们都只能按照自己的理解认知来完成开发任务，或许就是前端项目系统比较参差不齐的原因。</p>
 <p>一般情况下，我们会不假思索地把业务与非业务逻辑代码混杂在一起，因为确实没有谁指导或提供将二者分离的代码编写方式，而且这样也确实能更快实现功能并看到成果，大多数人都乐于采用这样的方式。</p>
-<p>例如，前端开发中，向服务器请求数据是必不可少的，在这里就产生了比较典型的接口调用和接口参数校验逻辑的耦合。</p>
+<p>例如，前端开发中，向服务器请求数据是必不可少的，在某些情况下，请求之前需要进行参数校验，而这里就产生了比较典型的接口调用和接口参数校验逻辑的耦合。</p>
 <p>不过，这很可能会留下隐患（虽然暂时看不出来）...</p>
 <p>在随后的项目迭代中，耦合的开发方式无疑会对现存的功能进行改动，而这种“改动”很可能会导致新问题的出现（不改动就不会有问题）；不仅如此，这种“改动”还很可能会在原来的基础上不断增加代码量，比如，某一天需求发生了变更：除了要校验参数外，还要禁止频繁点击，并且后续可能还有其他别的需求... 久而久之，一个难以名状的“庞然大物”形成了。</p>
 <p>此时，无论是从维护的角度，还是从拓展的角度，都是非常难以入手的（俗称“祖传代码”），因此，开发当中应该要极力避免这种局面。</p>
@@ -136,7 +136,7 @@ export const exampleInterceptor = {
 };
 </code></pre>
 <p>调用applyingInterceptors()后，首先会对拦截器进行初始化，包括分组和判断对应的拦截器方法是否存在，最后返回一个匿名函数，同时也是解耦的核心逻辑。</p>
-<p>依次执行group1、group2中的拦截器，如果出现错误则抛出异常；或者返回中断信号则返回调用，停止往下执行。</p>
+<p>在匿名函数中，group1、group2中的拦截器被依次执行，如果出现错误则抛出异常；或者返回中断信号则返回调用，停止往下执行。</p>
 <pre><code class="language-js">export const applyingInterceptors = (fn, interceptors=[]) =&gt; {
     const group1 = [];
     const group2 = [];
