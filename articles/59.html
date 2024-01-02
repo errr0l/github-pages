@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>nutaku自动签到程序计划 - 小埃的个人博客</title>
+    <link rel="stylesheet" href="../css/reset.css">
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/index.css">
+    <link rel="stylesheet" href="../css/header.css">
+    <link rel="stylesheet" href="../css/mobile.css">
+    <link rel="stylesheet" href="../css/theme-light.css">
+    <link rel="shortcut icon" href="../favicon.ico" type="image/x-icon">
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?d1fc0144cbb354a3f8442b7ba568bc2f";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+        <meta name="keywords" content="自动签到,nutaku,计划">
+    <link rel="stylesheet" href="../css/article.css">
+    <link rel="stylesheet" href="../css/markdown/github-markdown.css">
+    <link rel="stylesheet" href="../css/markdown/github-markdown-light.css">
+    <link rel="stylesheet" href="../css/gittalk-cover.css">
+    <link rel="stylesheet"
+          href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</head>
+<body>
+<div id="app">
+    <div id="header">
+    <div id="bar">
+        <div class="container mg-0-auto d-f">
+            <div class="logo">
+                <a href="../" class="nav-link">
+                    <img src="../image/portal/logo.jpg" alt="小埃的个人博客">
+                </a>
+            </div>
+            <div class="right">
+                <ul class="nav f-l">
+                        <li class="nav-item">
+                            <a href="../index.html" class="nav-link active">
+                                <span>首页</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="../category.html" class="nav-link ">
+                                <span>分类</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="../about.html" class="nav-link ">
+                                <span>关于</span>
+                            </a>
+                        </li>
+                </ul>
+                <div class="eb-title">
+                    小埃的个人博客
+                </div>
+                <div id="search">
+                    <input type="text" id="search-input" data-prefix="../" placeholder="搜索" autocomplete="off" />
+                    <span class="search-icon t-a">
+                        <img class="el-icon-search" src="../image/portal/search.png" width="16" height="16">
+                    </span>
+                    <div id="search-result">
+                        <input type="text" class="input-1" id="search-input-2" data-prefix="../" placeholder="请输入" autocomplete="off" />
+                        <div class="content">
+                        </div>
+                        <div class="arrow"></div>
+                    </div>
+                </div>
+                <div class="eb-menu">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-list-ul" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M5 11.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm-3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm0 4a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm0 4a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    <div id="main">
+        <div class="container mg-0-auto pd-t-10">
+            <div class="left">
+                <article class="mg-b-20">
+                    <div class="markdown-body">
+                        <div class="title">nutaku自动签到程序计划</div>
+                        <div class="item meta mg-b-10">
+                            <span class="author">由<a href="javascript:void(0);">errol</a>发表于<a href="#">2024-01-02 02:16:19</a></span>
+                            <span>|</span>
+                            <span class="time">
+                            分类为
+                            <a href="../categories/6.html">瞎聊</a></span>
+                            <span>|</span>
+                            <span class="tags">
+                                标签为<a href="javascript:void(0);">自动签到</a>、<a href="javascript:void(0);">nutaku</a>、<a href="javascript:void(0);">计划</a>
+                            </span>
+                        </div>
+                        <div class="content">
+                            <p>最近n站出了个金币签到活动，经过粗略计算，最多可获取到一百八十+的金币，看着很馋...</p>
+<p>但就是每天得打开网站点击签到有点烦人，几乎要月全勤才能拿完所有的奖励，因此就想着写一个脚本程序来代替完成这项工作。</p>
+<p>薅羊毛这种事情，我等白嫖党义不容辞！</p>
+<p>要知道，如果在没有优惠的情况下购买n站金币时，最低的档位为500个/5刀，也就是一个pqt小月卡所需要的金币，所以现在通过活动拿到180+金币还是很划算的，算是n站回馈给用户的一点小福利，约为1/3个小月卡；更重要的是，根据n站的描述来看，它是一个长期举行的活动，这就更加凸显自动签到程序的必要性了，它是解放双手的动力所在。</p>
+<p>当然，这也要求程序需要具备较高的稳定性和健壮性，如在未登录的情况下，自动登陆；签到成功/失败，要有通知提醒，以免多签漏签；开机启动/重启等等，对自动签到程序而言，这些都是很重要的特性，是程序好用与否的关键。</p>
+<p>所以对我来说，这是一项具有挑战性的任务。</p>
+<p>目前打算是以可执行程序（如exe等）的形式进行开发，毕竟大伙每天都应该有用电脑，且windows居多；之前还想过以chrome插件的形式开发，但想到插件可能没那么方便，才选择了前者。</p>
+<p>然而，无论是exe还是chrome插件，哪一种我都没有写过就是了，因此需要的时间估计比较多，而且其中还涉及到了爬虫的知识，这是我最近想要学习的内容。</p>
+<p>不得不承认，在这么多层debuff的加持下，能不能完成还要打上个问号...</p>
+<p>总之，先试着设计初稿。</p>
+
+                        </div>
+                    </div>
+                </article>
+                <div class="comment-wrap">
+                        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+                        <script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+                        <div id="gitalk-container"></div>
+                        <script>
+                            const gitalk = new Gitalk({
+                                clientID: 'ae1422e500a8b19fb1fc',
+                                clientSecret: '9f387db6a84a4945cdf5dc743c16ce25fdef6b76',
+                                repo: 'github-pages',      // The repository of store comments,
+                                owner: 'xxzhiwei',
+                                admin: ['xxzhiwei'],
+                                id: location.pathname,      // Ensure uniqueness and length less than 50
+                                distractionFreeMode: false  // Facebook-like distraction free mode
+                            });
+                            gitalk.render('gitalk-container');
+                        </script>
+                </div>
+            </div>
+            <div class="right">
+                    <div class="side-card b-s-1 mg-b-10">
+                        <div class="wrapper">
+                            <h2 class="item title">相关文章</h2>
+                            <div class="item content">
+                                    <div class="item1">
+                                        <a href="../articles/45.html">pqt活动文本提取小结</a>
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+            </div>
+        </div>
+    </div>
+    <div class="back">返回</div>
+</div>
+    <script src="../js/dataList.js"></script>
+    <script src="../js/lazy.js"></script>
+    <script src="../js/search.js"></script>
+    <script src="../js/menu.js"></script>
+<script>
+    let back = document.querySelector(".back");
+    back.addEventListener("click", function () {
+        window.history.go(-1);
+    });
+</script>
+</body>
+</html>
