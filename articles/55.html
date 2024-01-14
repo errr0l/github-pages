@@ -434,6 +434,116 @@ created() {
 <p>然而，这并不是最重要的，我真正想说的是，js这门语言，如果能有效利用其动态性（将函数作为参数传递，动态绑定&amp;动态调用等特性），就可以完成一些比较复杂的功能。</p>
 <p>当然，文中的示例只是一个比较简单的功能，所以还得读者根据自己的实际情况挖掘开发。</p>
 <p>以上就是本篇文章的全部内容了，希望对读者有所帮助，如若存在不足之处或有好的建议想法，还请不吝赐教。</p>
+<h3>20240114更新</h3>
+<p>目前作者已经在几个项目中应用了该解耦小工具，感觉还不错，不过在使用的时候，也发现了一个体验很不好的问题。</p>
+<blockquote>
+<p>当禁用类的拦截器触发效果后，再出现其他错误时，会停留在当前状态（如账号密码输入不正确时停留在登陆界面），由于没有恢复状态的逻辑，目标元素仍处于被禁用状态，无法再次操作，需要重新加载。</p>
+</blockquote>
+<p>针对这一情况，今天对该小工具做一次小更新。</p>
+<p><strong>要处理这个问题很简单，既然没有恢复逻辑，那就添加。</strong></p>
+<p>有以下两种方式：</p>
+<ul>
+<li>在新增的拦截器中添加；</li>
+<li>在当前禁用拦截器添加。</li>
+</ul>
+<p>1、 在新增的拦截器中添加恢复逻辑</p>
+<p>相对来说，这种方式是最容易实现的，且不需要对工具进行改动。</p>
+<pre><code class="language-js">
+import { onlyOneClickInterceptor, timeoutRollback, disabledInterceptorPreHandle } from &quot;./interceptor&quot;;
+// ...
+
+const interceptors4 = [
+    {
+        preHandle: disabledInterceptorPreHandle,
+        paramName: 'btnDisabled2',
+    },
+    {
+        group: 2, paramName: 'btnDisabled2',
+        preHandle: timeoutRollback // 在新增的拦截器中添加了一个延迟解除禁用的处理器
+    }
+];
+
+export const timeoutRollback = ({ args, _this, interceptor, errors }) =&gt; {
+    const { paramName, timeout } = interceptor;
+    setTimeout(() =&gt; {
+        _this[paramName] = false;
+    }, timeout || 2000);
+};
+</code></pre>
+<p>拦截器运行后，其中的处理器被依次执行，其中也包括了解除禁用拦截器，它将会在指定的延迟时间后触发效果，即解除禁用状态。</p>
+<p>2、在当前禁用拦截器添加恢复逻辑</p>
+<p>这种方式需要对工具源码做一些改动，此外还需要在被拦截的方法中返回数据，作为判断本次执行是否通过的依据，如：</p>
+<p><em><del>以下代码是本次更新新增的测试方法</del></em></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202401/004ad58c57014e93b75933cdb0bf4978-1E9DD7EBE2F7FFC2958EC64C382DFE65.png" /></p>
+<p><em>图1 login方法</em></p>
+<p>在login方法中返回了resp。</p>
+<pre><code class="language-js">const interceptors4 = [
+    {
+        preHandle: disabledInterceptorPreHandle,
+        paramName: 'btnDisabled2',
+        // 在异常处理器中添加解除禁用的逻辑
+        rollback: ({ args, _this, interceptor, errors }) =&gt; {
+            _this[interceptor.paramName] = false;
+        }
+    }
+];
+</code></pre>
+<p>新增判断方法：</p>
+<blockquote>
+<p>util/interceptor.js</p>
+</blockquote>
+<pre><code>// 一般通用的isPass方法
+export const isPassForCommon = (resp) =&gt; {
+    if (resp &amp;&amp; resp.code == 0) {
+        return true;
+    }
+    return false;
+}
+</code></pre>
+<p>修改applyingInterceptors：</p>
+<blockquote>
+<p>util/common.js</p>
+</blockquote>
+<p>fn()返回了数据时，就使用isPass()进行判断，如果不符合预期，则将会抛出异常，并触发异常处理器，从而达到恢复状态的效果。</p>
+<p>当然，如果有需要时，可以自定义isPass()。</p>
+<pre><code class="language-js">import { isPassForCommon } from &quot;../interceptor&quot;;
+// ...
+
+export const applyingInterceptors = (fn, interceptors = [], options) =&gt; {
+    options = Object.assign({}, options);
+    let { isPass } = options;
+    const isPassFunction = typeof isPass == 'function';
+    if (!isPassFunction) {
+        isPass = isPassForCommon;
+    }
+    // ...
+    const anonymous = async function (...args) {
+        // ...
+        try {
+            // ...
+            result = await fn.apply(_this, args);
+            if (result &amp;&amp; !isPass(result)) {
+                throw new Error('执行结果校验不通过；result=' + (JSON.stringify(result)));
+            }
+            else {
+                _run2(group2, args, _this);
+                _run2(group1, args, _this);
+            }
+        } catch (e) {
+            // ...
+        }
+        // ...
+    }
+}
+</code></pre>
+<p>两种方式任选其一即可，下面将使用第一种方式进行测试。</p>
+<p>1、触发禁用效果</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202401/93d6d4b3a2ca429abb5220c502617038-3E6A2C64791C76C62696E22634C9B9B7.png" /></p>
+<p><em>图2 禁用按钮</em></p>
+<p>2、延迟过后，解除禁用</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202401/714455ffb12a4166af52a1ef77893d25-07599A85F79D9C4C380E3D7753297F15.png" /></p>
+<p><em>图3 解除按钮禁用</em></p>
+<p>以上就是本次更新的说明，示例代码也已经更新至仓库中。</p>
 
                         </div>
                     </div>
