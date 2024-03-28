@@ -1,18 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel="stylesheet" href="./css/category.css">
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>分类 - 小埃的个人博客</title>
-    <link rel="stylesheet" href="./css/reset.css">
-    <link rel="stylesheet" href="./css/base.css">
-    <link rel="stylesheet" href="./css/index.css">
-    <link rel="stylesheet" href="./css/header.css">
-    <link rel="stylesheet" href="./css/mobile.css">
-    <link rel="stylesheet" href="./css/theme-light.css">
-    <link rel="shortcut icon" href="./favicon.ico" type="image/x-icon">
+    <title>分类-编程 - 小埃的个人博客</title>
+    <link rel="stylesheet" href="../css/reset.css">
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/index.css">
+    <link rel="stylesheet" href="../css/header.css">
+    <link rel="stylesheet" href="../css/mobile.css">
+    <link rel="stylesheet" href="../css/theme-light.css">
+    <link rel="shortcut icon" href="../favicon.ico" type="image/x-icon">
     <script>
         var _hmt = _hmt || [];
         (function() {
@@ -91,6 +90,19 @@
             window.addEventListener("scroll", headerEleVisibleHandler);
         });
     </script>
+    <style>
+        .container .side-card .content .item1:not(:last-child) {
+            margin-bottom: 10px;
+        }
+        .container .side-card .title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .container .side-card .title .more {
+            font-size: 14px;
+        }
+    </style>
 </head>
 <body>
 <div id="app">
@@ -98,24 +110,24 @@
     <div id="bar">
         <div class="container mg-0-auto d-f">
             <div class="logo">
-                <a href="./" class="nav-link" style="margin-right: 10px;">
-                    <img src="./image/portal/logo.jpg" alt="小埃的个人博客">
+                <a href="../" class="nav-link" style="margin-right: 10px;">
+                    <img src="../image/portal/logo.jpg" alt="小埃的个人博客">
                 </a>
             </div>
             <div class="right">
                 <ul class="nav f-l">
                         <li class="nav-item">
-                            <a href="./index.html" class="nav-link ">
+                            <a href="../index.html" class="nav-link ">
                                 <span>首页</span>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="./category.html" class="nav-link active">
+                            <a href="../category.html" class="nav-link active">
                                 <span>分类</span>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="./about.html" class="nav-link ">
+                            <a href="../about.html" class="nav-link ">
                                 <span>关于</span>
                             </a>
                         </li>
@@ -124,12 +136,12 @@
                     小埃的个人博客
                 </div>
                     <div id="search">
-                        <input type="text" id="search-input" data-prefix="./" placeholder="搜索" autocomplete="off" />
+                        <input type="text" id="search-input" data-prefix="../" placeholder="搜索" autocomplete="off" />
                         <span class="search-icon t-a">
-                            <img class="el-icon-search" src="./image/portal/search.png" width="16" height="16">
+                            <img class="el-icon-search" src="../image/portal/search.png" width="16" height="16">
                         </span>
                         <div id="search-result">
-                            <input type="text" class="input-1" id="search-input-2" data-prefix="./" placeholder="请输入" autocomplete="off" />
+                            <input type="text" class="input-1" id="search-input-2" data-prefix="../" placeholder="请输入" autocomplete="off" />
                             <div class="content">
                             </div>
                             <div class="arrow"></div>
@@ -146,17 +158,17 @@
     </div>
     </div>
     <div id="main">
-        <div class="container category mg-0-auto pd-t-10">
-            <div class="left">
+        <div class="container category-2 mg-0-auto pd-t-10">
+            <div class="category-card-wrapper">
     <div class="category-card b-s-1">
         <div class="wrapper">
             <div class="item content">
                     <div class="cover">
-                        <img src="./image/portal/202304/cover/3d5c033001d64eb2beccef8b5cb27005-7ad549a4678c166e7375f126a52b77a2.png" alt="">
+                        <img src="../image/portal/202304/cover/3d5c033001d64eb2beccef8b5cb27005-7ad549a4678c166e7375f126a52b77a2.png" alt="">
                     </div>
                 <div class="inf">
                     <div class="name">
-                        <a style="display: inline-block; width: 100%; height: 100%;" href="./categories/1.html">编程</a>
+                        <a style="display: inline-block; width: 100%; height: 100%;" href="../categories/1.html">编程</a>
                     </div>
                     <div class="desc text">先写出点bug，然后再修</div>
                     <div class="count">
@@ -166,99 +178,83 @@
             </div>
         </div>
     </div>
-    <div class="category-card b-s-1">
-        <div class="wrapper">
-            <div class="item content">
-                    <div class="cover">
-                        <img src="./image/portal/202304/cover/7343a87cf8934418bf3ac578bc919ac5-ff99cd229909f4f47c1d1deeb62a17c1.png" alt="">
-                    </div>
-                <div class="inf">
-                    <div class="name">
-                        <a style="display: inline-block; width: 100%; height: 100%;" href="./categories/3.html">游戏</a>
-                    </div>
-                    <div class="desc text">爱游戏，享受生活</div>
-                    <div class="count">
-                        文章数：6
-                    </div>
-                </div>
             </div>
-        </div>
-    </div>
-    <div class="category-card b-s-1">
+            <div class="left">
+    <div class="card">
         <div class="wrapper">
-            <div class="item content">
-                    <div class="cover">
-                        <img src="./image/portal/202304/cover/632a56a267494b458e4e29612873bc4d-541BE1327BA0E914B1E358681524E2B0.jpg" alt="">
-                    </div>
-                <div class="inf">
-                    <div class="name">
-                        <a style="display: inline-block; width: 100%; height: 100%;" href="./categories/6.html">随说</a>
-                    </div>
-                    <div class="desc text">没啥，随便说说</div>
-                    <div class="count">
-                        文章数：12
-                    </div>
-                </div>
+            <div class="item title mg-b-5">
+                <a href="../articles/15.html">兼容部署在Github Pages与其他服务器的应用引入资源的解决方案</a>
             </div>
-        </div>
-    </div>
-    <div class="category-card b-s-1">
-        <div class="wrapper">
             <div class="item content">
-                    <div class="cover">
-                        <img src="./image/portal/202305/cover/8c281ab614bb4c3bb65a1637efd7ead4-88b360fef3dd2bce9043d51019ecb148.png" alt="">
-                    </div>
-                <div class="inf">
-                    <div class="name">
-                        <a style="display: inline-block; width: 100%; height: 100%;" href="./categories/9.html">小知识</a>
-                    </div>
-                    <div class="desc text">可能会有点用的东西</div>
-                    <div class="count">
-                        文章数：2
-                    </div>
+                <div class="cover f-r">
+                    <img style="object-fit: cover;" src="../image/portal/loading.gif" data-src="../image/portal/202304/cover/3d1e234ec548474aa029e07874aa6ed3-d6a08501caac287b7d89c5cc5206ffce.jpg" alt="">
                 </div>
+                <span class="brief">在开发环境与部署在其他服务器下都运行良好，但是，当将该项目上传至Github Pages之后，则出现了静态资源404的问题...<a href="../articles/15.html" class="reading-more">继续阅读<i class="el-icon-thumb f-w-b"></i></a></span>
             </div>
-        </div>
-    </div>
-    <div class="category-card b-s-1">
-        <div class="wrapper">
-            <div class="item content">
-                    <div class="cover">
-                        <img src="./image/portal/202306/b2905f5f5df142a8a40e313c5ca33fdb-28a8385d9eef0f666e476828b0c5764e.png" alt="">
-                    </div>
-                <div class="inf">
-                    <div class="name">
-                        <a style="display: inline-block; width: 100%; height: 100%;" href="./categories/10.html">学习笔记</a>
-                    </div>
-                    <div class="desc text">不学是不可能不学的，这辈子都不可能不学</div>
-                    <div class="count">
-                        文章数：4
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="category-card b-s-1">
-        <div class="wrapper">
-            <div class="item content">
-                    <div class="cover">
-                        <img src="./image/portal/202307/572f1ccdb1974361a4f9d0f2b53acd28-system.png" alt="">
-                    </div>
-                <div class="inf">
-                    <div class="name">
-                        <a style="display: inline-block; width: 100%; height: 100%;" href="./categories/11.html">系统/软件</a>
-                    </div>
-                    <div class="desc text">爱折腾</div>
-                    <div class="count">
-                        文章数：5
-                    </div>
-                </div>
+            <div class="item meta mg-b-10 footer pd-t-10">
+                <span class="author">由<a href="javascript:void(0);">errol</a>发表于<a href="#">2023-04-07 04:03:58</a></span>
+                <span>|</span>
+                <span class="time">
+                    分类为
+                    <a href="../categories/1.html">编程</a></span>
+                    <span>|</span>
+                    <span class="tags">
+                        标签为<a href="javascript:void(0);">相对路径</a>、<a href="javascript:void(0);">绝对路径</a>、<a href="javascript:void(0);">网络路径</a>、<a href="javascript:void(0);">静态资源404</a>、<a href="javascript:void(0);">Github Pages</a>、<a href="javascript:void(0);">js</a>
+                    </span>
             </div>
         </div>
     </div>
             </div>
             <div class="right">
+    <div class="side-card b-s-1 mg-b-10">
+        <div class="wrapper">
+            <h2 class="item title">
+                <span>其他分类</span>
+                <!-- 除了当前分类以外，如果大于5，就显示更多，因此此处应该为6 -->
+            </h2>
+            <div class="item content">
+                    <div class="item1 img-item">
+                            <img src="../image/portal/loading.gif" data-src="../image/portal/202304/cover/7343a87cf8934418bf3ac578bc919ac5-ff99cd229909f4f47c1d1deeb62a17c1.png" alt="">
+                        <a href="../categories/3.html">游戏</a>
+                    </div>
+                    <div class="item1 img-item">
+                            <img src="../image/portal/loading.gif" data-src="../image/portal/202304/cover/632a56a267494b458e4e29612873bc4d-541BE1327BA0E914B1E358681524E2B0.jpg" alt="">
+                        <a href="../categories/6.html">随说</a>
+                    </div>
+                    <div class="item1 img-item">
+                            <img src="../image/portal/loading.gif" data-src="../image/portal/202305/cover/8c281ab614bb4c3bb65a1637efd7ead4-88b360fef3dd2bce9043d51019ecb148.png" alt="">
+                        <a href="../categories/9.html">小知识</a>
+                    </div>
+                    <div class="item1 img-item">
+                            <img src="../image/portal/loading.gif" data-src="../image/portal/202306/b2905f5f5df142a8a40e313c5ca33fdb-28a8385d9eef0f666e476828b0c5764e.png" alt="">
+                        <a href="../categories/10.html">学习笔记</a>
+                    </div>
+                    <div class="item1 img-item">
+                            <img src="../image/portal/loading.gif" data-src="../image/portal/202307/572f1ccdb1974361a4f9d0f2b53acd28-system.png" alt="">
+                        <a href="../categories/11.html">系统/软件</a>
+                    </div>
             </div>
+        </div>
+    </div>
+            </div>
+
+        <div class="pagination-wrapper" style="text-align: center; margin-top: 20px;">
+            <ul class="pagination">
+                <li class="pre ">
+                        <a href="../index.html">上一页</a>
+                </li>
+
+                        <li class="pn ">
+                            <a href="../index.html">1</a>
+                        </li>
+                        <li class="pn current">
+                            <a href="../index_2.html">2</a>
+                        </li>
+                <li class="next disabled">
+                        <a href="javascript:void(0);">下一页</a>
+                </li>
+            </ul>
+        </div>
         </div>
     </div>
 
@@ -272,9 +268,9 @@
         </div>
     </div>
 </div>
-    <script src="./js/dataList.js"></script>
-    <script src="./js/lazy.js"></script>
-    <script src="./js/search.js"></script>
-    <script src="./js/menu.js"></script>
+    <script src="../js/dataList.js"></script>
+    <script src="../js/lazy.js"></script>
+    <script src="../js/search.js"></script>
+    <script src="../js/menu.js"></script>
 </body>
 </html>
