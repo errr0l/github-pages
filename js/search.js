@@ -63,7 +63,7 @@ let obj = window.getComputedStyle(searchInput);
 searchIcon.addEventListener("click", function(e) {
 
     // 如果是宽屏状态，则不执行以下逻辑
-    if (obj.display == "block") {
+    if (obj.display === "block") {
         return;
     }
     let mask = document.querySelector("#mask-2");
