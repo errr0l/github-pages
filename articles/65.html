@@ -200,8 +200,8 @@ fs.readFile(&quot;../data.json&quot;, { encoding: 'utf-8' }, (error, data) =&gt;
 <p>执行文件后，得到如下结果：</p>
 <p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202405/9b4f8ef007a0432284b2631504deaaed-DC7625EAF838CDF517031DFF7C185D14.png" /></p>
 <p><em>图1 app.js正常运行</em></p>
-<p>可以看到，现在这段代码是可以正常运行，无论是require()，还是fs.readFile()，都成功读取了文件内容，但是<strong>存在一个隐患</strong>。</p>
-<p>比如，当切换到其他目录执行时，会发现代码抛出“找不到文件”的异常。</p>
+<p>可以看到，现在代码是可以正常运行，无论是require()，还是fs.readFile()，都成功读取了文件内容，但是这段代码<strong>存在一个隐患</strong>。</p>
+<p>比如，当切换到其他目录执行时，会发现程序抛出“找不到文件”的异常。</p>
 <p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202405/483dd6d24f5842d7a9ed1195357b1699-8B528CA070EC0FF7D1B7C2A47C542AF8.png" /></p>
 <p><em>图2 app.js [Error: ENOENT: no such file or directory, open '../data.json']</em></p>
 <p>需要注意的是，错误是从fs.readFile()抛出的，require()可以正常运行。</p>
@@ -213,9 +213,9 @@ fs.readFile(&quot;../data.json&quot;, { encoding: 'utf-8' }, (error, data) =&gt;
 <p>在nodejs文档中，有这样一段关于文件模块fs的<a href="https://nodejs.org/api/fs.html#string-paths">描述</a>：</p>
 <pre><code class="language-text">String paths are interpreted as UTF-8 character sequences identifying the absolute or relative filename. Relative paths will be resolved relative to the current working directory as determined by calling process.cwd().
 </code></pre>
-<p>主要的是后面那句，说的是：<strong>相对路径将根据调用process.cwd()所确定的当前工作目录进行解析。</strong></p>
+<p>重点在于后面一句：<strong>相对路径将根据调用process.cwd()所确定的当前工作目录进行解析。</strong></p>
 <p>换句话说，使用文件模块fs通过相对路径读取文件时，相对的是process.cwd()的返回结果，该结果也被称为<strong>工作目录</strong>。</p>
-<p>而所谓的工作目录，<strong>其实指的就是执行文件时所在的目录</strong>，通过一行简单的代码就能验证这句话。</p>
+<p>而所谓的工作目录，<strong>其实指的就是执行文件时所在的目录</strong>，可以通过简单的代码进行验证。</p>
 <p>在src/目录下新建一个名为printing-working-dir.js的文件，编写如下代码，并在不同目录下执行：</p>
 <pre><code class="language-js">console.log(process.cwd());
 </code></pre>
@@ -223,17 +223,17 @@ fs.readFile(&quot;../data.json&quot;, { encoding: 'utf-8' }, (error, data) =&gt;
 <p><em>图3 在loading-file-with-nodejs-demo/目录下的执行结果</em></p>
 <p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202405/eddc01b8bc254fbcad719f912b044bab-97DAF049DD3CE89C43204730487FDAE4.png" /></p>
 <p><em>图4 在loading-file-with-nodejs-demo/src/目录下的执行结果</em></p>
-<p>如截图所示，在loading-file-with-nodejs-demo/下执行文件时，其工作目录为loading-file-with-nodejs-demo/；在src/目录执行文件时，其工作目录为src/。</p>
+<p>如上图所示，在loading-file-with-nodejs-demo/下执行文件时，其工作目录为loading-file-with-nodejs-demo/；在src/目录执行文件时，其工作目录为src/。</p>
 <p>得到了这一重要信息之后，重新对前面的案例进行分析。</p>
 <p><strong>1、在loading-file-with-nodejs-demo/src/目录下执行app.js文件</strong></p>
 <p>此时fs.readFile(&quot;../data.json&quot;, ...)相对的是loading-file-with-nodejs-demo/src/，相对路径的上一层为loading-file-with-nodejs-demo/，该目录下存在名为data.json的文件，所以读取成功。</p>
 <p><strong>2、在loading-file-with-nodejs-demo/执行app.js文件</strong></p>
 <p>此时fs.readFile(&quot;../data.json&quot;, ...)相对的是相对的是loading-file-with-nodejs-demo/的上一层目录，demo/，该目录下不存在data.json文件，所以读取失败。</p>
-<p>根据目前已知的信息，可得出如下结论：</p>
+<p>整合目前已知的信息，可得出如下结论：</p>
 <blockquote>
 <p>使用相对路径读取文件时，如果实际的工作目录与预期的工作目录不同，就会导致抛出找不到文件的异常。</p>
 </blockquote>
-<p>以当前代码为例，app.js中使用fs.readFile(&quot;../data.json&quot;)读取文件的预期工作目录是src/，因而，有且只有在src/下执行文件时，代码才能够正常运行；在非src/目录下都会运行失败。</p>
+<p>以当前代码为例，app.js中使用fs.readFile(&quot;../data.json&quot;)读取文件的预期工作目录是src/，因而，有且只有在src/下执行文件时，代码才能够正常运行；在非src/目录下都会运行失败（如上）。</p>
 <pre><code class="language-text"># 本文代码结构
 
 loading-file-with-nodejs-demo
@@ -245,13 +245,14 @@ loading-file-with-nodejs-demo
         └── common.js
 </code></pre>
 <h3>二、解决方案</h3>
-<p>这种在非固定目录下执行文件（或启动系统）还挺常见的，比如说部署项目的时候，不可能说还必须要切换到某个项目目录下才能执行相应的操作，一般都在项目外层或使用脚本。</p>
+<p>在非固定目录下执行文件（或启动系统）的场景还挺常见的，比如说部署项目的时候，不可能说还必须要切换到某个项目目录下才能执行相应的操作，一般都在项目外层或使用脚本。</p>
 <p><strong>既然使用相对路径会存在问题，那就改为使用绝对路径。</strong></p>
 <p>或者也可以说是两者结合的方式，<strong>本文采用的是__dirname + path.resolve()。</strong></p>
 <p>__dirname是nodejs中的一个全局变量，指代的是当前文件所在的目录，是一个绝对路径；而<a href="https://nodejs.org/api/path.html#pathresolvepaths">path.resolve()</a>是一个将参数解析为绝对路径的方法。</p>
 <blockquote>
 <p>The path.resolve() method resolves a sequence of paths or path segments into an absolute path.</p>
 </blockquote>
+<p><em>将它们与先前的相对路径组合在一起使用，可准确生成目标文件在磁盘上的绝对路径。</em></p>
 <p>将src/app.js的代码修改如下，并以相同的条件执行：</p>
 <pre><code class="language-js">const fs = require(&quot;fs&quot;);
 const path = require(&quot;path&quot;);
@@ -287,7 +288,7 @@ fs.readFile(path.resolve(__dirname, &quot;../data.json&quot;), { encoding: 'utf-
 <p>在nodejs中，require和fs都可以通过相对路径读取|加载文件，但两者存在差异：由于fs相对的是工作目录，并非当前文件，导致在非预期工作目录执行文件时，出现无法读取文件的错误。</p>
 <p>即相对路径会随着工作目录的变化而变化，这种不稳定的因素正是系统异常的来源之一。</p>
 <p>所以，一般情况下，都尽量不使用相对路径读取文件，免得出现不必要的麻烦。如本文使用__dirname + path.resolve()结合生成绝对路径的方式作为代替。</p>
-<p>需要注意的是，这并非nodejs独有，其他语言也存在同样的问题，python、java等，想必设计者肯定有自己的理由。</p>
+<p>（需要注意的是，这并非nodejs独有，其他语言也存在同样的问题，python、java等，归根结底，这种情况可能不算上一个“问题”...）</p>
 <p>以上。</p>
 
                         </div>
