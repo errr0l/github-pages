@@ -173,7 +173,6 @@
                         <div class="content">
                             <p>在nodejs中，由于通常使用相对路径加载自定义模块文件的缘故，自然而然地，在读取磁盘文件时，首先想到的，可能也是使用相对路径的方式。</p>
 <p>当然，并不是说相对路径不可取，只是在某些情况下，这种方式会存在问题。</p>
-<h3>一、问题定位</h3>
 <p>如以下一段示例代码：</p>
 <pre><code class="language-js">// src/app.js
 
@@ -205,9 +204,9 @@ fs.readFile(&quot;../data.json&quot;, { encoding: 'utf-8' }, (error, data) =&gt;
 <p>比如，当切换到其他目录执行时，会发现代码抛出“找不到文件”的异常。</p>
 <p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202405/483dd6d24f5842d7a9ed1195357b1699-8B528CA070EC0FF7D1B7C2A47C542AF8.png" /></p>
 <p><em>图2 app.js [Error: ENOENT: no such file or directory, open '../data.json']</em></p>
-<p><strong>需要注意的是，错误是从fs.readFile()抛出的，require()可以正常运行。</strong></p>
-<h3>二、问题分析</h3>
-<p><strong>为什么会出现这种差异？</strong></p>
+<p>需要注意的是，错误是从fs.readFile()抛出的，require()可以正常运行。</p>
+<p><strong>为什么会存在这种差异？</strong></p>
+<h3>一、问题分析</h3>
 <blockquote>
 <p>究其原因，其实是require和fs加载文件的机制不同。</p>
 </blockquote>
@@ -245,7 +244,7 @@ loading-file-with-nodejs-demo
     └── util
         └── common.js
 </code></pre>
-<h3>三、解决方案</h3>
+<h3>二、解决方案</h3>
 <p>这种在非固定目录下执行文件（或启动系统）还挺常见的，比如说部署项目的时候，不可能说还必须要切换到某个项目目录下才能执行相应的操作，一般都在项目外层或使用脚本。</p>
 <p><strong>既然使用相对路径会存在问题，那就改为使用绝对路径。</strong></p>
 <p>或者也可以说是两者结合的方式，<strong>本文采用的是__dirname + path.resolve()。</strong></p>
@@ -283,6 +282,7 @@ fs.readFile(path.resolve(__dirname, &quot;../data.json&quot;), { encoding: 'utf-
 <p><em>图5 [修改后]在loading-file-with-nodejs-demo/目录下的执行结果</em></p>
 <p><strong>使用path.resolve(__dirname, [相对路径])的意义在于，读取文件时相对的是当前文件，而不再是工作目录【process.cwd()】</strong>，使得传入fs.readFile()中的路径参数变为固定值。</p>
 <p>因此，改动后的代码，无论在那个目录下都可以正常运行。</p>
+<p><em><a href="https://github.com/xxzhiwei/demo/tree/master/loading-file-with-nodejs-demo">示例代码</a>自取</em>。</p>
 <hr />
 <p>在nodejs中，require和fs都可以通过相对路径读取|加载文件，但两者存在差异：由于fs相对的是工作目录，并非当前文件，导致在非预期工作目录执行文件时，出现无法读取文件的错误。</p>
 <p>即相对路径会随着工作目录的变化而变化，这种不稳定的因素正是系统异常的来源之一。</p>
