@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>简单整理博客及其相关项目的情况 - 小埃的个人博客</title>
+    <link rel="stylesheet" href="../css/reset.css">
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/index.css">
+    <link rel="stylesheet" href="../css/header.css">
+    <link rel="stylesheet" href="../css/mobile.css">
+    <link rel="stylesheet" href="../css/theme-light.css">
+    <link rel="shortcut icon" href="../favicon.ico" type="image/x-icon">
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?d1fc0144cbb354a3f8442b7ba568bc2f";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+
+        window.addEventListener('DOMContentLoaded', () => {
+            let headerEle = document.getElementById('header');
+            let eleHeight = headerEle.offsetHeight;
+            let lastScrollTop = 0;
+            let topAnchor = 0; // 某个方向的锚点
+            let downAnchor = 0;
+            let stylTop = "-" + eleHeight + "px";
+            let stylTop2 = "0";
+            let threshold = 180;
+            function headerEleVisibleHandler() {
+                let scrollTop = document.documentElement.scrollTop;
+                // 向下滚动
+                if (scrollTop > lastScrollTop) {
+                    if (downAnchor !== 0) {
+                        downAnchor = 0;
+                    }
+                    if (topAnchor === 0) {
+                        topAnchor = scrollTop;
+                    }
+                    if ((scrollTop > threshold || scrollTop - topAnchor > threshold) && headerEle.style.top !== stylTop) {
+                        headerEle.style.top =  stylTop;
+                    }
+                }
+                // 向上
+                else {
+                    if (topAnchor !== 0) {
+                        topAnchor = 0;
+                    }
+                    if (downAnchor === 0) {
+                        downAnchor = scrollTop;
+                    }
+                    if ((scrollTop + threshold > downAnchor) && headerEle.style.top === stylTop) {
+                        headerEle.style.top = stylTop2;
+                    }
+                }
+                lastScrollTop = scrollTop;
+            }
+
+            function throttleWrapper(fn, options) {
+                if (!options) {
+                    options = {};
+                }
+                let timer = null;
+                const { timeout } = options;
+
+                const _setTimeout = () => {
+                    timer = window.setTimeout(() => {
+                        window.clearTimeout(timer);
+                        timer = null;
+                    }, timeout);
+                    return timer;
+                }
+
+                return function (...args) {
+                    if (timer) {
+                        return;
+                    }
+                    timer = -1;
+                    let result = fn.apply(this, args);
+                    _setTimeout();
+                    return result;
+                }
+            }
+
+            headerEleVisibleHandler = throttleWrapper(headerEleVisibleHandler, { timeout: 200 });
+
+            window.addEventListener("scroll", headerEleVisibleHandler);
+        });
+    </script>
+        <meta name="keywords" content="博客,规范,优化">
+    <link rel="stylesheet" href="../css/article.css">
+    <link rel="stylesheet" href="../css/markdown/github-markdown.css">
+    <link rel="stylesheet" href="../css/markdown/github-markdown-light.css">
+    <link rel="stylesheet" href="../css/gittalk-cover.css">
+    <link rel="stylesheet"
+          href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</head>
+<body>
+<div id="app">
+    <div id="header">
+    <div id="bar">
+        <div class="container mg-0-auto d-f">
+            <div class="logo">
+                <a href="../" class="nav-link" style="margin-right: 10px;">
+                    <img src="../image/portal/logo.jpg" alt="小埃的个人博客">
+                </a>
+            </div>
+            <div class="right">
+                <ul class="nav f-l">
+                        <li class="nav-item">
+                            <a href="../index.html" class="nav-link active">
+                                <span>首页</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="../category.html" class="nav-link ">
+                                <span>分类</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="../about.html" class="nav-link ">
+                                <span>关于</span>
+                            </a>
+                        </li>
+                </ul>
+                <div class="eb-title">
+                    小埃的个人博客
+                </div>
+                    <div id="search">
+                        <input type="text" id="search-input" data-prefix="../" placeholder="搜索" autocomplete="off" />
+                        <span class="search-icon t-a">
+                            <img class="el-icon-search" src="../image/portal/search.png" width="16" height="16">
+                        </span>
+                        <div id="search-result">
+                            <input type="text" class="input-1" id="search-input-2" data-prefix="../" placeholder="请输入" autocomplete="off" />
+                            <div class="content">
+                            </div>
+                            <div class="arrow"></div>
+                        </div>
+                    </div>
+
+                <div class="eb-menu">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-list-ul" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M5 11.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm-3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm0 4a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm0 4a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    <div id="main">
+        <div class="container mg-0-auto pd-t-10">
+            <div class="left">
+                <article class="mg-b-20">
+                    <div class="markdown-body">
+                        <div class="title">简单整理博客及其相关项目的情况</div>
+                        <div class="item meta mg-b-10">
+                            <span class="author">由<a href="javascript:void(0);">errol</a>发表于<a href="#">2024-09-07 09:56:37</a></span>
+                            <span>|</span>
+                            <span class="time">
+                            分类为
+                            <a href="../categories/1.html">编程</a></span>
+                            <span>|</span>
+                            <span class="tags">
+                                标签为<a href="javascript:void(0);">博客</a>、<a href="javascript:void(0);">规范</a>、<a href="javascript:void(0);">优化</a>
+                            </span>
+                        </div>
+                            <div class="cover mg-b-10">
+                                <img src="../image/portal/202409/a9b8bc93a30a48f2bec189099368277e-1724518479678.gif?project=easyblog" alt="">
+                            </div>
+                        <div class="content">
+                            <p>每次树莓派出现故障，从镜像中恢复，都得搞半天，错误百出，人麻了…</p>
+<p>所以现在稍微整理一下目前存在的问题，以及需要优化和规范的点。</p>
+<p>1、[easyblog]后台读取静态资源来自磁盘；当然，部署的时候，为了方便，该资源目录是存放在项目部署的根目录下，而项目目录下的资源【resources】其实是没用的，最终要把它copy到指定的磁盘目录下，才可正常读取；关于resources文件夹位置，即配置文件中的root，存放静态资源的位置，该目录不会打包进jar中，因此必须选择一个地方，项目目录外或项目目录下（开发时），如果在项目目录外的话，文件修改后，必要要同步（一般是在编辑器修改，没错吧）。</p>
+<p>2、源码更改后，要及时上传至github，同时对数据库做备份</p>
+<p>3、[easyblog]图片问题【大头】</p>
+<p>博客的图片分有好几种形式，像是后台的、前台的、封面、markdown图片，其中前台、封面（文章、分类）、markdown图片，需要一起打包为静态资源，其读取的方式也有区别：出了markdown图片外，其他的图片需要前端加上一个前缀，这种方式太过于繁琐复杂，所以想优化。</p>
+<p>而现在想到的一种方式是，数据库不保存前缀，通过代理转发请求：在图片链接中添加标明项目的url参数，根据该参数使用代理转发请求，这样一来，简化了请求，也简化了保存/上传图片的流程，越简单，越不容易出现错误，很通俗易懂的道理。</p>
+<blockquote>
+<p>nginx配置</p>
+</blockquote>
+<pre><code class="language-bash">http {
+    # ...
+    map $arg_project $proxy_host {
+        default      127.0.0.1:8080;
+        easyblog     127.0.0.1:8080;
+    }
+    # ...
+    server {
+        # ...
+        location ~ ^/(image|temp) {
+            add_header 'Access-Control-Allow-Origin' '*' always;
+            add_header 'Access-Control-Allow-Methods' 'GET,OPTIONS';
+            add_header 'Access-Control-Allow-Headers' '*';
+            add_header 'Access-Control-Allow-Credentials' false;
+            add_header 'Access-Control-Max-Age' 1728000;
+            limit_req zone=rateLimit burst=10 nodelay;
+            proxy_pass http://$proxy_host;
+        }
+    }
+    # ...
+}
+</code></pre>
+<p>至于线上数据库中的旧数据，则需要将其拉到本地，使用脚本修改后再上传，其中由脚本修改完后，url参数由前端自行添加。</p>
+<p>注意，该种方式必须依赖于代理，否则将会导致读取图片失败。</p>
+<p>4、[easyblog-admin]配置文件</p>
+<p>不再同项目文件一起打包，由外部以接口的形式提供，使得项目具有从外部进行微调整的能力，比较典型的是，需要修改接口地址时，无需再重新打包部署。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202409/fd086e108fc540019008634dffc4eeb7-49EEBE4E8174EEA9C2B5713979F829C0.png?project=easyblog" /></p>
+<p><em>图1 配置信息接口</em></p>
+<p><strong>该请求必须在所有请求前完成，本次选择了在router.beforeEach()方法内完成。</strong></p>
+<p>开发时，可选择在webpack中返回数据；线上则可通过nginx返回。</p>
+<blockquote>
+<p>配置文件示例</p>
+</blockquote>
+<pre><code class="language-json">{
+    &quot;HOST&quot;: &quot;http://localhost:80&quot;,
+    &quot;PREFIX&quot;: &quot;/easyblog/admin&quot;,
+    &quot;OAUTH&quot;: {
+        &quot;OAUTH_REDIRECT_URI&quot;: &quot;http://localhost:9528/easyblog/admin/#/oauth2/callback&quot;,
+        &quot;OAUTH_AUTHORIZATION_URI&quot;: &quot;http://localhost:80/ya/oauth2/authorize&quot;,
+        &quot;OAUTH_CLIENT_ID&quot;: &quot;1&quot;
+    }
+}
+</code></pre>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202409/3b55df21536547ba8fe9de735e99e1a9-5F984880B90B73D30E1BD3AEF8F1D1C9.png?project=easyblog" /></p>
+<p><em>图2 nginx中的配置(同在server内)</em></p>
+<p>5、[easyblog-admin]Markdown文本与数据库内容不一致的问题</p>
+<p>编辑文章时，没有做任何改动，但仍然提示保存，这是因为空格的问题。</p>
+<p>markdown将文本读入编辑器后，会对其进行一些处理，比如，删除一些非必要的字符，如下：</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202409/87bcfce1f9744d458d9b674548d8dcf8-DCC9C831E58F9671471195339BB1D546.png?project=easyblog" /></p>
+<p><em>图3 markdown文本空格示例</em></p>
+<p>在1和2之间，存在两个空字符，而编辑器会将多余的空字符串处理(合并?)，也就导致了在检测时，出现了不一致的问题。</p>
+<p>这个问题甚至不需要处理，只需要在写文章时，注意不要留有多余的空格就行了。</p>
+<hr />
+<p>基本上，目前暂时就是以上的这些问题。</p>
+
+                        </div>
+                    </div>
+                </article>
+                <div class="comment-wrap">
+                        <div class="t-a close">评论区已关闭</div>
+                </div>
+            </div>
+            <div class="right">
+            </div>
+        </div>
+    </div>
+    <div class="back">返回</div>
+</div>
+    <script src="../js/dataList.js"></script>
+    <script src="../js/lazy.js"></script>
+    <script src="../js/search.js"></script>
+    <script src="../js/menu.js"></script>
+<script>
+    let back = document.querySelector(".back");
+    back.addEventListener("click", function () {
+        window.history.go(-1);
+    });
+</script>
+</body>
+</html>

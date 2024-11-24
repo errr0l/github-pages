@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>复制带反斜杠的字符串时引发的问题 - 小埃的个人博客</title>
+    <link rel="stylesheet" href="../css/reset.css">
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/index.css">
+    <link rel="stylesheet" href="../css/header.css">
+    <link rel="stylesheet" href="../css/mobile.css">
+    <link rel="stylesheet" href="../css/theme-light.css">
+    <link rel="shortcut icon" href="../favicon.ico" type="image/x-icon">
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?d1fc0144cbb354a3f8442b7ba568bc2f";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+
+        window.addEventListener('DOMContentLoaded', () => {
+            let headerEle = document.getElementById('header');
+            let eleHeight = headerEle.offsetHeight;
+            let lastScrollTop = 0;
+            let topAnchor = 0; // 某个方向的锚点
+            let downAnchor = 0;
+            let stylTop = "-" + eleHeight + "px";
+            let stylTop2 = "0";
+            let threshold = 180;
+            function headerEleVisibleHandler() {
+                let scrollTop = document.documentElement.scrollTop;
+                // 向下滚动
+                if (scrollTop > lastScrollTop) {
+                    if (downAnchor !== 0) {
+                        downAnchor = 0;
+                    }
+                    if (topAnchor === 0) {
+                        topAnchor = scrollTop;
+                    }
+                    if ((scrollTop > threshold || scrollTop - topAnchor > threshold) && headerEle.style.top !== stylTop) {
+                        headerEle.style.top =  stylTop;
+                    }
+                }
+                // 向上
+                else {
+                    if (topAnchor !== 0) {
+                        topAnchor = 0;
+                    }
+                    if (downAnchor === 0) {
+                        downAnchor = scrollTop;
+                    }
+                    if ((scrollTop + threshold > downAnchor) && headerEle.style.top === stylTop) {
+                        headerEle.style.top = stylTop2;
+                    }
+                }
+                lastScrollTop = scrollTop;
+            }
+
+            function throttleWrapper(fn, options) {
+                if (!options) {
+                    options = {};
+                }
+                let timer = null;
+                const { timeout } = options;
+
+                const _setTimeout = () => {
+                    timer = window.setTimeout(() => {
+                        window.clearTimeout(timer);
+                        timer = null;
+                    }, timeout);
+                    return timer;
+                }
+
+                return function (...args) {
+                    if (timer) {
+                        return;
+                    }
+                    timer = -1;
+                    let result = fn.apply(this, args);
+                    _setTimeout();
+                    return result;
+                }
+            }
+
+            headerEleVisibleHandler = throttleWrapper(headerEleVisibleHandler, { timeout: 200 });
+
+            window.addEventListener("scroll", headerEleVisibleHandler);
+        });
+    </script>
+        <meta name="keywords" content="特殊字符,转义,校验">
+    <link rel="stylesheet" href="../css/article.css">
+    <link rel="stylesheet" href="../css/markdown/github-markdown.css">
+    <link rel="stylesheet" href="../css/markdown/github-markdown-light.css">
+    <link rel="stylesheet" href="../css/gittalk-cover.css">
+    <link rel="stylesheet"
+          href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</head>
+<body>
+<div id="app">
+    <div id="header">
+    <div id="bar">
+        <div class="container mg-0-auto d-f">
+            <div class="logo">
+                <a href="../" class="nav-link" style="margin-right: 10px;">
+                    <img src="../image/portal/logo.jpg" alt="小埃的个人博客">
+                </a>
+            </div>
+            <div class="right">
+                <ul class="nav f-l">
+                        <li class="nav-item">
+                            <a href="../index.html" class="nav-link active">
+                                <span>首页</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="../category.html" class="nav-link ">
+                                <span>分类</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="../about.html" class="nav-link ">
+                                <span>关于</span>
+                            </a>
+                        </li>
+                </ul>
+                <div class="eb-title">
+                    小埃的个人博客
+                </div>
+                    <div id="search">
+                        <input type="text" id="search-input" data-prefix="../" placeholder="搜索" autocomplete="off" />
+                        <span class="search-icon t-a">
+                            <img class="el-icon-search" src="../image/portal/search.png" width="16" height="16">
+                        </span>
+                        <div id="search-result">
+                            <input type="text" class="input-1" id="search-input-2" data-prefix="../" placeholder="请输入" autocomplete="off" />
+                            <div class="content">
+                            </div>
+                            <div class="arrow"></div>
+                        </div>
+                    </div>
+
+                <div class="eb-menu">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-list-ul" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M5 11.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm-3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm0 4a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm0 4a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    <div id="main">
+        <div class="container mg-0-auto pd-t-10">
+            <div class="left">
+                <article class="mg-b-20">
+                    <div class="markdown-body">
+                        <div class="title">复制带反斜杠的字符串时引发的问题</div>
+                        <div class="item meta mg-b-10">
+                            <span class="author">由<a href="javascript:void(0);">errol</a>发表于<a href="#">2024-11-24 08:44:13</a></span>
+                            <span>|</span>
+                            <span class="time">
+                            分类为
+                            <a href="../categories/1.html">编程</a></span>
+                            <span>|</span>
+                            <span class="tags">
+                                标签为<a href="javascript:void(0);">特殊字符</a>、<a href="javascript:void(0);">转义</a>、<a href="javascript:void(0);">校验</a>
+                            </span>
+                        </div>
+                        <div class="content">
+                            <p>在大多数编程语言中，反斜杠，即“\”，是一个特殊的字符，具体来说是一个转义字符，它常与其他字符组合来表示另一个特殊字符，如“\t”表示制表符，“\n”表示换行符，“\r”表示换行符等等。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202411/9fa1029c118c487ea376ac7378832cc4-tmp_filePasted_Graphic_107.png?project=easyblog" /></p>
+<p><em>图1 换行符</em></p>
+<p>当然，反斜杠也可能出现“单独使用”的情况，比如一个随机生成的字符串中，其长度为190，不过需要注意的是，此时反斜杠表示的是一个普通的字符，而不是特殊字符。</p>
+<blockquote>
+<p>E1eo0pcDzt\kELI4NxGrwD/cxgxGcCHnj\J5veAX5cEHfq8e5PxLlVzd5zY8raccb1eomKiGLS2eU7dypxUHWOWkdhIUoBpr\bLBrNDlgziQweg0wBIL+zDT7Ld\07ttX0B98TVNIzAb74mNgR4AxIisiG+XkNiy7Bi2mUf0waW3+QYM:1732172257549</p>
+</blockquote>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202411/ec0937a966294665be4ced1ea0c3dcb4-81F8E8B97118153BACDA396F13FAE6DF.png?project=easyblog" /></p>
+<p><em>图2 随机生成的带反斜杠的字符串</em></p>
+<p><strong>如果将该字符串直接复制到其他地方时，可能会引发问题。</strong></p>
+<p>以浏览器控制台为例，复制后赋值给变量str1。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202411/763c79a0c8cd4e1ba9bf6d7686e3128a-E50ABECBEDC4722909CD44A5ACA22772.png?project=easyblog" /></p>
+<p><em>图3 变量str1</em></p>
+<p>当获取该字符串的长度时，发现已经不是原来的190。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202411/b9563bac783c45a6b74049bca50cb318-97EA1A71B15C34931822D093FB4F174D.png?project=easyblog" /></p>
+<p><em>图4 输出变量str1的长度</em></p>
+<p>与原来的字符串相比，不难发现，str1字符串有些反斜杠消失了，有些反斜杠还存在。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202411/2177afcd2ffc407ebe87110784784c2a-HjJ5veAX5cEHfq8e5PxLlVzd5z81o07yHWOw_copy.png?project=easyblog" /></p>
+<p><em>图5 “消失”与的“存活”的反斜杠</em></p>
+<p>这是由于反斜杠是一个特殊字符的缘故，它不能单独使用，<strong>即反斜杠在控制台与声明变量时所表示的意义不同</strong>。</p>
+<p>在将复制的字符串赋值给变量str1时，js语法解析器会尝试将反斜杠与其相邻的下一个字符解析为一个特殊字符。</p>
+<p>以字符串中的第一个反斜杠“Hnj\J5ve”为例：很明显，“\J”并不能表示一个特殊字符，因此该反斜杠会被移除，只剩下一个“J”；在第二个反斜杠“pr\bLB”中，“\b”可以表示特殊字符，代表单词的边界，<strong>因此反斜杠会被保留下来，但“\b”也只表示一个字符</strong>。</p>
+<p>所以很明显，如果将复制的字符串用于参数校验的话，无疑会导致校验失败。</p>
+<p>处理该问题也简单，<strong>仅需要将字符串按照它原本的意义表示即可</strong>，也就是说，反斜杠原来是一个普通字符，赋值后，它应该也是一个普通字符。</p>
+<p>已知的方法有两种：</p>
+<p>1、将控制台的字符串先复制到编辑器中，再从编辑器复制到浏览器</p>
+<p>有些编辑器会智能识别反斜杠字符，并为其加上转义字符，如JetBrains系列编辑器。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202411/11883048992e4cd6a2d9aed87a26da32-0BE1A1D91E59D13E15ED2BF04984F3E4.png?project=easyblog" /></p>
+<p><em>图6 经编辑器处理后的字符</em></p>
+<p>2、使用String.raw()方法</p>
+<p>如方法名字面意思，使用该方法处理字符串时，字符串不会发生转义。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202411/71c57e05e5404d88a0b73e6e5ed4afef-D16009FF934244513CB522452D20988C.png?project=easyblog" /></p>
+<p><em>图7 变量str2</em></p>
+<hr />
+<p>不得不说，平时确实会为了图方便，将控制台的输出结果直接复制并拿去赋值，继而引发该问题，不过问题也不大，只要知道原因所在即可。</p>
+<p><del>同时，本文也是作者在某个参数校验过程中发生了小插曲后的产物，以此为戒。</del></p>
+
+                        </div>
+                    </div>
+                </article>
+                <div class="comment-wrap">
+                        <div class="t-a close">评论区已关闭</div>
+                </div>
+            </div>
+            <div class="right">
+            </div>
+        </div>
+    </div>
+    <div class="back">返回</div>
+</div>
+    <script src="../js/dataList.js"></script>
+    <script src="../js/lazy.js"></script>
+    <script src="../js/search.js"></script>
+    <script src="../js/menu.js"></script>
+<script>
+    let back = document.querySelector(".back");
+    back.addEventListener("click", function () {
+        window.history.go(-1);
+    });
+</script>
+</body>
+</html>
