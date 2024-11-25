@@ -90,7 +90,7 @@
             window.addEventListener("scroll", headerEleVisibleHandler);
         });
     </script>
-        <meta name="keywords" content="特殊字符,转义,校验">
+        <meta name="keywords" content="特殊字符,校验,转义字符">
     <link rel="stylesheet" href="../css/article.css">
     <link rel="stylesheet" href="../css/markdown/github-markdown.css">
     <link rel="stylesheet" href="../css/markdown/github-markdown-light.css">
@@ -167,14 +167,14 @@
                             <a href="../categories/1.html">编程</a></span>
                             <span>|</span>
                             <span class="tags">
-                                标签为<a href="javascript:void(0);">特殊字符</a>、<a href="javascript:void(0);">转义</a>、<a href="javascript:void(0);">校验</a>
+                                标签为<a href="javascript:void(0);">特殊字符</a>、<a href="javascript:void(0);">校验</a>、<a href="javascript:void(0);">转义字符</a>
                             </span>
                         </div>
                         <div class="content">
-                            <p>在大多数编程语言中，反斜杠，即“\”，是一个特殊的字符，具体来说是一个转义字符，它常与其他字符组合来表示另一个特殊字符，如“\t”表示制表符，“\n”表示换行符，“\r”表示换行符等等。</p>
+                            <p>在大多数编程语言中，反斜杠，即“\”，是一个特殊的字符，具体来说是一个转义字符，它常与其他字符组合来表示另一个特殊字符，如“\t”表示制表符，“\n”表示换行符，“\r”表示回车符等等。</p>
 <p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202411/9fa1029c118c487ea376ac7378832cc4-tmp_filePasted_Graphic_107.png?project=easyblog" /></p>
 <p><em>图1 换行符</em></p>
-<p>当然，反斜杠也可能出现“单独使用”的情况，比如一个随机生成的字符串中，其长度为190，不过需要注意的是，此时反斜杠表示的是一个普通的字符，而不是特殊字符。</p>
+<p>当然，反斜杠也可能出现“单独使用”的情况，比如一个随机生成的字符串中，其长度为190，不过需要注意的是，<strong>此时反斜杠表示的是一个普通的字符，而不是特殊字符</strong>。</p>
 <blockquote>
 <p>E1eo0pcDzt\kELI4NxGrwD/cxgxGcCHnj\J5veAX5cEHfq8e5PxLlVzd5zY8raccb1eomKiGLS2eU7dypxUHWOWkdhIUoBpr\bLBrNDlgziQweg0wBIL+zDT7Ld\07ttX0B98TVNIzAb74mNgR4AxIisiG+XkNiy7Bi2mUf0waW3+QYM:1732172257549</p>
 </blockquote>
@@ -189,23 +189,23 @@
 <p><em>图4 输出变量str1的长度</em></p>
 <p>与原来的字符串相比，不难发现，str1字符串有些反斜杠消失了，有些反斜杠还存在。</p>
 <p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202411/2177afcd2ffc407ebe87110784784c2a-HjJ5veAX5cEHfq8e5PxLlVzd5z81o07yHWOw_copy.png?project=easyblog" /></p>
-<p><em>图5 “消失”与的“存活”的反斜杠</em></p>
+<p><em>图5 “消失”与“存活”的反斜杠</em></p>
 <p>这是由于反斜杠是一个特殊字符的缘故，它不能单独使用，<strong>即反斜杠在控制台与声明变量时所表示的意义不同</strong>。</p>
 <p>在将复制的字符串赋值给变量str1时，js语法解析器会尝试将反斜杠与其相邻的下一个字符解析为一个特殊字符。</p>
 <p>以字符串中的第一个反斜杠“Hnj\J5ve”为例：很明显，“\J”并不能表示一个特殊字符，因此该反斜杠会被移除，只剩下一个“J”；在第二个反斜杠“pr\bLB”中，“\b”可以表示特殊字符，代表单词的边界，<strong>因此反斜杠会被保留下来，但“\b”也只表示一个字符</strong>。</p>
 <p>所以很明显，如果将复制的字符串用于参数校验的话，无疑会导致校验失败。</p>
 <p>处理该问题也简单，<strong>仅需要将字符串按照它原本的意义表示即可</strong>，也就是说，反斜杠原来是一个普通字符，赋值后，它应该也是一个普通字符。</p>
-<p>已知的方法有两种：</p>
+<p>目前已知的方法有两种：</p>
 <p>1、将控制台的字符串先复制到编辑器中，再从编辑器复制到浏览器</p>
 <p>有些编辑器会智能识别反斜杠字符，并为其加上转义字符，如JetBrains系列编辑器。</p>
 <p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202411/11883048992e4cd6a2d9aed87a26da32-0BE1A1D91E59D13E15ED2BF04984F3E4.png?project=easyblog" /></p>
 <p><em>图6 经编辑器处理后的字符</em></p>
 <p>2、使用String.raw()方法</p>
-<p>如方法名字面意思，使用该方法处理字符串时，字符串不会发生转义。</p>
+<p>如方法名字面意思，使用该方法处理字符串时，字符串不会发生转义。一般情况下，其他语言也会有类似的字符串处理接口。</p>
 <p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202411/71c57e05e5404d88a0b73e6e5ed4afef-D16009FF934244513CB522452D20988C.png?project=easyblog" /></p>
 <p><em>图7 变量str2</em></p>
 <hr />
-<p>不得不说，平时确实会为了图方便，将控制台的输出结果直接复制并拿去赋值，继而引发该问题，不过问题也不大，只要知道原因所在即可。</p>
+<p>不得不说，平时确实会为了图方便，而将控制台的输出结果直接复制并拿去赋值，继而引发该错误，不过问题也不大，只要知道原因所在即可。</p>
 <p><del>同时，本文也是作者在某个参数校验过程中发生了小插曲后的产物，以此为戒。</del></p>
 
                         </div>
