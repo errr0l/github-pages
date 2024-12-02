@@ -171,7 +171,8 @@
                             </span>
                         </div>
                         <div class="content">
-                            <p>继上次给出了滑动认证码的处理方案后，本次带来的是一次滑动验证码逆向的实战。当然，至于本文中使用到的验证码缺口识别模块，则是直接沿用了上一篇文章中的代码，本文不再做过多的讲解，如有疑惑，请前往阅读<a href="./articles/65.html">文章</a>。</p>
+                            <p>继上次给出了滑动认证码的处理方案后，本次带来的是一次滑动验证码逆向的实战，<strong>其目的是使用程序来代替人手来完成认证流程</strong>。</p>
+<p>实战仍需用到上一篇文章中实现的代码，但本文不再对此做过多的讲解，如有疑惑，请前往阅读文章：<a href="./articles/65.html">《一种可能可行的滑动认证码处理方案》</a>。</p>
 <p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202412/ddaaeb06245a40ccba7af517622d4075-C46885D7FC3B7FAD69AA16921DB29811.png?project=easyblog" /></p>
 <p><em>图1 某云滑动验证码</em></p>
 <p>目标网站地址：</p>
@@ -185,13 +186,13 @@
 <p><em>图2 校验通过时返回的数据</em></p>
 <p>所以文章的安排也已经比较明了了，一共分为<strong>三个部分</strong>，先是<strong>对获取验证码接口的逆向</strong>，然后是<strong>对校验验证码接口的逆向</strong>，最后<strong>整体调用方法</strong>。</p>
 <p>另外，还有一些不太重要，但需要提前说明的事项。</p>
-<p>1）本实战采用的是“极简”策略，简而言之，能默认值(固定值)就默认值，能空则空，不做多余的步骤；</p>
-<p>2）不会复述一些基础逆向操作的同时(浏览器开发者工具相关、断点相关等)，也不会给出太多细节，正如前面所说，网站会经常进行迭代，咱们编程的都知道，过于具体的代码，没有适应变化的能力，所以懂了，最好是读者自己上手…(绝对不是觉得麻烦想偷懒)。</p>
-<p>截止到文章发布，本文涉及的代码仍可正常运行，但不排除后续有随着版本迭代而失效的可能，一旦出现这种情况时，推荐采用排除法，具体为：将网站中生成的参数替换为本地参数，并查看执行结果，不断循环该步骤，最终可定位到问题所在。</p>
+<p>1）本实战采用的是“极简”策略，简而言之，能用默认&amp;固定值就默认&amp;固定值，能空则空，不做多余的步骤；</p>
+<p>2）不会复述一些基础逆向操作的同时(浏览器开发者工具相关、断点相关等)，也不会给出太多细节，由于网站会经常进行迭代，编程的都知道，过于具体的代码，没有适应变化的能力，所以懂了... 最好是读者自己上手（绝对不是因为觉得麻烦）。</p>
+<p>截止到文章发布，本文涉及的代码仍可正常运行，但不排除后续会失效，一旦出现这种情况时，推荐采用<strong>排除法</strong>，具体为：将网站中生成的参数替换为本地参数，并查看执行结果，不断循环该步骤，最终可定位到问题所在，并加以解决。</p>
 <p>下面开始补充细节部分。</p>
 <h3>一、获取验证码接口逆向</h3>
-<p>完整的方法如下，大多数参数可采用固定值，少数，如fp、cb等则需要分析js文件，虽不会详细描述分析的过程，但稍后会给出参数生成的大致位置。</p>
-<p>方法返回了验证码滑块和背景的链接，验证码令牌，以及cookie。</p>
+<p>完整的方法如下，大多数参数可采用固定值，少数，如fp、cb等则需要分析js文件，虽不会详细描述分析的过程，但稍后会贴出参数生成的大致位置。</p>
+<p>方法返回了验证码滑块和背景的链接，验证码令牌，以及cookie，校验时需要用到。</p>
 <pre><code class="language-python">def get_captcha(dt):
     &quot;&quot;&quot;
     获取验证码(url、token、cookies)；在未获取到数据时，acToken会使用一个固定参数；该接口会检查以下请求头字段，缺少时将会导致后续的校验不通过
@@ -237,6 +238,7 @@
     }
 </code></pre>
 <h5>1、cb参数</h5>
+<p>这类由前端动态生成的参数，需要通过断点定位生成参数的算法，并移植到本地，以便在本地环境生成格式一致的数据。</p>
 <p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202412/6e5f829c0c2746aa840cf15474c36c8a-image-20241201205246015.png?project=easyblog" /></p>
 <p><em>图3 给获取验证码接口打上断点-1</em></p>
 <p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202412/9293fad483844dbe9146ec6d221c8140-image-20241201205347245_2.png?project=easyblog" /></p>
@@ -301,7 +303,7 @@
 </blockquote>
 <h3>二、校验接口逆向</h3>
 <p>也就是验证码中拖动滑块，并发送请求的部分。</p>
-<p>与上一步类似，先给出最终的代码；不同的是，本步骤使用js代码来生成一个完整的url，因此，在主体python中直接请求该url即可。</p>
+<p>与上一步类似，先给出最终的代码；不同的是，本步骤使用js代码来生成一个完整的url，主体python中只需要直接请求该url。</p>
 <pre><code class="language-js">// 生成url参数；token从get_captcha()中获取；offset是缺口偏移量；scale为图片浏览器渲染与实际大小的比例；PX_4和PX_11是经尝试后得到的常量；
 function generateParameters(token, offset, deviceToken) {
     const captchaId = &quot;73a18dc827b24b18ad0783701a75277d&quot;;
@@ -350,9 +352,8 @@ function _generateParameters(token, offset, deviceToken, captchaId, _atomTraceDa
 }
 </code></pre>
 <p>其中，<strong>atomTraceData是一组在网站中将滑块从头拖到尾所生成的滑动轨迹数据</strong>，但该数据不能直接使用，还需经filter()方法过滤筛选，简单来说，只能使用&quot;偏移量&quot;这段距离(包括本身)之前的数据，这点与在网站上将滑块拖动至缺口处的效果一致，如有必要，可查看js代码；</p>
-<p>此外，该方法还依赖了一些其他的数据：</p>
 <h5>1、deviceToken</h5>
-<p>该参数可长时间使用，在目标网站中以localStorage的方式存储。</p>
+<p>在目标网站中以localStorage的方式存储，表明了该参数可长时间使用。</p>
 <pre><code class="language-python">def get_conf():
     &quot;&quot;&quot;
     获取配置信息，dt(deviceToken)等，返回值可以持续使用
@@ -375,7 +376,7 @@ function _generateParameters(token, offset, deviceToken, captchaId, _atomTraceDa
     pass
 </code></pre>
 <h5>2、offset</h5>
-<p>获取到验证码后，需要取得缺口偏移量，也就是文章开头所提及的验证码缺口识别模块，具体可查看上一篇相关的文章：<a href="./articles/65.html">《一种可能可行的滑动认证码处理方案》</a>。</p>
+<p>获取到验证码后，需要取得缺口偏移量，可通过验证码缺口识别模块get_offset()计算得出。</p>
 <pre><code class="language-python">def get_offset(bg, front):
     &quot;&quot;&quot;
     获取缺口偏移量；由于是链接，因此还需在方法内获取图片
@@ -392,14 +393,14 @@ function _generateParameters(token, offset, deviceToken, captchaId, _atomTraceDa
     return match(bg_image, pos_list, start_x=90, offset_x=-90)
 </code></pre>
 <h5>3、_generateParameters#params.data参数</h5>
-<p>该参数需要补全代码。</p>
+<p>该参数为前端动态生成，需要补全代码。</p>
 <p>老规矩，给/api/v3/check接口打上断点，进入debugger模式后，跟随调用栈查找到参数生成的位置，如下图所示。</p>
 <p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202412/14e485a400bd41e488423b8d8dd8259a-image-20241201215549339_2.png?project=easyblog" /></p>
 <p><em>图9 data参数生成代码</em></p>
 <h5>4、_generateParameters#params.cb参数</h5>
-<p>cb参数就比较简单了，它跟获取验证码中的cb共用一个方法。</p>
+<p>cb参数就比较简单，它与获取验证码接口中的cb共用一个算法。</p>
 <h3>三、调用方法</h3>
-<p>dt通过get_conf方法返回，运行该demo时，应该重新调用接口获取参数，以避免可能会引起的错误。</p>
+<p>dt通过get_conf()方法返回，运行该demo时，应该重新调用接口获取参数，以避免可能会引起的错误。</p>
 <pre><code class="language-python">if __name__ == '__main__':
     dt = &quot;RE+Yi5ZI1vFBAgVQVFOGWtVNhsdVskhv&quot;
     token = &quot;&quot;
@@ -431,12 +432,12 @@ function _generateParameters(token, offset, deviceToken, captchaId, _atomTraceDa
 <p>运行代码后，执行结果如下：</p>
 <pre><code class="language-bash">__JSONP_5g71aef_1({&quot;data&quot;:{&quot;result&quot;:true,&quot;zoneId&quot;:&quot;CN31&quot;,&quot;token&quot;:&quot;b9398b216c254817a4e96a691690166d&quot;,&quot;validate&quot;:&quot;ogMP2QM05Uc35eePTcG3io2nqEO2Jpqh5f1NP7wdhLe1D95bcH8ZWxerGc6U2No6Oo/FuHPtQFBhkQJgfVNfwK+iYRCmnjwQABS6iF2xBAPfwrL7cRzIOjaQd1p/JN/a1yfnA3BwTSHJCbLgflhhlvZRQvQoVDCDR9Gv289kc8Q=&quot;},&quot;error&quot;:0,&quot;msg&quot;:&quot;ok&quot;});
 </code></pre>
-<p>可以看到，数据符合预期，【result】为true及【validate】不为空。</p>
+<p>可以看到，数据符合预期，“result”为true及“validate”不为空。</p>
 <hr />
 <p>完整的代码已上传至<a href="https://github.com/xxzhiwei/demo/tree/master/neteasemusic-sliding-captcha-demo">github</a>。</p>
 <p><del>随便玩玩的话，应该没事</del></p>
 <p>至此，本文已经进入尾声，不过，本文仅仅为验证码逆向的内容，不包扩账号登录，当然，这个部分之后有时间也会做，这里算是开了个新坑。</p>
-<p>要提醒的是，本次实战虽看上去简单，但其实暗坑不在少数，就看有没有人会踩上去了，比方说，之前作者就有过这样的遭遇：参数正常，请求接口没有任何报错提示，但大多数情况下校验不通过，偶尔可以成功，经长时间的排除之后，才发现是因为获取验证码接口中缺少了一个“host”请求头字段。</p>
+<p>要注意的是，本次实战虽看上去简单，但其实暗坑不在少数，稍微出点偏差都大概率会得到错误的结果。比方说，之前作者就有过这样的遭遇：参数正常，请求接口没有任何报错提示，但大多数情况下校验不通过，偶尔可以成功，经长时间的排查后，才发现是因为获取验证码接口中缺少了一个“host”请求头字段。</p>
 <p>总的来说，逆向工程与很多事物类似，不能一蹴而就，也没有一套标准的解法，我们能做到的，只有多查、多猜、多想、多试，如此这般之后，很可能答案就在眼前。</p>
 <p>以上。</p>
 
