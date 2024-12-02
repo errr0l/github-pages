@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>某云滑动认证码逆向 - 小埃的个人博客</title>
+    <link rel="stylesheet" href="../css/reset.css">
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/index.css">
+    <link rel="stylesheet" href="../css/header.css">
+    <link rel="stylesheet" href="../css/mobile.css">
+    <link rel="stylesheet" href="../css/theme-light.css">
+    <link rel="shortcut icon" href="../favicon.ico" type="image/x-icon">
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?d1fc0144cbb354a3f8442b7ba568bc2f";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+
+        window.addEventListener('DOMContentLoaded', () => {
+            let headerEle = document.getElementById('header');
+            let eleHeight = headerEle.offsetHeight;
+            let lastScrollTop = 0;
+            let topAnchor = 0; // 某个方向的锚点
+            let downAnchor = 0;
+            let stylTop = "-" + eleHeight + "px";
+            let stylTop2 = "0";
+            let threshold = 180;
+            function headerEleVisibleHandler() {
+                let scrollTop = document.documentElement.scrollTop;
+                // 向下滚动
+                if (scrollTop > lastScrollTop) {
+                    if (downAnchor !== 0) {
+                        downAnchor = 0;
+                    }
+                    if (topAnchor === 0) {
+                        topAnchor = scrollTop;
+                    }
+                    if ((scrollTop > threshold || scrollTop - topAnchor > threshold) && headerEle.style.top !== stylTop) {
+                        headerEle.style.top =  stylTop;
+                    }
+                }
+                // 向上
+                else {
+                    if (topAnchor !== 0) {
+                        topAnchor = 0;
+                    }
+                    if (downAnchor === 0) {
+                        downAnchor = scrollTop;
+                    }
+                    if ((scrollTop + threshold > downAnchor) && headerEle.style.top === stylTop) {
+                        headerEle.style.top = stylTop2;
+                    }
+                }
+                lastScrollTop = scrollTop;
+            }
+
+            function throttleWrapper(fn, options) {
+                if (!options) {
+                    options = {};
+                }
+                let timer = null;
+                const { timeout } = options;
+
+                const _setTimeout = () => {
+                    timer = window.setTimeout(() => {
+                        window.clearTimeout(timer);
+                        timer = null;
+                    }, timeout);
+                    return timer;
+                }
+
+                return function (...args) {
+                    if (timer) {
+                        return;
+                    }
+                    timer = -1;
+                    let result = fn.apply(this, args);
+                    _setTimeout();
+                    return result;
+                }
+            }
+
+            headerEleVisibleHandler = throttleWrapper(headerEleVisibleHandler, { timeout: 200 });
+
+            window.addEventListener("scroll", headerEleVisibleHandler);
+        });
+    </script>
+        <meta name="keywords" content="滑动验证码,逆向,某云">
+    <link rel="stylesheet" href="../css/article.css">
+    <link rel="stylesheet" href="../css/markdown/github-markdown.css">
+    <link rel="stylesheet" href="../css/markdown/github-markdown-light.css">
+    <link rel="stylesheet" href="../css/gittalk-cover.css">
+    <link rel="stylesheet"
+          href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</head>
+<body>
+<div id="app">
+    <div id="header">
+    <div id="bar">
+        <div class="container mg-0-auto d-f">
+            <div class="logo">
+                <a href="../" class="nav-link" style="margin-right: 10px;">
+                    <img src="../image/portal/logo.jpg" alt="小埃的个人博客">
+                </a>
+            </div>
+            <div class="right">
+                <ul class="nav f-l">
+                        <li class="nav-item">
+                            <a href="../index.html" class="nav-link active">
+                                <span>首页</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="../category.html" class="nav-link ">
+                                <span>分类</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="../about.html" class="nav-link ">
+                                <span>关于</span>
+                            </a>
+                        </li>
+                </ul>
+                <div class="eb-title">
+                    小埃的个人博客
+                </div>
+                    <div id="search">
+                        <input type="text" id="search-input" data-prefix="../" placeholder="搜索" autocomplete="off" />
+                        <span class="search-icon t-a">
+                            <img class="el-icon-search" src="../image/portal/search.png" width="16" height="16">
+                        </span>
+                        <div id="search-result">
+                            <input type="text" class="input-1" id="search-input-2" data-prefix="../" placeholder="请输入" autocomplete="off" />
+                            <div class="content">
+                            </div>
+                            <div class="arrow"></div>
+                        </div>
+                    </div>
+
+                <div class="eb-menu">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-list-ul" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M5 11.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm-3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm0 4a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm0 4a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    <div id="main">
+        <div class="container mg-0-auto pd-t-10">
+            <div class="left">
+                <article class="mg-b-20">
+                    <div class="markdown-body">
+                        <div class="title">某云滑动认证码逆向</div>
+                        <div class="item meta mg-b-10">
+                            <span class="author">由<a href="javascript:void(0);">errol</a>发表于<a href="#">2024-12-02 08:41:01</a></span>
+                            <span>|</span>
+                            <span class="time">
+                            分类为
+                            <a href="../categories/1.html">编程</a></span>
+                            <span>|</span>
+                            <span class="tags">
+                                标签为<a href="javascript:void(0);">滑动验证码</a>、<a href="javascript:void(0);">逆向</a>、<a href="javascript:void(0);">某云</a>
+                            </span>
+                        </div>
+                        <div class="content">
+                            <p>继上次给出了滑动认证码的处理方案后，本次带来的是一次滑动验证码逆向的实战。当然，至于本文中使用到的验证码缺口识别模块，则是直接沿用了上一篇文章中的代码，本文不再做过多的讲解，如有疑惑，请前往阅读<a href="./articles/65.html">文章</a>。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202412/ddaaeb06245a40ccba7af517622d4075-C46885D7FC3B7FAD69AA16921DB29811.png?project=easyblog" /></p>
+<p><em>图1 某云滑动验证码</em></p>
+<p>目标网站地址：</p>
+<blockquote>
+<p>https://music.163.com/</p>
+</blockquote>
+<p>在正式开始之前，首先对文章做一个简要的概括，本次实战主要对目标网站的“<strong>https://c.dun.163.com/api/v3/get</strong>”、“<strong>https://c.dun.163.com/api/v3/check</strong>”两个接口进行分析，分别对应了“<strong>获取验证码</strong>”、“<strong>校验(验证码)</strong>”两个步骤。</p>
+<p><strong>预期的效果</strong>以校验接口/api/v3/check返回的数据为准，
+<strong>当【result】为“true”及【validate】不为空时，表示校验通过</strong>。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202412/fed47a8114c3451491ad76a1c04d07e6-image-20241201222653642_2.png?project=easyblog" /></p>
+<p><em>图2 校验通过时返回的数据</em></p>
+<p>所以文章的安排也已经比较明了了，一共分为<strong>三个部分</strong>，先是<strong>对获取验证码接口的逆向</strong>，然后是<strong>对校验验证码接口的逆向</strong>，最后<strong>整体调用方法</strong>。</p>
+<p>另外，还有一些不太重要，但需要提前说明的事项。</p>
+<p>1）本实战采用的是“极简”策略，简而言之，能默认值(固定值)就默认值，能空则空，不做多余的步骤；</p>
+<p>2）不会复述一些基础逆向操作的同时(浏览器开发者工具相关、断点相关等)，也不会给出太多细节，正如前面所说，网站会经常进行迭代，咱们编程的都知道，过于具体的代码，没有适应变化的能力，所以懂了，最好是读者自己上手…(绝对不是觉得麻烦想偷懒)。</p>
+<p>截止到文章发布，本文涉及的代码仍可正常运行，但不排除后续有随着版本迭代而失效的可能，一旦出现这种情况时，推荐采用排除法，具体为：将网站中生成的参数替换为本地参数，并查看执行结果，不断循环该步骤，最终可定位到问题所在。</p>
+<p>下面开始补充细节部分。</p>
+<h3>一、获取验证码接口逆向</h3>
+<p>完整的方法如下，大多数参数可采用固定值，少数，如fp、cb等则需要分析js文件，虽不会详细描述分析的过程，但稍后会给出参数生成的大致位置。</p>
+<p>方法返回了验证码滑块和背景的链接，验证码令牌，以及cookie。</p>
+<pre><code class="language-python">def get_captcha(dt):
+    &quot;&quot;&quot;
+    获取验证码(url、token、cookies)；在未获取到数据时，acToken会使用一个固定参数；该接口会检查以下请求头字段，缺少时将会导致后续的校验不通过
+
+    :param dt 设备id，可通过get_conf()获取；
+    :returns dict
+    &quot;&quot;&quot;
+    params = {
+        &quot;referer&quot;: &quot;https://music.163.com/#/download&quot;, &quot;zoneId&quot;: &quot;CN31&quot;,
+        &quot;dt&quot;: dt,
+        &quot;acToken&quot;: &quot;9ca17ae2e6fecda16ae2e6eeb5cb528ab69db8ea65bcaeaf9ad05b9c94a3a3c434898987d2b25ef4b2a983bb2af0feacc3b92ae2f4ee95a132e29aa3b1cd72abae8cd1d44eb0b7bb82f55bb08fa3afd437fffeb3&quot;,
+        &quot;id&quot;: &quot;73a18dc827b24b18ad0783701a75277d&quot;,
+        &quot;fp&quot;: captcha_js_ctx.call('generateFingerprint'),
+        &quot;https&quot;: &quot;true&quot;, &quot;type&quot;: &quot;undefined&quot;, &quot;version&quot;: &quot;2.27.2&quot;, &quot;dpr&quot;: 2,
+        &quot;dev&quot;: 1,
+        &quot;cb&quot;: captcha_js_ctx.call('C22'),
+      	&quot;ipv6&quot;: &quot;false&quot;,
+        &quot;runEnv&quot;: 10, &quot;group&quot;: &quot;&quot;,
+        &quot;scene&quot;: &quot;&quot;, &quot;lang&quot;: &quot;zh-CN&quot;,
+        &quot;sdkVersion&quot;: &quot;undefined&quot;, &quot;iv&quot;: 4, &quot;width&quot;: 320,
+        &quot;audio&quot;: &quot;false&quot;, &quot;sizeType&quot;: 10, &quot;smsVersion&quot;: &quot;v3&quot;, &quot;token&quot;: &quot;&quot;,
+      	&quot;callback&quot;: f'__JSONP_m3ilehc_{random.randint(1, 9)}'
+    }
+    headers = {
+        &quot;Accept&quot;: &quot;*/*&quot;,
+        &quot;Accept-Encoding&quot;: &quot;gzip, deflate, br, zstd&quot;,
+        &quot;Accept-Language&quot;: &quot;zh-CN,zh;q=0.9,en;q=0.8&quot;,
+        &quot;Cache-Control&quot;: &quot;no-cache&quot;,
+        &quot;Connection&quot;: &quot;keep-alive&quot;,
+        &quot;Host&quot;: &quot;c.dun.163.com&quot;,
+        &quot;Referer&quot;: &quot;https://music.163.com/&quot;,
+        &quot;User-Agent&quot;: &quot;Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) &quot;
+                      &quot;Chrome/128.0.0.0 Safari/537.36&quot;,
+    }
+    r = requests.get(f'https://c.dun.163.com/api/v3/get?{urlencode(params)}', headers=headers)
+    cookies = r.cookies.get_dict()
+    r = re.compile(r'__JSONP_.*?\((.*?)\)')
+    return {
+        'cookies': cookies,
+        'bg': r.get('data').get('bg')[0],
+        'front': r.get('data').get('front')[0],
+        'token': r.get('data').get('token')
+    }
+</code></pre>
+<h5>1、cb参数</h5>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202412/6e5f829c0c2746aa840cf15474c36c8a-image-20241201205246015.png?project=easyblog" /></p>
+<p><em>图3 给获取验证码接口打上断点-1</em></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202412/9293fad483844dbe9146ec6d221c8140-image-20241201205347245_2.png?project=easyblog" /></p>
+<p><em>图4 给获取验证码接口打上断点-2</em></p>
+<p>定位到调用栈顶(图4红色部分)，将鼠标移动到请求后可看到。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202412/bcb951fc1dfb496897baa9a6e32a94d7-image-20241201205459600_2.png?project=easyblog" /></p>
+<p><em>图5 给获取验证码接口打上断点-3</em></p>
+<p>拦截到请求后，跟随调用栈，大概可在下图位置处找到如下代码：</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202412/e599fc1009ee42bca3cdbfe5c674b3a7-image-20241201205749243_2.png?project=easyblog" /></p>
+<p><em>图6 cb参数生成位置</em></p>
+<p>之后顺着点过去，并将其复制到本地，并补全所依赖的代码即可。</p>
+<h5>2、fp参数</h5>
+<p>fp参数虽也在图6处赋值，但该处并非参数生成的位置。经分析后发现，fp取自window对象。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202412/f35894e1796047df9fa2cebb785305a6-image-20241201211410012_2.png?project=easyblog" /></p>
+<p><em>图7 fp赋值</em></p>
+<p>其中，jK(0x300)方法返回的是“<strong>gdxidpyhxde</strong>”，这表示，<strong>此处可通过监听window属性变化的方式，来定位fp参数生成的位置</strong>。</p>
+<p>在油猴中新建如下脚本：</p>
+<p><del>当然，不用油猴直接在控制台插入代码也可以，只是说使用油猴比较方便。</del></p>
+<pre><code class="language-js">// ==UserScript==
+// @name         网易云音乐调试工具
+// @namespace    http://tampermonkey.net/
+// @version      2024-11-19
+// @description  try to take over the world!
+// @author       You
+// @match        https://music.163.com
+// @icon         https://www.google.com/s2/favicons?sz=64&amp;domain=baidu.com
+// @grant        none
+// ==/UserScript==
+
+(function() {
+    'use strict';
+
+    // Your code here...
+    function listen(target, prop, container) {
+        const r = container || {};
+        Object.defineProperty(target, prop, {
+            enumerable: true,
+            configurable: true,
+            get: function() {
+                return r[prop];
+            },
+            set: function(value) {
+                console.log('已成功拦截' + prop + '属性变化：' + value);
+                r[prop] = value;
+                if (value) {
+                    debugger;
+                }
+            }
+        });
+        return r;
+    }
+    var obj = listen(window, 'gdxidpyhxde');
+    console.log('网易云音乐调试工具运行中...');
+})();
+</code></pre>
+<p>待脚本运行，并进入debugger模式后，可根据方法调用栈找到目标代码。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202412/78d135c37e4b49b680bfb08368ae7a03-image-20241201213100866_2.png?project=easyblog" /></p>
+<p><em>图8 fp参数生成</em></p>
+<p>跟上个步骤一样，将代码补全。</p>
+<blockquote>
+<p>ps：方法体内使用了大量的浏览器环境数据作为生成参数的依据，一般情况下，每个浏览器的数据都会存在差异。</p>
+</blockquote>
+<h3>二、校验接口逆向</h3>
+<p>也就是验证码中拖动滑块，并发送请求的部分。</p>
+<p>与上一步类似，先给出最终的代码；不同的是，本步骤使用js代码来生成一个完整的url，因此，在主体python中直接请求该url即可。</p>
+<pre><code class="language-js">// 生成url参数；token从get_captcha()中获取；offset是缺口偏移量；scale为图片浏览器渲染与实际大小的比例；PX_4和PX_11是经尝试后得到的常量；
+function generateParameters(token, offset, deviceToken) {
+    const captchaId = &quot;73a18dc827b24b18ad0783701a75277d&quot;;
+    const scale = 2 / 3;
+    const PX_4 = 4;
+    const PX_11 = 11;
+    return _generateParameters(token, offset + PX_4, deviceToken, captchaId, atomTraceData, scale, PX_11)
+}
+
+function _generateParameters(token, offset, deviceToken, captchaId, _atomTraceData, scale, PX_11) {
+    const atomTraceData = filter(_atomTraceData, parseInt('' + (offset * scale + PX_11)));
+    const traceData = generateTraceData(token, atomTraceData);
+    const H = sample(traceData);
+    // 计算百分百：offset * scale / 320；下方滑块的偏移量会比缺块的偏移量大一些
+    const C1 = CC(C8(token, parseInt(offset * scale + '') / 320 * 0x64 + ''));
+    const C2 = h(unique2DArray(atomTraceData, 0x2));
+    const params = {
+        data: JSON.stringify({
+            d: CC(H.join(&quot;:&quot;)),
+            m: '',
+            p: C1,
+            f: CC(C8(token, C2.join(','))),
+            ext: CC(C8(token, '1,' + traceData.length))
+        }),
+        'id': captchaId,
+        'token': token,
+        'acToken': undefined,
+        'width': 320,
+        'type': 2,
+        'version': &quot;2.27.2&quot;,
+        'cb': C22(),
+        'extraData': &quot;&quot;,
+        'bf': 0,
+        'runEnv': 10,
+        'sdkVersion': undefined,
+        'iv': 4,
+        dt: deviceToken,
+        referer: 'https://music.163.com/#/download',
+        zoneId: &quot;CN31&quot;,
+        &quot;callback&quot;: &quot;__JSONP_&quot; + Math.random().toString(0x24).slice(0x2, 0x9) + &quot;_1&quot;
+    };
+    let r2 = [];
+    for (let k in params)
+        r2.push(encodeURIComponent(k) + '=' + encodeURIComponent(params[k]));
+    return r2.join('&amp;');
+}
+</code></pre>
+<p>其中，<strong>atomTraceData是一组在网站中将滑块从头拖到尾所生成的滑动轨迹数据</strong>，但该数据不能直接使用，还需经filter()方法过滤筛选，简单来说，只能使用&quot;偏移量&quot;这段距离(包括本身)之前的数据，这点与在网站上将滑块拖动至缺口处的效果一致，如有必要，可查看js代码；</p>
+<p>此外，该方法还依赖了一些其他的数据：</p>
+<h5>1、deviceToken</h5>
+<p>该参数可长时间使用，在目标网站中以localStorage的方式存储。</p>
+<pre><code class="language-python">def get_conf():
+    &quot;&quot;&quot;
+    获取配置信息，dt(deviceToken)等，返回值可以持续使用
+
+    curl 'https://c.dun.163yun.com/api/v2/getconf?referer=https%3A%2F%2Fmusic.163.com%2F%23%2Fdownload&amp;zoneId=&amp;id=73a18dc827b24b18ad0783701a75277d&amp;ipv6=false&amp;runEnv=10&amp;iv=4&amp;loadVersion=2.5.0&amp;lang=zh-CN&amp;callback=__JSONP_e6zkt7z_6' \
+      -H 'Accept: */*' \
+      -H 'Accept-Language: zh-CN,zh;q=0.9,en;q=0.8' \
+      -H 'Cache-Control: no-cache' \
+      -H 'Connection: keep-alive' \
+      -H 'Pragma: no-cache' \
+      -H 'Referer: https://music.163.com/' \
+      -H 'Sec-Fetch-Dest: script' \
+      -H 'Sec-Fetch-Mode: no-cors' \
+      -H 'Sec-Fetch-Site: cross-site' \
+      -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36' \
+      -H 'sec-ch-ua: &quot;Chromium&quot;;v=&quot;128&quot;, &quot;Not;A=Brand&quot;;v=&quot;24&quot;, &quot;Google Chrome&quot;;v=&quot;128&quot;' \
+      -H 'sec-ch-ua-mobile: ?0' \
+      -H 'sec-ch-ua-platform: &quot;macOS&quot;'
+    &quot;&quot;&quot;
+    pass
+</code></pre>
+<h5>2、offset</h5>
+<p>获取到验证码后，需要取得缺口偏移量，也就是文章开头所提及的验证码缺口识别模块，具体可查看上一篇相关的文章：<a href="./articles/65.html">《一种可能可行的滑动认证码处理方案》</a>。</p>
+<pre><code class="language-python">def get_offset(bg, front):
+    &quot;&quot;&quot;
+    获取缺口偏移量；由于是链接，因此还需在方法内获取图片
+
+    :param bg 背景url
+    :param front 滑块url
+    &quot;&quot;&quot;
+    front_resp = requests.get(front)
+    front = Image.open(io.BytesIO(front_resp.content))
+    pos_list = collect(front)
+    bg_resp = requests.get(bg)
+    bg = np.asarray(bytearray(bg_resp.content), dtype=&quot;uint8&quot;)
+    bg_image = cv2.imdecode(bg, cv2.IMREAD_COLOR)
+    return match(bg_image, pos_list, start_x=90, offset_x=-90)
+</code></pre>
+<h5>3、_generateParameters#params.data参数</h5>
+<p>该参数需要补全代码。</p>
+<p>老规矩，给/api/v3/check接口打上断点，进入debugger模式后，跟随调用栈查找到参数生成的位置，如下图所示。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202412/14e485a400bd41e488423b8d8dd8259a-image-20241201215549339_2.png?project=easyblog" /></p>
+<p><em>图9 data参数生成代码</em></p>
+<h5>4、_generateParameters#params.cb参数</h5>
+<p>cb参数就比较简单了，它跟获取验证码中的cb共用一个方法。</p>
+<h3>三、调用方法</h3>
+<p>dt通过get_conf方法返回，运行该demo时，应该重新调用接口获取参数，以避免可能会引起的错误。</p>
+<pre><code class="language-python">if __name__ == '__main__':
+    dt = &quot;RE+Yi5ZI1vFBAgVQVFOGWtVNhsdVskhv&quot;
+    token = &quot;&quot;
+    captcha_resp = get_captcha(dt, token)
+    print(captcha_resp)
+    offset_resp = get_offset(captcha_resp.get('bg'), captcha_resp.get('front'))
+    if offset_resp is not None:
+        offset = offset_resp.get('offset')
+    		token = captcha_resp.get('token')
+        url = &quot;https://c.dun.163.com/api/v3/check?&quot;
+        url += captcha_js_ctx.call('generateParameters', token, offset, dt)
+        headers = {
+            'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36',
+            'referer': 'https://music.163.com/',
+            'Sec-Fetch-Dest': 'script',
+            'Accept': '*/*',
+            'Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.8',
+            'Cache-Control': 'no-cache',
+            'Connection': 'keep-alive',
+            'Sec-Fetch-Mode': 'no-cors',
+            'Sec-Fetch-Site': 'same-site',
+            'sec-ch-ua': '&quot;Chromium&quot;;v=&quot;128&quot;, &quot;Not;A=Brand&quot;;v=&quot;24&quot;, &quot;Google Chrome&quot;;v=&quot;128&quot;',
+            'sec-ch-ua-mobile': '?0',
+            'sec-ch-ua-platform': '&quot;macOS&quot;'
+        }
+        r = requests.get(url, headers=headers)
+        print(r.text)
+</code></pre>
+<p>运行代码后，执行结果如下：</p>
+<pre><code class="language-bash">__JSONP_5g71aef_1({&quot;data&quot;:{&quot;result&quot;:true,&quot;zoneId&quot;:&quot;CN31&quot;,&quot;token&quot;:&quot;b9398b216c254817a4e96a691690166d&quot;,&quot;validate&quot;:&quot;ogMP2QM05Uc35eePTcG3io2nqEO2Jpqh5f1NP7wdhLe1D95bcH8ZWxerGc6U2No6Oo/FuHPtQFBhkQJgfVNfwK+iYRCmnjwQABS6iF2xBAPfwrL7cRzIOjaQd1p/JN/a1yfnA3BwTSHJCbLgflhhlvZRQvQoVDCDR9Gv289kc8Q=&quot;},&quot;error&quot;:0,&quot;msg&quot;:&quot;ok&quot;});
+</code></pre>
+<p>可以看到，数据符合预期，【result】为true及【validate】不为空。</p>
+<hr />
+<p>完整的代码已上传至<a href="https://github.com/xxzhiwei/demo/tree/master/neteasemusic-sliding-captcha-demo">github</a>。</p>
+<p><del>随便玩玩的话，应该没事</del></p>
+<p>至此，本文已经进入尾声，不过，本文仅仅为验证码逆向的内容，不包扩账号登录，当然，这个部分之后有时间也会做，这里算是开了个新坑。</p>
+<p>要提醒的是，本次实战虽看上去简单，但其实暗坑不在少数，就看有没有人会踩上去了，比方说，之前作者就有过这样的遭遇：参数正常，请求接口没有任何报错提示，但大多数情况下校验不通过，偶尔可以成功，经长时间的排除之后，才发现是因为获取验证码接口中缺少了一个“host”请求头字段。</p>
+<p>总的来说，逆向工程与很多事物类似，不能一蹴而就，也没有一套标准的解法，我们能做到的，只有多查、多猜、多想、多试，如此这般之后，很可能答案就在眼前。</p>
+<p>以上。</p>
+
+                        </div>
+                    </div>
+                </article>
+                <div class="comment-wrap">
+                        <div class="t-a close">评论区已关闭</div>
+                </div>
+            </div>
+            <div class="right">
+            </div>
+        </div>
+    </div>
+    <div class="back">返回</div>
+</div>
+    <script src="../js/dataList.js"></script>
+    <script src="../js/lazy.js"></script>
+    <script src="../js/search.js"></script>
+    <script src="../js/menu.js"></script>
+<script>
+    let back = document.querySelector(".back");
+    back.addEventListener("click", function () {
+        window.history.go(-1);
+    });
+</script>
+</body>
+</html>

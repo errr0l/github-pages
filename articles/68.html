@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>复制带反斜杠的字符串时引发的问题 - 小埃的个人博客</title>
+    <title>复制带反斜杠的字符串时可能会引发的问题 - 小埃的个人博客</title>
     <link rel="stylesheet" href="../css/reset.css">
     <link rel="stylesheet" href="../css/base.css">
     <link rel="stylesheet" href="../css/index.css">
@@ -158,7 +158,7 @@
             <div class="left">
                 <article class="mg-b-20">
                     <div class="markdown-body">
-                        <div class="title">复制带反斜杠的字符串时引发的问题</div>
+                        <div class="title">复制带反斜杠的字符串时可能会引发的问题</div>
                         <div class="item meta mg-b-10">
                             <span class="author">由<a href="javascript:void(0);">errol</a>发表于<a href="#">2024-11-24 08:44:13</a></span>
                             <span>|</span>
@@ -187,14 +187,14 @@
 <p>当获取该字符串的长度时，发现已经不是原来的190。</p>
 <p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202411/b9563bac783c45a6b74049bca50cb318-97EA1A71B15C34931822D093FB4F174D.png?project=easyblog" /></p>
 <p><em>图4 输出变量str1的长度</em></p>
-<p>与原来的字符串相比，不难发现，str1字符串有些反斜杠消失了，有些反斜杠还存在。</p>
+<p>与原来的字符串相比，不难发现，str1字符串中有些反斜杠消失，有些反斜杠还存在。</p>
 <p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202411/2177afcd2ffc407ebe87110784784c2a-HjJ5veAX5cEHfq8e5PxLlVzd5z81o07yHWOw_copy.png?project=easyblog" /></p>
 <p><em>图5 “消失”与“存活”的反斜杠</em></p>
 <p>这是由于反斜杠是一个特殊字符的缘故，它不能单独使用，<strong>即反斜杠在控制台与声明变量时所表示的意义不同</strong>。</p>
-<p>在将复制的字符串赋值给变量str1时，js语法解析器会尝试将反斜杠与其相邻的下一个字符解析为一个特殊字符。</p>
-<p>以字符串中的第一个反斜杠“Hnj\J5ve”为例：很明显，“\J”并不能表示一个特殊字符，因此该反斜杠会被移除，只剩下一个“J”；在第二个反斜杠“pr\bLB”中，“\b”可以表示特殊字符，代表单词的边界，<strong>因此反斜杠会被保留下来，但“\b”也只表示一个字符</strong>。</p>
-<p>所以很明显，如果将复制的字符串用于参数校验的话，无疑会导致校验失败。</p>
-<p>处理该问题也简单，<strong>仅需要将字符串按照它原本的意义表示即可</strong>，也就是说，反斜杠原来是一个普通字符，赋值后，它应该也是一个普通字符。</p>
+<p>将复制的字符串赋值给变量str1时，js语法解析器会尝试将反斜杠与其相邻的下一个字符解析为一个特殊字符。</p>
+<p>以字符串中的第一个反斜杠“Hnj\J5ve”为例：显然，“\J”并不是一个有效的特殊字符，因此该反斜杠会被移除，只剩下一个“J”；在第二个反斜杠“pr\bLB”中，“\b”可以表示特殊字符，代表单词的边界，<strong>因此反斜杠会被保留下来，但“\b”也只表示一个字符</strong>，这是赋值后字符串长度变短的原因。</p>
+<p>所以很明显，如果此时将字符串用于参数校验的话，无疑会失败。</p>
+<p>处理该问题也简单，<strong>仅需要将字符串按照它原本的意义表示即可</strong>，也就是说，反斜杠原来是一个普通字符，赋值后，它应该也还是一个普通字符。</p>
 <p>目前已知的方法有两种：</p>
 <p>1、将控制台的字符串先复制到编辑器中，再从编辑器复制到浏览器</p>
 <p>有些编辑器会智能识别反斜杠字符，并为其加上转义字符，如JetBrains系列编辑器。</p>
