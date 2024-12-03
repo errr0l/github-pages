@@ -90,7 +90,8 @@
             window.addEventListener("scroll", headerEleVisibleHandler);
         });
     </script>
-        <meta name="keywords" content="滑动验证码,逆向,某云">
+    <meta name="keywords" content="滑动验证码,逆向,某云">
+    <meta name="description" content="某云滑动认证码逆向；继上次给出了滑动认证码的处理方案后，本次带来的是一次滑动验证码逆向的实战，其目的是使用程序来代替人手来完成认证流程。实战仍需用到上一篇文章中实现的代码，但本文不再对此做过多的讲解，如有疑惑，请前往阅读文章...">
     <link rel="stylesheet" href="../css/article.css">
     <link rel="stylesheet" href="../css/markdown/github-markdown.css">
     <link rel="stylesheet" href="../css/markdown/github-markdown-light.css">
@@ -167,9 +168,9 @@
                             <a href="../categories/1.html">编程</a></span>
                             <span>|</span>
                             <span class="tags">
-                                标签为<a href="javascript:void(0);">滑动验证码</a>、<a href="javascript:void(0);">逆向</a>、<a href="javascript:void(0);">某云</a>
+                               标签为<a href="javascript:void(0);">滑动验证码</a>、<a href="javascript:void(0);">逆向</a>、<a href="javascript:void(0);">某云</a>
                             </span>
-                        </div>
+                       </div>
                         <div class="content">
                             <p>继上次给出了滑动认证码的处理方案后，本次带来的是一次滑动验证码逆向的实战，<strong>其目的是使用程序来代替人手来完成认证流程</strong>。</p>
 <p>实战仍需用到上一篇文章中实现的代码，但本文不再对此做过多的讲解，如有疑惑，请前往阅读文章<a href="./65.html">《一种可能可行的滑动认证码处理方案》</a>。</p>
@@ -433,12 +434,12 @@ function _generateParameters(token, offset, deviceToken, captchaId, _atomTraceDa
 <p>运行代码后，执行结果如下：</p>
 <pre><code class="language-bash">__JSONP_5g71aef_1({&quot;data&quot;:{&quot;result&quot;:true,&quot;zoneId&quot;:&quot;CN31&quot;,&quot;token&quot;:&quot;b9398b216c254817a4e96a691690166d&quot;,&quot;validate&quot;:&quot;ogMP2QM05Uc35eePTcG3io2nqEO2Jpqh5f1NP7wdhLe1D95bcH8ZWxerGc6U2No6Oo/FuHPtQFBhkQJgfVNfwK+iYRCmnjwQABS6iF2xBAPfwrL7cRzIOjaQd1p/JN/a1yfnA3BwTSHJCbLgflhhlvZRQvQoVDCDR9Gv289kc8Q=&quot;},&quot;error&quot;:0,&quot;msg&quot;:&quot;ok&quot;});
 </code></pre>
-<p>可以看到，数据符合预期，“result”为true及“validate”不为空。</p>
+<p>“result”为true及“validate”不为空，数据符合预期，说明本次验证码校验已通过。</p>
 <hr />
 <p>完整的代码已上传至<a href="https://github.com/xxzhiwei/demo/tree/master/neteasemusic-sliding-captcha-demo">github</a>。</p>
 <p><del>随便玩玩的话，应该没事</del></p>
 <p>至此，本文已经进入尾声，不过，本文仅仅为验证码逆向的内容，不包扩账号登录，当然，这个部分之后有时间也会做，这里算是开了个新坑。</p>
-<p>要注意的是，本次实战虽看上去简单，但其实暗坑不在少数，稍微出点偏差都大概率会得到错误的结果。比方说，之前作者就有过这样的遭遇：参数正常，请求接口没有任何报错提示，但大多数情况下校验不通过，偶尔可以成功，经长时间的排查后，才发现是因为获取验证码接口中缺少了一个“host”请求头字段。</p>
+<p>要注意的是，本次实战虽看上去简单，但其实暗坑不在少数，稍微出点偏差都大概率会得到错误的结果。比方说，之前作者就有过这样的遭遇：参数正常，请求接口没有任何报错提示，但大多数情况下校验不通过，偶尔可以成功，经长时间的排查后，才发现是因为获取验证码接口中缺少了一个“host”请求头字段；还因为某个算法生成的错误数据而导致了验证失败，但接口不会返回任何出认证失败外的其他提示信息；等等...</p>
 <p>总的来说，逆向工程与很多事物类似，不能一蹴而就，也没有一套标准的解法，我们能做到的，只有多查、多猜、多想、多试，如此这般之后，很可能答案就在眼前。</p>
 <p>以上。</p>
 
