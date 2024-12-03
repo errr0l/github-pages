@@ -172,7 +172,7 @@
                         </div>
                         <div class="content">
                             <p>继上次给出了滑动认证码的处理方案后，本次带来的是一次滑动验证码逆向的实战，<strong>其目的是使用程序来代替人手来完成认证流程</strong>。</p>
-<p>实战仍需用到上一篇文章中实现的代码，但本文不再对此做过多的讲解，如有疑惑，请前往阅读文章：<a href="./articles/65.html">《一种可能可行的滑动认证码处理方案》</a>。</p>
+<p>实战仍需用到上一篇文章中实现的代码，但本文不再对此做过多的讲解，如有疑惑，请前往阅读文章<a href="./65.html">《一种可能可行的滑动认证码处理方案》</a>。</p>
 <p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202412/ddaaeb06245a40ccba7af517622d4075-C46885D7FC3B7FAD69AA16921DB29811.png?project=easyblog" /></p>
 <p><em>图1 某云滑动验证码</em></p>
 <p>目标网站地址：</p>
@@ -303,7 +303,7 @@
 </blockquote>
 <h3>二、校验接口逆向</h3>
 <p>也就是验证码中拖动滑块，并发送请求的部分。</p>
-<p>与上一步类似，先给出最终的代码；不同的是，本步骤使用js代码来生成一个完整的url，主体python中只需要直接请求该url。</p>
+<p>与上一步类似，先给出最终的代码；不同的是，本步骤主要使用js代码来完成，主体python中只需将生成的url参数做拼接后发起请求。</p>
 <pre><code class="language-js">// 生成url参数；token从get_captcha()中获取；offset是缺口偏移量；scale为图片浏览器渲染与实际大小的比例；PX_4和PX_11是经尝试后得到的常量；
 function generateParameters(token, offset, deviceToken) {
     const captchaId = &quot;73a18dc827b24b18ad0783701a75277d&quot;;
@@ -401,6 +401,7 @@ function _generateParameters(token, offset, deviceToken, captchaId, _atomTraceDa
 <p>cb参数就比较简单，它与获取验证码接口中的cb共用一个算法。</p>
 <h3>三、调用方法</h3>
 <p>dt通过get_conf()方法返回，运行该demo时，应该重新调用接口获取参数，以避免可能会引起的错误。</p>
+<p>获取到验证码后，计算出缺口偏移量，随后生成校验接口的url参数，最后将其与接口地址拼接，并发起请求。</p>
 <pre><code class="language-python">if __name__ == '__main__':
     dt = &quot;RE+Yi5ZI1vFBAgVQVFOGWtVNhsdVskhv&quot;
     token = &quot;&quot;
