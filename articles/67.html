@@ -90,7 +90,8 @@
             window.addEventListener("scroll", headerEleVisibleHandler);
         });
     </script>
-        <meta name="keywords" content="博客,规范,优化">
+    <meta name="keywords" content="博客,规范,优化">
+    <meta name="description" content="简单整理博客及其相关项目的情况；每次树莓派出现故障，从镜像中恢复，都得搞半天，错误百出，人都麻了... 所以现在稍微整理一下目前系统项目存在的问题，以及需要优化和规范的点...">
     <link rel="stylesheet" href="../css/article.css">
     <link rel="stylesheet" href="../css/markdown/github-markdown.css">
     <link rel="stylesheet" href="../css/markdown/github-markdown-light.css">
@@ -167,9 +168,9 @@
                             <a href="../categories/1.html">编程</a></span>
                             <span>|</span>
                             <span class="tags">
-                                标签为<a href="javascript:void(0);">博客</a>、<a href="javascript:void(0);">规范</a>、<a href="javascript:void(0);">优化</a>
+                               标签为<a href="javascript:void(0);">博客</a>、<a href="javascript:void(0);">规范</a>、<a href="javascript:void(0);">优化</a>
                             </span>
-                        </div>
+                       </div>
                             <div class="cover mg-b-10">
                                 <img src="../image/portal/202409/a9b8bc93a30a48f2bec189099368277e-1724518479678.gif?project=easyblog" alt="">
                             </div>
@@ -240,6 +241,10 @@
 <p><em>图3 markdown文本空格示例</em></p>
 <p>在1和2之间，存在两个空字符，而编辑器会将多余的空字符串处理(合并?)，也就导致了在检测时，出现了不一致的问题。</p>
 <p>这个问题甚至不需要处理，只需要在写文章时，注意不要留有多余的空格即可。</p>
+<p>6、[easyblog]文章处于“待发布”状态，但发布后，状态没有修改为“已发布”</p>
+<p>猜测该问题是由于之前直接修改数据库字段导致的，修改state字段后，由于没有更新过，此时last_updated_at仍然小于last_published_at，因此不符合发布后更新状态的条件。</p>
+<p>7、[easyblog]修改模板文件后，发布文章失败</p>
+<p>修改之前可以正常发布，修改后报错。</p>
 <hr />
 <p>目前暂时就是这些。</p>
 
