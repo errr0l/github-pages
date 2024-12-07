@@ -338,13 +338,13 @@ def match(path, pos_list, start_x=0, offset_x=0):
             record = {'offset': x, 'pos': pos_list2, 'type': 'not_matched', 'count': count}
     return record
 </code></pre>
-<p>图片处理前后的比较如下：</p>
+<h5 id="hidp-heading-5">4、图片处理前后的比较</h5>
 <p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202409/cfa7068eabd4426592c0ae8b777f5eab-bbf5fb899c4daa6fffcc90b704756542.png?project=easyblog" /></p>
 <p><em>图4 背景图</em></p>
 <p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202409/f2931f7bbbb748b7b584f36784ffed72-d3eec4fcc3b1ba884435ab456bf07692.png?project=easyblog" /></p>
 <p><em>图5 经模糊&amp;边缘检测后</em></p>
-<h4 id="hidp-heading-5">三、使用方法</h4>
-<h5 id="hidp-heading-6">1、定义程序入口</h5>
+<h4 id="hidp-heading-6">三、使用方法</h4>
+<h5 id="hidp-heading-7">1、定义程序入口</h5>
 <pre><code class="language-python">if __name__ == '__main__':
     bg_path = &quot;images/0-1.jpg&quot;
     slider_path = &quot;images/0-2.png&quot;
@@ -357,12 +357,13 @@ def match(path, pos_list, start_x=0, offset_x=0):
 <p>执行结果如下：</p>
 <pre><code class="language-bash">{'offset': 255, 'pos': [(288, 136, False), (283, 140, True), (280, 144, True), (279, 148, True), (280, 152, False), (260, 156, False), (260, 160, True), (260, 164, True), (261, 168, True), (261, 172, True), (261, 176, True), (261, 180, True), (260, 184, True), (260, 188, True), (260, 192, True), (260, 196, True), (260, 200, True), (260, 204, True), (260, 208, True)], 'type': 'matched'}
 </code></pre>
-<h5 id="hidp-heading-7">2、根据返回的坐标在原图上绘制</h5>
+<h5 id="hidp-heading-8">2、根据返回的坐标在原图上绘制</h5>
+<p>其中，绿色的点即为匹配命中的像素点。</p>
 <p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202409/9e42d8c7c6d045b984aa88f807a6c468-6d8669744ea380f68c49f2ae18a530a6.png?project=easyblog" /></p>
 <p><em>图6 匹配结果示例</em></p>
 <p>数据表明，本次成功匹配到了缺口的位置，其偏移量为255(像素)。</p>
 <p>需要说明的是，该方案并非与案例“过度拟合”，它是一种“通用”的方案，以下列出了其他一些网站的匹配数据。</p>
-<h5 id="hidp-heading-8">3、其他的匹配结果</h5>
+<h5 id="hidp-heading-9">3、其他的匹配结果</h5>
 <p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202409/d26e4398e9464dcaad0a286acdb34bc4-beeddadc75a2280746ae4c57f726fd37.png?project=easyblog" /></p>
 <p><em>图7 网易云音乐</em></p>
 <p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202409/9700af4297a3446eb663d08fa5b37c05-97BF816DA1713E381195E086942485A9.png?project=easyblog" /></p>
@@ -371,7 +372,7 @@ def match(path, pos_list, start_x=0, offset_x=0):
 <p><em>图8 极验</em></p>
 <p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202409/902a0b42b164488885c567355184b96f-1B2DF25CB8EBD175897857067B596405.png?project=easyblog" /></p>
 <p><em>图9 豆瓣</em></p>
-<h5 id="hidp-heading-9">4、不满足使用条件的情况说明</h5>
+<h5 id="hidp-heading-10">4、不满足使用条件的情况说明</h5>
 <p>当然，也并不总是能匹配成功，比较典型的就是刷到不满足使用条件的验证码，即是说，在以上匹配成功的网站中，也有可能刷出会匹配失败的码，需要看运气，遇到这种情况时，一般需要刷新重新获取。</p>
 <p>1）无法正确识别缺口形状</p>
 <p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202409/29103a36906f4af39d52c65e187d8282-4-1.png?project=easyblog" /></p>
@@ -383,6 +384,7 @@ def match(path, pos_list, start_x=0, offset_x=0):
 <p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202409/2c449505ac9042db8d6806db4bea41ea-ab0a3837a9132119d15b66670a785163.png?project=easyblog" /></p>
 <p><em>图12 无法正确读取滑块边沿像素点示例图</em></p>
 <hr />
+<h4 id="hidp-heading-11">四、后记</h4>
 <p>本文的<a href="https://github.com/xxzhiwei/demo/tree/master/sliding-captcha-demo">源代码</a>已经上传至github，可根据需要自行获取。</p>
 <p>该方案取巧的地方在于，它假设背景图片中缺口所在的水平线上，有且仅有一个“缺口”的形状，假设满足条件，一般都能够匹配成功，这好比在只有一个字符“a”的数组里查找“a”，只要从头遍历到尾，是必定可以查找到的；相反，如果水平线上存在多个“缺口”形状，那将会导致失败。</p>
 <p>总的来说，如文章开头所言，滑动认证码是一种较容易处理的验证码类型，使用通常的点子与思路足以应付，但也需要一些库的支持，如Pillow、opencv-python，同时也不能保证百分百识别成功。</p>
