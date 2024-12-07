@@ -1,3 +1,8 @@
+html {
+    scroll-padding-top: 74px;
+    background-color: var(--c-bg-1);
+}
+
 article {
     background-color: #fff;
     box-shadow: 0 2px 4px var(--c-shadow-1);

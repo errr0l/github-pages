@@ -91,12 +91,12 @@
         });
     </script>
         <meta name="keywords" content="特殊字符,校验,转义字符">
+        <meta name="description" content="复制带反斜杠的字符串时可能会引发的问题；在大多数编程语言中，反斜杠，即“\”，是一个特殊的字符，具体来说是一个转义字符，它常与其他字符组合来表示另一个特殊字符，如“\t”表示制表符，“\n”表示换行符，“\r”表示回车符等等...">
     <link rel="stylesheet" href="../css/article.css">
     <link rel="stylesheet" href="../css/markdown/github-markdown.css">
     <link rel="stylesheet" href="../css/markdown/github-markdown-light.css">
     <link rel="stylesheet" href="../css/gittalk-cover.css">
-    <link rel="stylesheet"
-          href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
     <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
     <script>hljs.highlightAll();</script>
 </head>
@@ -104,7 +104,7 @@
 <div id="app">
     <div id="header">
     <div id="bar">
-        <div class="container mg-0-auto d-f">
+        <div class="container mg-0-auto d-f pos-r">
             <div class="logo">
                 <a href="../" class="nav-link" style="margin-right: 10px;">
                     <img src="../image/portal/logo.jpg" alt="小埃的个人博客">
@@ -150,17 +150,21 @@
                     </svg>
                 </div>
             </div>
+            <div id="sd-box">
+                <div class="wrapper">
+                </div>
+            </div>
         </div>
     </div>
     </div>
     <div id="main">
         <div class="container mg-0-auto pd-t-10">
-            <div class="left">
+            <div class="wrapper">
                 <article class="mg-b-20">
                     <div class="markdown-body">
                         <div class="title">复制带反斜杠的字符串时可能会引发的问题</div>
                         <div class="item meta mg-b-10">
-                            <span class="author">由<a href="javascript:void(0);">errol</a>发表于<a href="#">2024-11-24 08:44:13</a></span>
+                            <span class="author">由<a href="javascript:void(0);">errol</a>发表于<a href="#">2024-11-24</a></span>
                             <span>|</span>
                             <span class="time">
                             分类为
@@ -174,6 +178,7 @@
                             <p>在大多数编程语言中，反斜杠，即“\”，是一个特殊的字符，具体来说是一个转义字符，它常与其他字符组合来表示另一个特殊字符，如“\t”表示制表符，“\n”表示换行符，“\r”表示回车符等等。</p>
 <p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202411/9fa1029c118c487ea376ac7378832cc4-tmp_filePasted_Graphic_107.png?project=easyblog" /></p>
 <p><em>图1 换行符</em></p>
+<h4 id="hidp-heading-0">1、特殊字符：\</h4>
 <p>当然，反斜杠也可能出现“单独使用”的情况，比如一个随机生成的字符串中，其长度为190，不过需要注意的是，<strong>此时反斜杠表示的是一个普通的字符，而不是特殊字符</strong>。</p>
 <blockquote>
 <p>E1eo0pcDzt\kELI4NxGrwD/cxgxGcCHnj\J5veAX5cEHfq8e5PxLlVzd5zY8raccb1eomKiGLS2eU7dypxUHWOWkdhIUoBpr\bLBrNDlgziQweg0wBIL+zDT7Ld\07ttX0B98TVNIzAb74mNgR4AxIisiG+XkNiy7Bi2mUf0waW3+QYM:1732172257549</p>
@@ -194,6 +199,7 @@
 <p>将复制的字符串赋值给变量str1时，js语法解析器会尝试将反斜杠与其相邻的下一个字符解析为一个特殊字符。</p>
 <p>以字符串中的第一个反斜杠“Hnj\J5ve”为例：显然，“\J”并不是一个有效的特殊字符，因此该反斜杠会被移除，只剩下一个“J”；在第二个反斜杠“pr\bLB”中，“\b”可以表示特殊字符，代表单词的边界，<strong>因此反斜杠会被保留下来，但“\b”也只表示一个字符</strong>，这是赋值后字符串长度变短的原因。</p>
 <p>所以很明显，如果此时将字符串用于参数校验的话，无疑会失败。</p>
+<h4 id="hidp-heading-1">2、普通字符：\</h4>
 <p>处理该问题也简单，<strong>仅需要将字符串按照它原本的意义表示即可</strong>，也就是说，反斜杠原来是一个普通字符，赋值后，它应该也还是一个普通字符。</p>
 <p>目前已知的方法有两种：</p>
 <p>1、将控制台的字符串先复制到编辑器中，再从编辑器复制到浏览器</p>
@@ -215,8 +221,6 @@
                         <div class="t-a close">评论区已关闭</div>
                 </div>
             </div>
-            <div class="right">
-            </div>
         </div>
     </div>
     <div class="back">返回</div>
@@ -225,6 +229,7 @@
     <script src="../js/lazy.js"></script>
     <script src="../js/search.js"></script>
     <script src="../js/menu.js"></script>
+<script src="../js/toc.js"></script>
 <script>
     let back = document.querySelector(".back");
     back.addEventListener("click", function () {

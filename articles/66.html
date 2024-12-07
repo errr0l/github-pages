@@ -90,13 +90,13 @@
             window.addEventListener("scroll", headerEleVisibleHandler);
         });
     </script>
-        <meta name="keywords" content="nodejs,相对路径,绝对路径,读取文件">
+        <meta name="keywords" content="nodejs,相对路径,绝对路径,读取文件,js">
+        <meta name="description" content="关于nodejs使用相对路径读取文件的问题；在nodejs中，由于通常使用相对路径加载自定义模块文件的缘故，自然而然地，在读取磁盘文件时，首先想到的，可能也是使用相对路径的方式...">
     <link rel="stylesheet" href="../css/article.css">
     <link rel="stylesheet" href="../css/markdown/github-markdown.css">
     <link rel="stylesheet" href="../css/markdown/github-markdown-light.css">
     <link rel="stylesheet" href="../css/gittalk-cover.css">
-    <link rel="stylesheet"
-          href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
     <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
     <script>hljs.highlightAll();</script>
 </head>
@@ -104,7 +104,7 @@
 <div id="app">
     <div id="header">
     <div id="bar">
-        <div class="container mg-0-auto d-f">
+        <div class="container mg-0-auto d-f pos-r">
             <div class="logo">
                 <a href="../" class="nav-link" style="margin-right: 10px;">
                     <img src="../image/portal/logo.jpg" alt="小埃的个人博客">
@@ -150,30 +150,63 @@
                     </svg>
                 </div>
             </div>
+            <div id="sd-box">
+                <div class="wrapper">
+                        <div class="side-card b-s-1 mg-b-10">
+                            <div class="wrapper">
+                                <h2 class="item title">
+                                    <span>相关文章</span>
+                                </h2>
+                                <div class="item content">
+                                        <div class="item1 ">
+                                            <a href="../articles/15.html">
+                                                    兼容部署在Github Pages与其他服务器的应用引入资源的解决方案
+                                            </a>
+                                        </div>
+                                        <div class="item1 ">
+                                            <a href="../articles/55.html">
+                                                    解耦在js中的应用
+                                            </a>
+                                        </div>
+                                        <div class="item1 ">
+                                            <a href="../articles/22.html">
+                                                    为静态站点添加搜索功能
+                                            </a>
+                                        </div>
+                                        <div class="item1 ">
+                                            <a href="../articles/19.html">
+                                                    为vue单页面应用添加提示保存功能
+                                            </a>
+                                        </div>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+            </div>
         </div>
     </div>
     </div>
     <div id="main">
         <div class="container mg-0-auto pd-t-10">
-            <div class="left">
+            <div class="wrapper">
                 <article class="mg-b-20">
                     <div class="markdown-body">
                         <div class="title">关于nodejs使用相对路径读取文件的问题</div>
                         <div class="item meta mg-b-10">
-                            <span class="author">由<a href="javascript:void(0);">errol</a>发表于<a href="#">2024-05-19 08:42:48</a></span>
+                            <span class="author">由<a href="javascript:void(0);">errol</a>发表于<a href="#">2024-05-19</a></span>
                             <span>|</span>
                             <span class="time">
                             分类为
                             <a href="../categories/1.html">编程</a></span>
                             <span>|</span>
                             <span class="tags">
-                                标签为<a href="javascript:void(0);">nodejs</a>、<a href="javascript:void(0);">相对路径</a>、<a href="javascript:void(0);">绝对路径</a>、<a href="javascript:void(0);">读取文件</a>
+                                标签为<a href="javascript:void(0);">nodejs</a>、<a href="javascript:void(0);">相对路径</a>、<a href="javascript:void(0);">绝对路径</a>、<a href="javascript:void(0);">读取文件</a>、<a href="javascript:void(0);">js</a>
                             </span>
                         </div>
                         <div class="content">
                             <p>在nodejs中，由于通常使用相对路径加载自定义模块文件的缘故，自然而然地，在读取磁盘文件时，首先想到的，可能也是使用相对路径的方式。</p>
 <p>当然，并不是说相对路径不可取，只是在某些情况下，这种方式会存在问题。</p>
-<h3>一、问题定位</h3>
+<h3 id="hidp-heading-0">一、问题定位</h3>
 <p>如以下一段示例代码：</p>
 <pre><code class="language-js">// src/app.js
 
@@ -199,14 +232,14 @@ fs.readFile(&quot;../data.json&quot;, { encoding: 'utf-8' }, (error, data) =&gt;
 </code></pre>
 <p>该段代码首先从src/util/common.js中加载print()方法，接着分别使用require()和fs.readFile()加载src/data.json文件，并将内容输出到控制台。</p>
 <p>执行文件后，得到如下结果：</p>
-<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202405/9b4f8ef007a0432284b2631504deaaed-DC7625EAF838CDF517031DFF7C185D14.png" /></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202405/9b4f8ef007a0432284b2631504deaaed-DC7625EAF838CDF517031DFF7C185D14.png?project=easyblog" /></p>
 <p><em>图1 app.js正常运行</em></p>
 <p>可以看到，现在这段代码是可以正常运行，无论是require()，还是fs.readFile()，都成功读取了文件内容，但是<strong>存在一个隐患</strong>。</p>
 <p>比如，当切换到其他目录执行时，会发现代码抛出“找不到文件”的异常。</p>
-<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202405/483dd6d24f5842d7a9ed1195357b1699-8B528CA070EC0FF7D1B7C2A47C542AF8.png" /></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202405/483dd6d24f5842d7a9ed1195357b1699-8B528CA070EC0FF7D1B7C2A47C542AF8.png?project=easyblog" /></p>
 <p><em>图2 app.js [Error: ENOENT: no such file or directory, open '../data.json']</em></p>
 <p><strong>需要注意的是，错误是从fs.readFile()抛出的，require()可以正常运行。</strong></p>
-<h3>二、问题分析</h3>
+<h3 id="hidp-heading-1">二、问题分析</h3>
 <p><strong>为什么会出现这种差异？</strong></p>
 <blockquote>
 <p>究其原因，其实是require和fs加载文件的机制不同。</p>
@@ -220,9 +253,9 @@ fs.readFile(&quot;../data.json&quot;, { encoding: 'utf-8' }, (error, data) =&gt;
 <p>在src/目录下新建一个名为printing-working-dir.js的文件，编写如下代码，并在不同目录下执行：</p>
 <pre><code class="language-js">console.log(process.cwd());
 </code></pre>
-<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202405/9da24c71e8ff45e49eede36a60e1c2e4-6ACCE6E6E8DC34637C06F8230BD453E6.png" /></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202405/9da24c71e8ff45e49eede36a60e1c2e4-6ACCE6E6E8DC34637C06F8230BD453E6.png?project=easyblog" /></p>
 <p><em>图3 在loading-file-with-nodejs-demo/目录下的执行结果</em></p>
-<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202405/eddc01b8bc254fbcad719f912b044bab-97DAF049DD3CE89C43204730487FDAE4.png" /></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202405/eddc01b8bc254fbcad719f912b044bab-97DAF049DD3CE89C43204730487FDAE4.png?project=easyblog" /></p>
 <p><em>图4 在loading-file-with-nodejs-demo/src/目录下的执行结果</em></p>
 <p>如截图所示，在loading-file-with-nodejs-demo/下执行文件时，其工作目录为loading-file-with-nodejs-demo/；在src/目录执行文件时，其工作目录为src/。</p>
 <p>得到了这一重要信息之后，重新对前面的案例进行分析。</p>
@@ -245,7 +278,7 @@ loading-file-with-nodejs-demo
     └── util
         └── common.js
 </code></pre>
-<h3>三、解决方案</h3>
+<h3 id="hidp-heading-2">三、解决方案</h3>
 <p>这种在非固定目录下执行文件（或启动系统）还挺常见的，比如说部署项目的时候，不可能说还必须要切换到某个项目目录下才能执行相应的操作，一般都在项目外层或使用脚本。</p>
 <p><strong>既然使用相对路径会存在问题，那就改为使用绝对路径。</strong></p>
 <p>或者也可以说是两者结合的方式，<strong>本文采用的是__dirname + path.resolve()。</strong></p>
@@ -277,9 +310,9 @@ fs.readFile(path.resolve(__dirname, &quot;../data.json&quot;), { encoding: 'utf-
     print(data);
 });
 </code></pre>
-<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202405/ee239f51f89f4841a66f82e5400ba4f0-D729B239D0A92184E3B7A256DC31C832.png" /></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202405/ee239f51f89f4841a66f82e5400ba4f0-D729B239D0A92184E3B7A256DC31C832.png?project=easyblog" /></p>
 <p><em>图4 [修改后]在loading-file-with-nodejs-demo/src/目录下的执行结果</em></p>
-<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202405/ff1f913038584c69ac9e07f6bde32632-8DBC98C26D985F7D9AE93CFEB67800E4.png" /></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202405/ff1f913038584c69ac9e07f6bde32632-8DBC98C26D985F7D9AE93CFEB67800E4.png?project=easyblog" /></p>
 <p><em>图5 [修改后]在loading-file-with-nodejs-demo/目录下的执行结果</em></p>
 <p><strong>使用path.resolve(__dirname, [相对路径])的意义在于，读取文件时相对的是当前文件，而不再是工作目录【process.cwd()】</strong>，使得传入fs.readFile()中的路径参数变为固定值。</p>
 <p>因此，改动后的代码，无论在那个目录下都可以正常运行。</p>
@@ -297,18 +330,6 @@ fs.readFile(path.resolve(__dirname, &quot;../data.json&quot;), { encoding: 'utf-
                         <div class="t-a close">评论区已关闭</div>
                 </div>
             </div>
-            <div class="right">
-                    <div class="side-card b-s-1 mg-b-10">
-                        <div class="wrapper">
-                            <h2 class="item title">相关文章</h2>
-                            <div class="item content">
-                                    <div class="item1">
-                                        <a href="../articles/15.html">兼容部署在Github Pages与其他服务器的应用引入资源的解决方案</a>
-                                    </div>
-                            </div>
-                        </div>
-                    </div>
-            </div>
         </div>
     </div>
     <div class="back">返回</div>
@@ -317,6 +338,7 @@ fs.readFile(path.resolve(__dirname, &quot;../data.json&quot;), { encoding: 'utf-
     <script src="../js/lazy.js"></script>
     <script src="../js/search.js"></script>
     <script src="../js/menu.js"></script>
+<script src="../js/toc.js"></script>
 <script>
     let back = document.querySelector(".back");
     back.addEventListener("click", function () {

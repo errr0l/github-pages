@@ -30,6 +30,19 @@
     font-size: 14px;
 }
 
+
+#main .container > .wrapper {
+    min-height: 90vh;
+}
+
+#sd-box {
+    position: absolute; top: 74px; right: 0; width: calc(28%);
+    overflow: auto;
+    height: 100vh;
+    box-sizing: border-box;
+    padding: 0 3px 20px 2px;
+}
+
 .card {
     padding: 10px 20px 0 20px;
 }
@@ -103,7 +116,7 @@
 }
 
 .side-card .content .item1 {
-    font-size: 12px;
+    font-size: 14px;
 }
 
 .side-card .content .item1.img-item {
@@ -263,4 +276,8 @@
 
 .meta a:hover {
     color: var(--c-2);
+}
+
+.pos-r {
+    position: relative;
 }

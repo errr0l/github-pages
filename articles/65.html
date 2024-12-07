@@ -91,12 +91,12 @@
         });
     </script>
         <meta name="keywords" content="爬虫,认证码,python,滑动认证码">
+        <meta name="description" content="一种可能可行的滑动认证码处理方案；现如今，认证码（CAPTCHA）已经成为自动化网络爬虫无法绕过的坎，所谓认证码，就是一种用于区分用户是机器或人的全自动程序，是一种反爬的手段&措施，由此可见，“自动化”与“认证码”是互相对立的存在，爬虫想要达成自动化，就必须攻克验证码...">
     <link rel="stylesheet" href="../css/article.css">
     <link rel="stylesheet" href="../css/markdown/github-markdown.css">
     <link rel="stylesheet" href="../css/markdown/github-markdown-light.css">
     <link rel="stylesheet" href="../css/gittalk-cover.css">
-    <link rel="stylesheet"
-          href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
     <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
     <script>hljs.highlightAll();</script>
 </head>
@@ -104,7 +104,7 @@
 <div id="app">
     <div id="header">
     <div id="bar">
-        <div class="container mg-0-auto d-f">
+        <div class="container mg-0-auto d-f pos-r">
             <div class="logo">
                 <a href="../" class="nav-link" style="margin-right: 10px;">
                     <img src="../image/portal/logo.jpg" alt="小埃的个人博客">
@@ -150,17 +150,45 @@
                     </svg>
                 </div>
             </div>
+            <div id="sd-box">
+                <div class="wrapper">
+                        <div class="side-card b-s-1 mg-b-10">
+                            <div class="wrapper">
+                                <h2 class="item title">
+                                    <span>相关文章</span>
+                                </h2>
+                                <div class="item content">
+                                        <div class="item1 ">
+                                            <a href="../articles/69.html">
+                                                    某云滑动认证码逆向
+                                            </a>
+                                        </div>
+                                        <div class="item1 ">
+                                            <a href="../articles/60.html">
+                                                    nutaku自动签到程序实现
+                                            </a>
+                                        </div>
+                                        <div class="item1 ">
+                                            <a href="../articles/62.html">
+                                                    新一年的计划
+                                            </a>
+                                        </div>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+            </div>
         </div>
     </div>
     </div>
     <div id="main">
         <div class="container mg-0-auto pd-t-10">
-            <div class="left">
+            <div class="wrapper">
                 <article class="mg-b-20">
                     <div class="markdown-body">
                         <div class="title">一种可能可行的滑动认证码处理方案</div>
                         <div class="item meta mg-b-10">
-                            <span class="author">由<a href="javascript:void(0);">errol</a>发表于<a href="#">2024-09-02 02:57:15</a></span>
+                            <span class="author">由<a href="javascript:void(0);">errol</a>发表于<a href="#">2024-09-02</a></span>
                             <span>|</span>
                             <span class="time">
                             分类为
@@ -180,10 +208,11 @@
 <p><del>其中还有一种通过机器学习训练模型的方式，但它不在本文的讨论范围内</del></p>
 <p>话虽如此，但从网络上检索的方案来看，效果都不尽人意。有些识别率低；有些是“针对某个网站”的特定方案，不具备通用性；有些甚至无法运行... 总之就是不好使。</p>
 <p>当然，有些案例还是很值得借鉴的，同时也是本文灵感的由来。</p>
-<h4>一、设计思路</h4>
+<h4 id="hidp-heading-0">一、设计思路</h4>
 <p>与模板匹配类似，但本方案不是读取滑块的全部像素来与背景图比较，而只读<strong>取滑块的边沿像素，并尝试在背景图中找到与之匹配的点，即缺口的位置</strong>。</p>
-<h4>二、方法设计</h4>
+<h4 id="hidp-heading-1">二、方法设计</h4>
 <p>姑且称之为“边沿像素点匹配法”，主要分为两个步骤，其一为<strong>采集滑块边沿像素点</strong>，其二为<strong>根据采集的像素点匹配背景图片缺口边沿像素点</strong>。</p>
+<h5 id="hidp-heading-2">1、必要条件</h5>
 <p>即是说，要使用该方法首先必须满足条件：</p>
 <ul>
 <li>
@@ -196,7 +225,7 @@
 <p>此外，还有一个隐藏条件，滑块与缺口要处于水平对齐状态。</p>
 <p>一般情况下，展示给用户的滑动认证码的滑块与缺口是水平对齐的，但并不意味着它的原图也处于相同的状态，如果遇到这种情况，就需要找到该验证码对齐的规律并应用。</p>
 <p>以下的实现需要依赖Pillow、opencv-python。</p>
-<h5>1、滑块边沿像素坐标采集</h5>
+<h5 id="hidp-heading-3">2、滑块边沿像素坐标采集</h5>
 <p>先后对读取的图片进行了灰度、二值化处理，随后进行采集像素点。</p>
 <p>采集的方式也比较简单，从上到下、从左到右依次遍历，将第一个不为黑，即色块值不为0的像素点坐标保存至列表中，并将其返回。</p>
 <pre><code class="language-python">from PIL import Image
@@ -229,17 +258,17 @@ def collect(path, start_x=0, start_y=0, offset_x=0, offset_y=0):
     return pos_list
 </code></pre>
 <p>其中，图片处理前后的比较如下：</p>
-<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202409/a923eea3a8ec4451b4124c95777b5d3e-44d6a1046e5f80d99e1a554b70a081ac.png" /></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202409/a923eea3a8ec4451b4124c95777b5d3e-44d6a1046e5f80d99e1a554b70a081ac.png?project=easyblog" /></p>
 <p><em>图1 滑块</em></p>
-<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202409/45bfdf6ba1de46a0a8f80efd0355b788-64c0ca094422322f462dc426b9bacccf.png" /></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202409/45bfdf6ba1de46a0a8f80efd0355b788-64c0ca094422322f462dc426b9bacccf.png?project=easyblog" /></p>
 <p><em>图2 经灰度&amp;二值化处理后</em></p>
 <p>在本案例中，滑块与背景图缺口原本就处于水平对齐状态，所以可以直接采集像素点，其执行结果类似于：</p>
 <pre><code class="language-bash">[(33, 136), (27, 140), (24, 144), (24, 148), (25, 152), (5, 156), (5, 160), (5, 164), (5, 168), (5, 172), (5, 176), (5, 180), (5, 184), (5, 188), (5, 192), (5, 196), (5, 200), (5, 204), (5, 208), (5, 212), (5, 216)]
 </code></pre>
 <p>将其在原图上绘制后，如下：</p>
-<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202409/7d2134468bf74dbb957b3273172c1cb0-ce65513be39c5541d120d2d8c457ca4d.png" /></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202409/7d2134468bf74dbb957b3273172c1cb0-ce65513be39c5541d120d2d8c457ca4d.png?project=easyblog" /></p>
 <p><em>图3 滑块边沿像素点示例</em></p>
-<h5>2、缺口边沿像素点匹配方法</h5>
+<h5 id="hidp-heading-4">3、缺口边沿像素点匹配方法</h5>
 <p>匹配之前，需对图片做相应的处理：</p>
 <ul>
 <li>
@@ -310,12 +339,12 @@ def match(path, pos_list, start_x=0, offset_x=0):
     return record
 </code></pre>
 <p>图片处理前后的比较如下：</p>
-<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202409/cfa7068eabd4426592c0ae8b777f5eab-bbf5fb899c4daa6fffcc90b704756542.png" /></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202409/cfa7068eabd4426592c0ae8b777f5eab-bbf5fb899c4daa6fffcc90b704756542.png?project=easyblog" /></p>
 <p><em>图4 背景图</em></p>
-<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202409/f2931f7bbbb748b7b584f36784ffed72-d3eec4fcc3b1ba884435ab456bf07692.png" /></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202409/f2931f7bbbb748b7b584f36784ffed72-d3eec4fcc3b1ba884435ab456bf07692.png?project=easyblog" /></p>
 <p><em>图5 经模糊&amp;边缘检测后</em></p>
-<h4>三、使用方法</h4>
-<h5>1、定义程序入口</h5>
+<h4 id="hidp-heading-5">三、使用方法</h4>
+<h5 id="hidp-heading-6">1、定义程序入口</h5>
 <pre><code class="language-python">if __name__ == '__main__':
     bg_path = &quot;images/0-1.jpg&quot;
     slider_path = &quot;images/0-2.png&quot;
@@ -328,30 +357,30 @@ def match(path, pos_list, start_x=0, offset_x=0):
 <p>执行结果如下：</p>
 <pre><code class="language-bash">{'offset': 255, 'pos': [(288, 136, False), (283, 140, True), (280, 144, True), (279, 148, True), (280, 152, False), (260, 156, False), (260, 160, True), (260, 164, True), (261, 168, True), (261, 172, True), (261, 176, True), (261, 180, True), (260, 184, True), (260, 188, True), (260, 192, True), (260, 196, True), (260, 200, True), (260, 204, True), (260, 208, True)], 'type': 'matched'}
 </code></pre>
-<h5>2、根据返回的坐标在原图上绘制</h5>
-<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202409/9e42d8c7c6d045b984aa88f807a6c468-6d8669744ea380f68c49f2ae18a530a6.png" /></p>
+<h5 id="hidp-heading-7">2、根据返回的坐标在原图上绘制</h5>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202409/9e42d8c7c6d045b984aa88f807a6c468-6d8669744ea380f68c49f2ae18a530a6.png?project=easyblog" /></p>
 <p><em>图6 匹配结果示例</em></p>
 <p>数据表明，本次成功匹配到了缺口的位置，其偏移量为255(像素)。</p>
 <p>需要说明的是，该方案并非与案例“过度拟合”，它是一种“通用”的方案，以下列出了其他一些网站的匹配数据。</p>
-<h5>3、其他的匹配结果</h5>
-<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202409/d26e4398e9464dcaad0a286acdb34bc4-beeddadc75a2280746ae4c57f726fd37.png" /></p>
+<h5 id="hidp-heading-8">3、其他的匹配结果</h5>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202409/d26e4398e9464dcaad0a286acdb34bc4-beeddadc75a2280746ae4c57f726fd37.png?project=easyblog" /></p>
 <p><em>图7 网易云音乐</em></p>
-<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202409/9700af4297a3446eb663d08fa5b37c05-97BF816DA1713E381195E086942485A9.png" /></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202409/9700af4297a3446eb663d08fa5b37c05-97BF816DA1713E381195E086942485A9.png?project=easyblog" /></p>
 <p><em>图8 bilibili (但现在已改为点选)</em></p>
-<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202409/306c89d532124513875b0f7870d0dbff-D17D4F17FDA0D3546C7B52BF8023448D.png" /></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202409/306c89d532124513875b0f7870d0dbff-D17D4F17FDA0D3546C7B52BF8023448D.png?project=easyblog" /></p>
 <p><em>图8 极验</em></p>
-<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202409/902a0b42b164488885c567355184b96f-1B2DF25CB8EBD175897857067B596405.png" /></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202409/902a0b42b164488885c567355184b96f-1B2DF25CB8EBD175897857067B596405.png?project=easyblog" /></p>
 <p><em>图9 豆瓣</em></p>
-<h5>4、不满足使用条件的情况说明</h5>
+<h5 id="hidp-heading-9">4、不满足使用条件的情况说明</h5>
 <p>当然，也并不总是能匹配成功，比较典型的就是刷到不满足使用条件的验证码，即是说，在以上匹配成功的网站中，也有可能刷出会匹配失败的码，需要看运气，遇到这种情况时，一般需要刷新重新获取。</p>
 <p>1）无法正确识别缺口形状</p>
-<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202409/29103a36906f4af39d52c65e187d8282-4-1.png" /></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202409/29103a36906f4af39d52c65e187d8282-4-1.png?project=easyblog" /></p>
 <p><em>图10 无法识别缺口示例图（原图）</em></p>
-<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202409/cdd0d1f221814a7281890244a08c861d-710779a640119323ba5bf4b322d4f067.png" /></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202409/cdd0d1f221814a7281890244a08c861d-710779a640119323ba5bf4b322d4f067.png?project=easyblog" /></p>
 <p><em>图11 无法识别缺口示例图（处理后）</em></p>
 <p>2）无法正确读取滑块边沿像素点</p>
 <p>有些网站中，滑块图并不单独存在，此时需要找到网站认证码的排布规律，采集滑块像素点并使之与缺口水平对齐。</p>
-<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202409/2c449505ac9042db8d6806db4bea41ea-ab0a3837a9132119d15b66670a785163.png" /></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202409/2c449505ac9042db8d6806db4bea41ea-ab0a3837a9132119d15b66670a785163.png?project=easyblog" /></p>
 <p><em>图12 无法正确读取滑块边沿像素点示例图</em></p>
 <hr />
 <p>本文的<a href="https://github.com/xxzhiwei/demo/tree/master/sliding-captcha-demo">源代码</a>已经上传至github，可根据需要自行获取。</p>
@@ -368,21 +397,6 @@ def match(path, pos_list, start_x=0, offset_x=0):
                         <div class="t-a close">评论区已关闭</div>
                 </div>
             </div>
-            <div class="right">
-                    <div class="side-card b-s-1 mg-b-10">
-                        <div class="wrapper">
-                            <h2 class="item title">相关文章</h2>
-                            <div class="item content">
-                                    <div class="item1">
-                                        <a href="../articles/60.html">nutaku自动签到程序实现</a>
-                                    </div>
-                                    <div class="item1">
-                                        <a href="../articles/62.html">新一年的计划</a>
-                                    </div>
-                            </div>
-                        </div>
-                    </div>
-            </div>
         </div>
     </div>
     <div class="back">返回</div>
@@ -391,6 +405,7 @@ def match(path, pos_list, start_x=0, offset_x=0):
     <script src="../js/lazy.js"></script>
     <script src="../js/search.js"></script>
     <script src="../js/menu.js"></script>
+<script src="../js/toc.js"></script>
 <script>
     let back = document.querySelector(".back");
     back.addEventListener("click", function () {

@@ -90,14 +90,13 @@
             window.addEventListener("scroll", headerEleVisibleHandler);
         });
     </script>
-    <meta name="keywords" content="滑动验证码,逆向,某云">
-    <meta name="description" content="某云滑动认证码逆向；继上次给出了滑动认证码的处理方案后，本次带来的是一次滑动验证码逆向的实战，其目的是使用程序来代替人手来完成认证流程。实战仍需用到上一篇文章中实现的代码，但本文不再对此做过多的讲解，如有疑惑，请前往阅读文章...">
+        <meta name="keywords" content="滑动验证码,逆向,某云,认证码,爬虫">
+        <meta name="description" content="某云滑动认证码逆向；继上次给出了滑动认证码的处理方案后，本次带来的是一次滑动验证码逆向的实战，其目的是使用程序来代替人手来完成认证流程。实战仍需用到上一篇文章中实现的代码，但本文不再对此做过多的讲解，如有疑惑，请前往阅读文章...">
     <link rel="stylesheet" href="../css/article.css">
     <link rel="stylesheet" href="../css/markdown/github-markdown.css">
     <link rel="stylesheet" href="../css/markdown/github-markdown-light.css">
     <link rel="stylesheet" href="../css/gittalk-cover.css">
-    <link rel="stylesheet"
-          href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
     <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
     <script>hljs.highlightAll();</script>
 </head>
@@ -105,7 +104,7 @@
 <div id="app">
     <div id="header">
     <div id="bar">
-        <div class="container mg-0-auto d-f">
+        <div class="container mg-0-auto d-f pos-r">
             <div class="logo">
                 <a href="../" class="nav-link" style="margin-right: 10px;">
                     <img src="../image/portal/logo.jpg" alt="小埃的个人博客">
@@ -151,26 +150,54 @@
                     </svg>
                 </div>
             </div>
+            <div id="sd-box">
+                <div class="wrapper">
+                        <div class="side-card b-s-1 mg-b-10">
+                            <div class="wrapper">
+                                <h2 class="item title">
+                                    <span>相关文章</span>
+                                </h2>
+                                <div class="item content">
+                                        <div class="item1 ">
+                                            <a href="../articles/65.html">
+                                                    一种可能可行的滑动认证码处理方案
+                                            </a>
+                                        </div>
+                                        <div class="item1 ">
+                                            <a href="../articles/62.html">
+                                                    新一年的计划
+                                            </a>
+                                        </div>
+                                        <div class="item1 ">
+                                            <a href="../articles/60.html">
+                                                    nutaku自动签到程序实现
+                                            </a>
+                                        </div>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+            </div>
         </div>
     </div>
     </div>
     <div id="main">
         <div class="container mg-0-auto pd-t-10">
-            <div class="left">
+            <div class="wrapper">
                 <article class="mg-b-20">
                     <div class="markdown-body">
                         <div class="title">某云滑动认证码逆向</div>
                         <div class="item meta mg-b-10">
-                            <span class="author">由<a href="javascript:void(0);">errol</a>发表于<a href="#">2024-12-02 08:41:01</a></span>
+                            <span class="author">由<a href="javascript:void(0);">errol</a>发表于<a href="#">2024-12-02</a></span>
                             <span>|</span>
                             <span class="time">
                             分类为
                             <a href="../categories/1.html">编程</a></span>
                             <span>|</span>
                             <span class="tags">
-                               标签为<a href="javascript:void(0);">滑动验证码</a>、<a href="javascript:void(0);">逆向</a>、<a href="javascript:void(0);">某云</a>
+                                标签为<a href="javascript:void(0);">滑动验证码</a>、<a href="javascript:void(0);">逆向</a>、<a href="javascript:void(0);">某云</a>、<a href="javascript:void(0);">认证码</a>、<a href="javascript:void(0);">爬虫</a>
                             </span>
-                       </div>
+                        </div>
                         <div class="content">
                             <p>继上次给出了滑动认证码的处理方案后，本次带来的是一次滑动验证码逆向的实战，<strong>其目的是使用程序来代替人手来完成认证流程</strong>。</p>
 <p>实战仍需用到上一篇文章中实现的代码，但本文不再对此做过多的讲解，如有疑惑，请前往阅读文章<a href="./65.html">《一种可能可行的滑动认证码处理方案》</a>。</p>
@@ -191,9 +218,10 @@
 <p>2）不会复述一些基础逆向操作的同时(浏览器开发者工具相关、断点相关等)，也不会给出太多细节，由于网站会经常进行迭代，编程的都知道，过于具体的代码，没有适应变化的能力，所以懂了... 没办法，逆向就是这样的，最好是读者自己上手（绝对不是因为觉得麻烦）。</p>
 <p>截止到文章发布，本文涉及的代码仍可正常运行，但不排除后续会失效，一旦出现这种情况时，推荐采用<strong>排除法</strong>，具体为：将网站中生成的参数替换为本地参数，并查看执行结果，不断循环该步骤，最终可定位到问题所在，并加以解决。</p>
 <p>下面开始补充细节部分。</p>
-<h3>一、获取验证码接口逆向</h3>
+<h3 id="hidp-heading-0">一、获取验证码接口逆向</h3>
 <p>完整的方法如下，大多数参数可采用固定值，少数，如fp、cb等则需要分析js文件，虽不会详细描述分析的过程，但稍后会贴出参数生成的大致位置。</p>
 <p>方法返回了验证码滑块和背景的链接，验证码令牌，以及cookie，校验时需要用到。</p>
+<h5 id="hidp-heading-1">1、方法设计</h5>
 <pre><code class="language-python">def get_captcha(dt):
     &quot;&quot;&quot;
     获取验证码(url、token、cookies)；在未获取到数据时，acToken会使用一个固定参数；该接口会检查以下请求头字段，缺少时将会导致后续的校验不通过
@@ -238,7 +266,7 @@
         'token': r.get('data').get('token')
     }
 </code></pre>
-<h5>1、cb参数</h5>
+<h5 id="hidp-heading-2">2、cb参数</h5>
 <p>这类由前端动态生成的参数，需要通过断点定位生成参数的算法，并移植到本地，以便在本地环境生成格式一致的数据。</p>
 <p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202412/6e5f829c0c2746aa840cf15474c36c8a-image-20241201205246015.png?project=easyblog" /></p>
 <p><em>图3 给获取验证码接口打上断点-1</em></p>
@@ -251,7 +279,7 @@
 <p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202412/e599fc1009ee42bca3cdbfe5c674b3a7-image-20241201205749243_2.png?project=easyblog" /></p>
 <p><em>图6 cb参数生成位置</em></p>
 <p>之后顺着点过去，并将其复制到本地，并补全所依赖的代码即可。</p>
-<h5>2、fp参数</h5>
+<h5 id="hidp-heading-3">3、fp参数</h5>
 <p>fp参数虽也在图6处赋值，但该处并非参数生成的位置。经分析后发现，fp取自window对象。</p>
 <p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202412/f35894e1796047df9fa2cebb785305a6-image-20241201211410012_2.png?project=easyblog" /></p>
 <p><em>图7 fp赋值</em></p>
@@ -302,9 +330,10 @@
 <blockquote>
 <p>ps：方法体内使用了大量的浏览器环境数据作为生成参数的依据，一般情况下，每个浏览器的数据都会存在差异。</p>
 </blockquote>
-<h3>二、校验接口逆向</h3>
+<h3 id="hidp-heading-4">二、校验接口逆向</h3>
 <p>也就是验证码中拖动滑块，并发送请求的部分。</p>
 <p>与上一步类似，先给出最终的代码；不同的是，本步骤主要使用js代码来完成，主体python中只需将生成的url参数做拼接后发起请求。</p>
+<h5 id="hidp-heading-5">1、方法设计</h5>
 <pre><code class="language-js">// 生成url参数；token从get_captcha()中获取；offset是缺口偏移量；scale为图片浏览器渲染与实际大小的比例；PX_4和PX_11是经尝试后得到的常量；
 function generateParameters(token, offset, deviceToken) {
     const captchaId = &quot;73a18dc827b24b18ad0783701a75277d&quot;;
@@ -353,7 +382,7 @@ function _generateParameters(token, offset, deviceToken, captchaId, _atomTraceDa
 }
 </code></pre>
 <p>其中，<strong>atomTraceData是一组在网站中将滑块从头拖到尾所生成的滑动轨迹数据</strong>，但该数据不能直接使用，还需经filter()方法过滤筛选，简单来说，只能使用&quot;偏移量&quot;这段距离(包括本身)之前的数据，这点与在网站上将滑块拖动至缺口处的效果一致，如有必要，可查看js代码；</p>
-<h5>1、deviceToken</h5>
+<h5 id="hidp-heading-6">2、deviceToken</h5>
 <p>在目标网站中以localStorage的方式存储，表明了该参数可长时间使用。</p>
 <pre><code class="language-python">def get_conf():
     &quot;&quot;&quot;
@@ -376,7 +405,7 @@ function _generateParameters(token, offset, deviceToken, captchaId, _atomTraceDa
     &quot;&quot;&quot;
     pass
 </code></pre>
-<h5>2、offset</h5>
+<h5 id="hidp-heading-7">3、offset</h5>
 <p>获取到验证码后，需要取得缺口偏移量，可通过验证码缺口识别模块get_offset()计算得出。</p>
 <pre><code class="language-python">def get_offset(bg, front):
     &quot;&quot;&quot;
@@ -393,14 +422,14 @@ function _generateParameters(token, offset, deviceToken, captchaId, _atomTraceDa
     bg_image = cv2.imdecode(bg, cv2.IMREAD_COLOR)
     return match(bg_image, pos_list, start_x=90, offset_x=-90)
 </code></pre>
-<h5>3、_generateParameters#params.data参数</h5>
+<h5 id="hidp-heading-8">4、_generateParameters#params.data</h5>
 <p>该参数为前端动态生成，需要补全代码。</p>
 <p>老规矩，给/api/v3/check接口打上断点，进入debugger模式后，跟随调用栈查找到参数生成的位置，如下图所示。</p>
 <p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202412/14e485a400bd41e488423b8d8dd8259a-image-20241201215549339_2.png?project=easyblog" /></p>
 <p><em>图9 data参数生成代码</em></p>
-<h5>4、_generateParameters#params.cb参数</h5>
+<h5 id="hidp-heading-9">5、_generateParameters#params.cb</h5>
 <p>cb参数就比较简单，它与获取验证码接口中的cb共用一个算法。</p>
-<h3>三、调用方法</h3>
+<h3 id="hidp-heading-10">三、调用方法</h3>
 <p>dt通过get_conf()方法返回，运行该demo时，应该重新调用接口获取参数，以避免可能会引起的错误。</p>
 <p>获取到验证码后，计算出缺口偏移量，随后生成校验接口的url参数，最后将其与接口地址拼接，并发起请求。</p>
 <pre><code class="language-python">if __name__ == '__main__':
@@ -450,8 +479,6 @@ function _generateParameters(token, offset, deviceToken, captchaId, _atomTraceDa
                         <div class="t-a close">评论区已关闭</div>
                 </div>
             </div>
-            <div class="right">
-            </div>
         </div>
     </div>
     <div class="back">返回</div>
@@ -460,6 +487,7 @@ function _generateParameters(token, offset, deviceToken, captchaId, _atomTraceDa
     <script src="../js/lazy.js"></script>
     <script src="../js/search.js"></script>
     <script src="../js/menu.js"></script>
+<script src="../js/toc.js"></script>
 <script>
     let back = document.querySelector(".back");
     back.addEventListener("click", function () {
