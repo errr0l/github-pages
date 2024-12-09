@@ -26,8 +26,7 @@
             let eleHeight = headerEle.offsetHeight;
             let lastScrollTop = 0;
             let topAnchor = 0; // 某个方向的锚点
-       
-     let downAnchor = 0;
+            let downAnchor = 0;
             let stylTop = "-" + eleHeight + "px";
             let stylTop2 = "0";
             let threshold = 180;
@@ -82,13 +81,10 @@
                     timer = -1;
                     let result = fn.apply(this, args);
                     _setTimeout();
-                    re
-turn result;
+                    return result;
                 }
             }
-
             headerEleVisibleHandler = throttleWrapper(headerEleVisibleHandler, { timeout: 200 });
-
             window.addEventListener("scroll", headerEleVisibleHandler);
         });
     </script>
@@ -119,20 +115,17 @@ turn result;
             <div class="right">
                 <ul class="nav f-l">
                         <li class="nav-item">
-                            <a href="../index.html" class="nav-link 
-">
+                            <a href="../index.html" class="nav-link ">
                                 <span>首页</span>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="../category.html" class="nav-link 
-active">
+                            <a href="../category.html" class="nav-link active">
                                 <span>分类</span>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="../about.html" class="nav-link 
-">
+                            <a href="../about.html" class="nav-link ">
                                 <span>关于</span>
                             </a>
                         </li>
@@ -164,8 +157,7 @@ active">
                         <div class="side-card b-s-1 mg-b-10">
                             <div class="wrapper">
                                 <h2 class="item title">
-                                    <s
-pan>其他分类</span>
+                                    <span>其他分类</span>
                                 </h2>
                                 <div class="item content">
                                         <div class="item1 img-item">
@@ -214,8 +206,7 @@ pan>其他分类</span>
             <div class="item content">
                     <div class="cover">
                         <img src="..//image/portal/202304/cover/3d5c033001d64eb2beccef8b5cb27005-7ad549a4678c166e7375f126a52b77a2.png" alt="">
-                  
-  </div>
+                    </div>
                 <div class="inf">
                     <div class="name">
                         <a style="display: inline-block; width: 100%; height: 100%;" href="../categories/1.html">编程</a>
@@ -243,7 +234,8 @@ pan>其他分类</span>
                 <span>|</span>
                 <span class="time">
                     分类为
-                    <a href="../categories/1.html">编程</a></span>
+                    <a href="../categories/1.html">编程</a>
+                </span>
                     <span>|</span>
                     <span class="tags">
                         标签为<a href="javascript:void(0);">博客</a>、<a href="javascript:void(0);">静态站点</a>、<a href="javascript:void(0);">js</a>、<a href="javascript:void(0);">markdown</a>、<a href="javascript:void(0);">目录</a>
@@ -264,7 +256,8 @@ pan>其他分类</span>
                 <span>|</span>
                 <span class="time">
                     分类为
-                    <a href="../categories/1.html">编程</a></span>
+                    <a href="../categories/1.html">编程</a>
+                </span>
                     <span>|</span>
                     <span class="tags">
                         标签为<a href="javascript:void(0);">滑动验证码</a>、<a href="javascript:void(0);">逆向</a>、<a href="javascript:void(0);">某云</a>、<a href="javascript:void(0);">认证码</a>、<a href="javascript:void(0);">爬虫</a>
@@ -285,7 +278,8 @@ pan>其他分类</span>
                 <span>|</span>
                 <span class="time">
                     分类为
-                    <a href="../categories/1.html">编程</a></span>
+                    <a href="../categories/1.html">编程</a>
+                </span>
                     <span>|</span>
                     <span class="tags">
                         标签为<a href="javascript:void(0);">特殊字符</a>、<a href="javascript:void(0);">校验</a>、<a href="javascript:void(0);">转义字符</a>
@@ -299,8 +293,7 @@ pan>其他分类</span>
                 <a href="../articles/67.html">简单整理博客及其相关项目的情况</a>
             </div>
             <div class="item content">
-                <div class
-="cover f-r">
+                <div class="cover f-r">
                     <img style="object-fit: cover;" src="../image/portal/loading.gif" data-src="../image/portal/202409/a9b8bc93a30a48f2bec189099368277e-1724518479678.gif?project=easyblog" alt="">
                 </div>
                 <span class="brief">每次树莓派出现故障，从镜像中恢复，都得搞半天，错误百出，人都麻了... 所以现在稍微整理一下目前系统项目存在的问题，以及需要优化和规范的点...<a href="../articles/67.html" class="reading-more">继续阅读<i class="el-icon-thumb f-w-b"></i></a></span>
@@ -310,7 +303,8 @@ pan>其他分类</span>
                 <span>|</span>
                 <span class="time">
                     分类为
-                    <a href="../categories/1.html">编程</a></span>
+                    <a href="../categories/1.html">编程</a>
+                </span>
                     <span>|</span>
                     <span class="tags">
                         标签为<a href="javascript:void(0);">博客</a>、<a href="javascript:void(0);">规范</a>、<a href="javascript:void(0);">优化</a>
@@ -331,7 +325,8 @@ pan>其他分类</span>
                 <span>|</span>
                 <span class="time">
                     分类为
-                    <a href="../categories/1.html">编程</a></span>
+                    <a href="../categories/1.html">编程</a>
+                </span>
                     <span>|</span>
                     <span class="tags">
                         标签为<a href="javascript:void(0);">爬虫</a>、<a href="javascript:void(0);">认证码</a>、<a href="javascript:void(0);">python</a>、<a href="javascript:void(0);">滑动认证码</a>
@@ -352,7 +347,8 @@ pan>其他分类</span>
                 <span>|</span>
                 <span class="time">
                     分类为
-                    <a href="../categories/1.html">编程</a></span>
+                    <a href="../categories/1.html">编程</a>
+                </span>
                     <span>|</span>
                     <span class="tags">
                         标签为<a href="javascript:void(0);">nodejs</a>、<a href="javascript:void(0);">相对路径</a>、<a href="javascript:void(0);">绝对路径</a>、<a href="javascript:void(0);">读取文件</a>、<a href="javascript:void(0);">js</a>
@@ -374,7 +370,8 @@ pan>其他分类</span>
                 <span>|</span>
                 <span class="time">
                     分类为
-                    <a href="../categories/1.html">编程</a></span>
+                    <a href="../categories/1.html">编程</a>
+                </span>
                     <span>|</span>
                     <span class="tags">
                         标签为<a href="javascript:void(0);">IDToken</a>、<a href="javascript:void(0);">userinfo endpoint</a>、<a href="javascript:void(0);">OAuth</a>、<a href="javascript:void(0);">认证</a>、<a href="javascript:void(0);">授权</a>
@@ -395,7 +392,8 @@ pan>其他分类</span>
                 <span>|</span>
                 <span class="time">
                     分类为
-                    <a href="../categories/1.html">编程</a></span>
+                    <a href="../categories/1.html">编程</a>
+                </span>
                     <span>|</span>
                     <span class="tags">
                         标签为<a href="javascript:void(0);">nutaku</a>、<a href="javascript:void(0);">爬虫</a>、<a href="javascript:void(0);">python</a>
@@ -416,7 +414,8 @@ pan>其他分类</span>
                 <span>|</span>
                 <span class="time">
                     分类为
-                    <a href="../categories/1.html">编程</a></span>
+                    <a href="../categories/1.html">编程</a>
+                </span>
                     <span>|</span>
                     <span class="tags">
                         标签为<a href="javascript:void(0);">js</a>、<a href="javascript:void(0);">解耦</a>
@@ -437,7 +436,8 @@ pan>其他分类</span>
                 <span>|</span>
                 <span class="time">
                     分类为
-                    <a href="../categories/1.html">编程</a></span>
+                    <a href="../categories/1.html">编程</a>
+                </span>
                     <span>|</span>
                     <span class="tags">
                         标签为<a href="javascript:void(0);">java</a>、<a href="javascript:void(0);">打包</a>、<a href="javascript:void(0);">没有主清单属性</a>、<a href="javascript:void(0);">MANIFEST.MF</a>
@@ -446,13 +446,11 @@ pan>其他分类</span>
         </div>
     </div>
             </div>
-
         <div class="pagination-wrapper" style="text-align: center; margin-top: 20px;">
             <ul class="pagination">
                 <li class="pre disabled">
                         <a href="javascript:void(0);">上一页</a>
                 </li>
-
                         <li class="pn current">
                             <a href="../index.html">1</a>
                         </li>

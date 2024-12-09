@@ -27,8 +27,7 @@
             let eleHeight = headerEle.offsetHeight;
             let lastScrollTop = 0;
             let topAnchor = 0; // 某个方向的锚点
-       
-     let downAnchor = 0;
+            let downAnchor = 0;
             let stylTop = "-" + eleHeight + "px";
             let stylTop2 = "0";
             let threshold = 180;
@@ -83,13 +82,10 @@
                     timer = -1;
                     let result = fn.apply(this, args);
                     _setTimeout();
-                    re
-turn result;
+                    return result;
                 }
             }
-
             headerEleVisibleHandler = throttleWrapper(headerEleVisibleHandler, { timeout: 200 });
-
             window.addEventListener("scroll", headerEleVisibleHandler);
         });
     </script>
@@ -107,20 +103,17 @@ turn result;
             <div class="right">
                 <ul class="nav f-l">
                         <li class="nav-item">
-                            <a href="./index.html" class="nav-link 
-">
+                            <a href="./index.html" class="nav-link ">
                                 <span>首页</span>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="./category.html" class="nav-link 
-active">
+                            <a href="./category.html" class="nav-link active">
                                 <span>分类</span>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="./about.html" class="nav-link 
-">
+                            <a href="./about.html" class="nav-link ">
                                 <span>关于</span>
                             </a>
                         </li>
@@ -162,8 +155,7 @@ active">
             <div class="item content">
                     <div class="cover">
                         <img src=".//image/portal/202304/cover/3d5c033001d64eb2beccef8b5cb27005-7ad549a4678c166e7375f126a52b77a2.png" alt="">
-                  
-  </div>
+                    </div>
                 <div class="inf">
                     <div class="name">
                         <a style="display: inline-block; width: 100%; height: 100%;" href="./categories/1.html">编程</a>
@@ -181,8 +173,7 @@ active">
             <div class="item content">
                     <div class="cover">
                         <img src=".//image/portal/202304/cover/7343a87cf8934418bf3ac578bc919ac5-ff99cd229909f4f47c1d1deeb62a17c1.png" alt="">
-                  
-  </div>
+                    </div>
                 <div class="inf">
                     <div class="name">
                         <a style="display: inline-block; width: 100%; height: 100%;" href="./categories/3.html">游戏</a>
@@ -200,8 +191,7 @@ active">
             <div class="item content">
                     <div class="cover">
                         <img src=".//image/portal/202304/cover/632a56a267494b458e4e29612873bc4d-541BE1327BA0E914B1E358681524E2B0.jpg" alt="">
-                  
-  </div>
+                    </div>
                 <div class="inf">
                     <div class="name">
                         <a style="display: inline-block; width: 100%; height: 100%;" href="./categories/6.html">随说</a>
@@ -219,8 +209,7 @@ active">
             <div class="item content">
                     <div class="cover">
                         <img src=".//image/portal/202305/cover/8c281ab614bb4c3bb65a1637efd7ead4-88b360fef3dd2bce9043d51019ecb148.png" alt="">
-                  
-  </div>
+                    </div>
                 <div class="inf">
                     <div class="name">
                         <a style="display: inline-block; width: 100%; height: 100%;" href="./categories/9.html">小知识</a>
@@ -238,8 +227,7 @@ active">
             <div class="item content">
                     <div class="cover">
                         <img src=".//image/portal/202306/b2905f5f5df142a8a40e313c5ca33fdb-28a8385d9eef0f666e476828b0c5764e.png" alt="">
-                  
-  </div>
+                    </div>
                 <div class="inf">
                     <div class="name">
                         <a style="display: inline-block; width: 100%; height: 100%;" href="./categories/10.html">学习笔记</a>
@@ -257,8 +245,7 @@ active">
             <div class="item content">
                     <div class="cover">
                         <img src=".//image/portal/202307/572f1ccdb1974361a4f9d0f2b53acd28-system.png" alt="">
-                  
-  </div>
+                    </div>
                 <div class="inf">
                     <div class="name">
                         <a style="display: inline-block; width: 100%; height: 100%;" href="./categories/11.html">系统/软件</a>

@@ -26,8 +26,7 @@
             let eleHeight = headerEle.offsetHeight;
             let lastScrollTop = 0;
             let topAnchor = 0; // 某个方向的锚点
-       
-     let downAnchor = 0;
+            let downAnchor = 0;
             let stylTop = "-" + eleHeight + "px";
             let stylTop2 = "0";
             let threshold = 180;
@@ -82,13 +81,10 @@
                     timer = -1;
                     let result = fn.apply(this, args);
                     _setTimeout();
-                    re
-turn result;
+                    return result;
                 }
             }
-
             headerEleVisibleHandler = throttleWrapper(headerEleVisibleHandler, { timeout: 200 });
-
             window.addEventListener("scroll", headerEleVisibleHandler);
         });
     </script>
@@ -106,20 +102,17 @@ turn result;
             <div class="right">
                 <ul class="nav f-l">
                         <li class="nav-item">
-                            <a href="./index.html" class="nav-link 
-active">
+                            <a href="./index.html" class="nav-link active">
                                 <span>首页</span>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="./category.html" class="nav-link 
-">
+                            <a href="./category.html" class="nav-link ">
                                 <span>分类</span>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="./about.html" class="nav-link 
-">
+                            <a href="./about.html" class="nav-link ">
                                 <span>关于</span>
                             </a>
                         </li>
@@ -151,8 +144,7 @@ active">
                         <div class="side-card b-s-1 mg-b-10">
                             <div class="wrapper">
                                 <h2 class="item title">
-                                    <s
-pan>最近更新</span>
+                                    <span>最近更新</span>
                                 </h2>
                                 <div class="item content">
                                         <div class="item1 ">
@@ -205,7 +197,8 @@ pan>最近更新</span>
                 <span>|</span>
                 <span class="time">
                     分类为
-                    <a href="./categories/1.html">编程</a></span>
+                    <a href="./categories/1.html">编程</a>
+                </span>
                     <span>|</span>
                     <span class="tags">
                         标签为<a href="javascript:void(0);">树形结构数据</a>、<a href="javascript:void(0);">设计与实现</a>、<a href="javascript:void(0);">通用接口</a>
@@ -226,7 +219,8 @@ pan>最近更新</span>
                 <span>|</span>
                 <span class="time">
                     分类为
-                    <a href="./categories/10.html">学习笔记</a></span>
+                    <a href="./categories/10.html">学习笔记</a>
+                </span>
                     <span>|</span>
                     <span class="tags">
                         标签为<a href="javascript:void(0);">英语</a>、<a href="javascript:void(0);">定语从句</a>、<a href="javascript:void(0);">笔记</a>
@@ -247,7 +241,8 @@ pan>最近更新</span>
                 <span>|</span>
                 <span class="time">
                     分类为
-                    <a href="./categories/6.html">瞎聊</a></span>
+                    <a href="./categories/6.html">瞎聊</a>
+                </span>
                     <span>|</span>
                     <span class="tags">
                         标签为<a href="javascript:void(0);">黑心网站</a>、<a href="javascript:void(0);">被坑</a>、<a href="javascript:void(0);">图不符实</a>、<a href="javascript:void(0);">源码</a>
@@ -268,7 +263,8 @@ pan>最近更新</span>
                 <span>|</span>
                 <span class="time">
                     分类为
-                    <a href="./categories/3.html">游戏</a></span>
+                    <a href="./categories/3.html">游戏</a>
+                </span>
                     <span>|</span>
                     <span class="tags">
                         标签为<a href="javascript:void(0);">游戏</a>、<a href="javascript:void(0);">妮姬</a>、<a href="javascript:void(0);">抽卡</a>、<a href="javascript:void(0);">脸黑</a>、<a href="javascript:void(0);">不出货</a>
@@ -289,7 +285,8 @@ pan>最近更新</span>
                 <span>|</span>
                 <span class="time">
                     分类为
-                    <a href="./categories/6.html">瞎聊</a></span>
+                    <a href="./categories/6.html">瞎聊</a>
+                </span>
                     <span>|</span>
                     <span class="tags">
                         标签为<a href="javascript:void(0);">pqt</a>、<a href="javascript:void(0);">奖励</a>、<a href="javascript:void(0);">风波</a>
@@ -310,7 +307,8 @@ pan>最近更新</span>
                 <span>|</span>
                 <span class="time">
                     分类为
-                    <a href="./categories/6.html">瞎聊</a></span>
+                    <a href="./categories/6.html">瞎聊</a>
+                </span>
                     <span>|</span>
                     <span class="tags">
                         标签为<a href="javascript:void(0);">翻译</a>、<a href="javascript:void(0);">剧情翻译</a>
@@ -324,8 +322,7 @@ pan>最近更新</span>
                 <a href="./articles/26.html">如何去App开屏广告</a>
             </div>
             <div class="item content">
-                <div class
-="cover f-r">
+                <div class="cover f-r">
                     <img style="object-fit: cover;" src="./image/portal/loading.gif" data-src="./image/portal/202305/cover/7142c607e9284259b6361bcc24ad9da5-f8cd93e915c7ecc9bbb9174940bd10ae.jpg?project=easyblog" alt="">
                 </div>
                 <span class="brief">最近真的是被开屏广告恶心到了。特别是上一周某游开服的时候，真的亲身体验了被开屏广告糊脸的感觉，甚至在睡梦中也都难以忘怀... 购物、社交、论坛等等，常用的软件无一例外，虽然有跳过按钮，但那块小小的区域，还是会经常点错，一不小心就会跳到别的地方...<a href="./articles/26.html" class="reading-more">继续阅读<i class="el-icon-thumb f-w-b"></i></a></span>
@@ -335,7 +332,8 @@ pan>最近更新</span>
                 <span>|</span>
                 <span class="time">
                     分类为
-                    <a href="./categories/9.html">小知识</a></span>
+                    <a href="./categories/9.html">小知识</a>
+                </span>
                     <span>|</span>
                     <span class="tags">
                         标签为<a href="javascript:void(0);">开屏广告</a>、<a href="javascript:void(0);">App</a>、<a href="javascript:void(0);">去除广告</a>、<a href="javascript:void(0);">拦截广告</a>
@@ -349,8 +347,7 @@ pan>最近更新</span>
                 <a href="./articles/24.html">普通玩家如何获取更多的PvP奖励</a>
             </div>
             <div class="item content">
-                <div class
-="cover f-r">
+                <div class="cover f-r">
                     <img style="object-fit: cover;" src="./image/portal/loading.gif" data-src="./image/portal/202304/cover/a2149a0ce1e7442d9ae01b9430ef41ae-criAPDObnbY3yLh0M-zCPw==.png?project=easyblog" alt="">
                 </div>
                 <span class="brief">现在不少的游戏都有pvp这一玩法模式。所谓pvp，即Player vs Player，指的是玩家与玩家之间的对战，与对立阵营、派别的玩家进行战斗，通过完成击杀来获得荣誉、声望、装备、道具等多种游戏资源，其中还涉及到了策略、技术、博弈、团队、游戏理解等多种要素...<a href="./articles/24.html" class="reading-more">继续阅读<i class="el-icon-thumb f-w-b"></i></a></span>
@@ -360,7 +357,8 @@ pan>最近更新</span>
                 <span>|</span>
                 <span class="time">
                     分类为
-                    <a href="./categories/3.html">游戏</a></span>
+                    <a href="./categories/3.html">游戏</a>
+                </span>
                     <span>|</span>
                     <span class="tags">
                         标签为<a href="javascript:void(0);">游戏</a>、<a href="javascript:void(0);">pvp</a>、<a href="javascript:void(0);">奖励</a>、<a href="javascript:void(0);">竞技场</a>
@@ -382,7 +380,8 @@ pan>最近更新</span>
                 <span>|</span>
                 <span class="time">
                     分类为
-                    <a href="./categories/1.html">编程</a></span>
+                    <a href="./categories/1.html">编程</a>
+                </span>
                     <span>|</span>
                     <span class="tags">
                         标签为<a href="javascript:void(0);">静态站点</a>、<a href="javascript:void(0);">静态站点搜索</a>、<a href="javascript:void(0);">搜索功能</a>、<a href="javascript:void(0);">静态页面</a>、<a href="javascript:void(0);">html</a>、<a href="javascript:void(0);">js</a>、<a href="javascript:void(0);">css</a>
@@ -403,7 +402,8 @@ pan>最近更新</span>
                 <span>|</span>
                 <span class="time">
                     分类为
-                    <a href="./categories/6.html">瞎聊</a></span>
+                    <a href="./categories/6.html">瞎聊</a>
+                </span>
                     <span>|</span>
                     <span class="tags">
                         标签为<a href="javascript:void(0);">学习</a>、<a href="javascript:void(0);">新技术</a>
@@ -412,13 +412,11 @@ pan>最近更新</span>
         </div>
     </div>
             </div>
-
         <div class="pagination-wrapper" style="text-align: center; margin-top: 20px;">
             <ul class="pagination">
                 <li class="pre ">
                         <a href="./index_3.html">上一页</a>
                 </li>
-
                         <li class="pn ">
                             <a href="./index.html">1</a>
                         </li>

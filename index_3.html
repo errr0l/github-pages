@@ -26,8 +26,7 @@
             let eleHeight = headerEle.offsetHeight;
             let lastScrollTop = 0;
             let topAnchor = 0; // 某个方向的锚点
-       
-     let downAnchor = 0;
+            let downAnchor = 0;
             let stylTop = "-" + eleHeight + "px";
             let stylTop2 = "0";
             let threshold = 180;
@@ -82,13 +81,10 @@
                     timer = -1;
                     let result = fn.apply(this, args);
                     _setTimeout();
-                    re
-turn result;
+                    return result;
                 }
             }
-
             headerEleVisibleHandler = throttleWrapper(headerEleVisibleHandler, { timeout: 200 });
-
             window.addEventListener("scroll", headerEleVisibleHandler);
         });
     </script>
@@ -106,20 +102,17 @@ turn result;
             <div class="right">
                 <ul class="nav f-l">
                         <li class="nav-item">
-                            <a href="./index.html" class="nav-link 
-active">
+                            <a href="./index.html" class="nav-link active">
                                 <span>首页</span>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="./category.html" class="nav-link 
-">
+                            <a href="./category.html" class="nav-link ">
                                 <span>分类</span>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="./about.html" class="nav-link 
-">
+                            <a href="./about.html" class="nav-link ">
                                 <span>关于</span>
                             </a>
                         </li>
@@ -151,8 +144,7 @@ active">
                         <div class="side-card b-s-1 mg-b-10">
                             <div class="wrapper">
                                 <h2 class="item title">
-                                    <s
-pan>最近更新</span>
+                                    <span>最近更新</span>
                                 </h2>
                                 <div class="item content">
                                         <div class="item1 ">
@@ -205,7 +197,8 @@ pan>最近更新</span>
                 <span>|</span>
                 <span class="time">
                     分类为
-                    <a href="./categories/3.html">游戏</a></span>
+                    <a href="./categories/3.html">游戏</a>
+                </span>
                     <span>|</span>
                     <span class="tags">
                         标签为<a href="javascript:void(0);">pqt</a>、<a href="javascript:void(0);">游戏</a>、<a href="javascript:void(0);">策划发病</a>
@@ -226,7 +219,8 @@ pan>最近更新</span>
                 <span>|</span>
                 <span class="time">
                     分类为
-                    <a href="./categories/10.html">学习笔记</a></span>
+                    <a href="./categories/10.html">学习笔记</a>
+                </span>
                     <span>|</span>
                     <span class="tags">
                         标签为<a href="javascript:void(0);">英语</a>、<a href="javascript:void(0);">完成时态</a>、<a href="javascript:void(0);">语法</a>
@@ -248,7 +242,8 @@ pan>最近更新</span>
                 <span>|</span>
                 <span class="time">
                     分类为
-                    <a href="./categories/6.html">瞎聊</a></span>
+                    <a href="./categories/6.html">瞎聊</a>
+                </span>
                     <span>|</span>
                     <span class="tags">
                         标签为<a href="javascript:void(0);">计划</a>、<a href="javascript:void(0);">pqt</a>、<a href="javascript:void(0);">日常收菜</a>
@@ -269,7 +264,8 @@ pan>最近更新</span>
                 <span>|</span>
                 <span class="time">
                     分类为
-                    <a href="./categories/6.html">瞎聊</a></span>
+                    <a href="./categories/6.html">瞎聊</a>
+                </span>
                     <span>|</span>
                     <span class="tags">
                         标签为<a href="javascript:void(0);">qt</a>
@@ -291,7 +287,8 @@ pan>最近更新</span>
                 <span>|</span>
                 <span class="time">
                     分类为
-                    <a href="./categories/9.html">小知识</a></span>
+                    <a href="./categories/9.html">小知识</a>
+                </span>
                     <span>|</span>
                     <span class="tags">
                         标签为<a href="javascript:void(0);">笔记软件</a>、<a href="javascript:void(0);">ES文件浏览器</a>、<a href="javascript:void(0);">Typora</a>、<a href="javascript:void(0);">iCloud</a>、<a href="javascript:void(0);">有道云笔记</a>、<a href="javascript:void(0);">印象笔记</a>、<a href="javascript:void(0);">备忘录</a>
@@ -305,8 +302,7 @@ pan>最近更新</span>
                 <a href="./articles/42.html">树莓派搭建文件服务器（一）：装机</a>
             </div>
             <div class="item content">
-                <div class
-="cover f-r">
+                <div class="cover f-r">
                     <img style="object-fit: cover;" src="./image/portal/loading.gif" data-src="./image/portal/202307/287869bd50ac49d8ae6fe8b1e50645e2-8a3369577c284d40b31a971ddb6cb544.jpeg?project=easyblog" alt="">
                 </div>
                 <span class="brief">最近整理房内物件的时候，发现了一个树莓派静静地躺在角落里...
@@ -318,7 +314,8 @@ pan>最近更新</span>
                 <span>|</span>
                 <span class="time">
                     分类为
-                    <a href="./categories/11.html">系统/软件</a></span>
+                    <a href="./categories/11.html">系统/软件</a>
+                </span>
                     <span>|</span>
                     <span class="tags">
                         标签为<a href="javascript:void(0);">树莓派</a>、<a href="javascript:void(0);">装机</a>、<a href="javascript:void(0);">OS</a>、<a href="javascript:void(0);">文件服务器</a>
@@ -340,7 +337,8 @@ pan>最近更新</span>
                 <span>|</span>
                 <span class="time">
                     分类为
-                    <a href="./categories/10.html">学习笔记</a></span>
+                    <a href="./categories/10.html">学习笔记</a>
+                </span>
                     <span>|</span>
                     <span class="tags">
                         标签为<a href="javascript:void(0);">一般时态</a>、<a href="javascript:void(0);">英语</a>
@@ -362,7 +360,8 @@ pan>最近更新</span>
                 <span>|</span>
                 <span class="time">
                     分类为
-                    <a href="./categories/1.html">编程</a></span>
+                    <a href="./categories/1.html">编程</a>
+                </span>
                     <span>|</span>
                     <span class="tags">
                         标签为<a href="javascript:void(0);">spring</a>、<a href="javascript:void(0);">java</a>、<a href="javascript:void(0);">MultipartResolver</a>、<a href="javascript:void(0);">文件上传</a>
@@ -383,7 +382,8 @@ pan>最近更新</span>
                 <span>|</span>
                 <span class="time">
                     分类为
-                    <a href="./categories/6.html">瞎聊</a></span>
+                    <a href="./categories/6.html">瞎聊</a>
+                </span>
                     <span>|</span>
                     <span class="tags">
                         标签为<a href="javascript:void(0);">PQT</a>、<a href="javascript:void(0);">文本提取器</a>、<a href="javascript:void(0);">PQT活动剧情</a>、<a href="javascript:void(0);">计划安排</a>
@@ -404,7 +404,8 @@ pan>最近更新</span>
                 <span>|</span>
                 <span class="time">
                     分类为
-                    <a href="./categories/10.html">学习笔记</a></span>
+                    <a href="./categories/10.html">学习笔记</a>
+                </span>
                     <span>|</span>
                     <span class="tags">
                         标签为<a href="javascript:void(0);">英语</a>、<a href="javascript:void(0);">名词从句</a>
@@ -413,13 +414,11 @@ pan>最近更新</span>
         </div>
     </div>
             </div>
-
         <div class="pagination-wrapper" style="text-align: center; margin-top: 20px;">
             <ul class="pagination">
                 <li class="pre ">
                         <a href="./index_2.html">上一页</a>
                 </li>
-
                         <li class="pn ">
                             <a href="./index.html">1</a>
                         </li>
