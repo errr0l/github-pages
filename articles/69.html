@@ -440,7 +440,7 @@ function _generateParameters(token, offset, deviceToken, captchaId, _atomTraceDa
     offset_resp = get_offset(captcha_resp.get('bg'), captcha_resp.get('front'))
     if offset_resp is not None:
         offset = offset_resp.get('offset')
-    		token = captcha_resp.get('token')
+    	token = captcha_resp.get('token')
         url = &quot;https://c.dun.163.com/api/v3/check?&quot;
         url += captcha_js_ctx.call('generateParameters', token, offset, dt)
         headers = {
@@ -468,7 +468,7 @@ function _generateParameters(token, offset, deviceToken, captchaId, _atomTraceDa
 <p>完整的代码已上传至<a href="https://github.com/xxzhiwei/demo/tree/master/neteasemusic-sliding-captcha-demo">github</a>。</p>
 <p><del>随便玩玩的话，应该没事</del></p>
 <p>至此，本文已经进入尾声，不过，本文仅仅为验证码逆向的内容，不包扩账号登录，当然，这个部分之后有时间也会做，这里算是开了个新坑。</p>
-<p>要注意的是，本次实战虽看上去简单，但其实暗坑不在少数，稍微出点偏差都大概率会得到错误的结果。比方说，之前作者就有过这样的遭遇：参数正常，但大多数情况下校验不通过，还偶尔可以成功，请求接口没有任何报错提示，很无助，经长时间的排查后，才发现是因为获取验证码接口中缺少了一个“host”请求头字段；还因为某个算法生成的错误数据而导致了验证失败，但接口不会返回任何出认证失败外的其他提示信息；等等...</p>
+<p>要注意的是，本次实战虽看上去简单，但其实暗坑不在少数，稍微出点偏差都大概率会得到错误的结果。比方说，之前作者就有过这样的遭遇：参数正常，但大多数情况下校验不通过，请求接口没有任何报错提示，完全不知道哪个环节出现了问题，很无助。经长时间的排查后，才发现是因为获取验证码接口中缺少了一个“host”请求头字段；还因为某个算法生成的错误数据而导致了验证失败，但同样地，接口也不会返回任何有用的提示信息；等等...</p>
 <p>总的来说，逆向工程与很多事物类似，不能一蹴而就，也没有一套标准的解法，我们能做到的，只有多查、多猜、多想、多试，如此这般之后，很可能答案就在眼前。</p>
 <p>以上。</p>
 

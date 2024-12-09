@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>为静态站点添加目录功能 - 小埃的个人博客</title>
+    <link rel="stylesheet" href="../css/reset.css">
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/index.css">
+    <link rel="stylesheet" href="../css/header.css">
+    <link rel="stylesheet" href="../css/mobile.css">
+    <link rel="stylesheet" href="../css/theme-light.css">
+    <link rel="shortcut icon" href="../favicon.ico" type="image/x-icon">
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?d1fc0144cbb354a3f8442b7ba568bc2f";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+
+        window.addEventListener('DOMContentLoaded', () => {
+            let headerEle = document.getElementById('header');
+            let eleHeight = headerEle.offsetHeight;
+            let lastScrollTop = 0;
+            let topAnchor = 0; // 某个方向的锚点
+            let downAnchor = 0;
+            let stylTop = "-" + eleHeight + "px";
+            let stylTop2 = "0";
+            let threshold = 180;
+            function headerEleVisibleHandler() {
+                let scrollTop = document.documentElement.scrollTop;
+                // 向下滚动
+                if (scrollTop > lastScrollTop) {
+                    if (downAnchor !== 0) {
+                        downAnchor = 0;
+                    }
+                    if (topAnchor === 0) {
+                        topAnchor = scrollTop;
+                    }
+                    if ((scrollTop > threshold || scrollTop - topAnchor > threshold) && headerEle.style.top !== stylTop) {
+                        headerEle.style.top =  stylTop;
+                    }
+                }
+                // 向上
+                else {
+                    if (topAnchor !== 0) {
+                        topAnchor = 0;
+                    }
+                    if (downAnchor === 0) {
+                        downAnchor = scrollTop;
+                    }
+                    if ((scrollTop + threshold > downAnchor) && headerEle.style.top === stylTop) {
+                        headerEle.style.top = stylTop2;
+                    }
+                }
+                lastScrollTop = scrollTop;
+            }
+
+            function throttleWrapper(fn, options) {
+                if (!options) {
+                    options = {};
+                }
+                let timer = null;
+                const { timeout } = options;
+
+                const _setTimeout = () => {
+                    timer = window.setTimeout(() => {
+                        window.clearTimeout(timer);
+                        timer = null;
+                    }, timeout);
+                    return timer;
+                }
+
+                return function (...args) {
+                    if (timer) {
+                        return;
+                    }
+                    timer = -1;
+                    let result = fn.apply(this, args);
+                    _setTimeout();
+                    return result;
+                }
+            }
+
+            headerEleVisibleHandler = throttleWrapper(headerEleVisibleHandler, { timeout: 200 });
+
+            window.addEventListener("scroll", headerEleVisibleHandler);
+        });
+    </script>
+        <meta name="keywords" content="博客,静态站点,js,markdown,目录">
+        <meta name="description" content="为静态站点添加目录功能；最近阅读自己的文章时有感，没有目录的体验真的很糟糕。首先是汲取信息方面，缺少目录就意味着失去了一种概览全文的重要途径，只能将文章从头看到尾；其次是操作方面...">
+    <link rel="stylesheet" href="../css/article.css">
+    <link rel="stylesheet" href="../css/markdown/github-markdown.css">
+    <link rel="stylesheet" href="../css/markdown/github-markdown-light.css">
+    <link rel="stylesheet" href="../css/gittalk-cover.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</head>
+<body>
+<div id="app">
+    <div id="header">
+    <div id="bar">
+        <div class="container mg-0-auto d-f pos-r">
+            <div class="logo">
+                <a href="../" class="nav-link" style="margin-right: 10px;">
+                    <img src="../image/portal/logo.jpg" alt="小埃的个人博客">
+                </a>
+            </div>
+            <div class="right">
+                <ul class="nav f-l">
+                        <li class="nav-item">
+                            <a href="../index.html" class="nav-link active">
+                                <span>首页</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="../category.html" class="nav-link ">
+                                <span>分类</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="../about.html" class="nav-link ">
+                                <span>关于</span>
+                            </a>
+                        </li>
+                </ul>
+                <div class="eb-title">
+                    小埃的个人博客
+                </div>
+                    <div id="search">
+                        <input type="text" id="search-input" data-prefix="../" placeholder="搜索" autocomplete="off" />
+                        <span class="search-icon t-a">
+                            <img class="el-icon-search" src="../image/portal/search.png" width="16" height="16">
+                        </span>
+                        <div id="search-result">
+                            <input type="text" class="input-1" id="search-input-2" data-prefix="../" placeholder="请输入" autocomplete="off" />
+                            <div class="content">
+                            </div>
+                            <div class="arrow"></div>
+                        </div>
+                    </div>
+
+                <div class="eb-menu">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-list-ul" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M5 11.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm-3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm0 4a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm0 4a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
+                    </svg>
+                </div>
+            </div>
+            <div id="sd-box">
+                <div class="wrapper">
+                        <div class="side-card b-s-1 mg-b-10">
+                            <div class="wrapper">
+                                <h2 class="item title">
+                                    <span>相关文章</span>
+                                </h2>
+                                <div class="item content">
+                                        <div class="item1 ">
+                                            <a href="../articles/22.html">
+                                                    为静态站点添加搜索功能
+                                            </a>
+                                        </div>
+                                        <div class="item1 ">
+                                            <a href="../articles/67.html">
+                                                    简单整理博客及其相关项目的情况
+                                            </a>
+                                        </div>
+                                        <div class="item1 ">
+                                            <a href="../articles/66.html">
+                                                    关于nodejs使用相对路径读取文件的问题
+                                            </a>
+                                        </div>
+                                        <div class="item1 ">
+                                            <a href="../articles/55.html">
+                                                    解耦在js中的应用
+                                            </a>
+                                        </div>
+                                        <div class="item1 ">
+                                            <a href="../articles/19.html">
+                                                    为vue单页面应用添加提示保存功能
+                                            </a>
+                                        </div>
+                                        <div class="item1 ">
+                                            <a href="../articles/15.html">
+                                                    兼容部署在Github Pages与其他服务器的应用引入资源的解决方案
+                                            </a>
+                                        </div>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    <div id="main">
+        <div class="container mg-0-auto pd-t-10">
+            <div class="wrapper">
+                <article class="mg-b-20">
+                    <div class="markdown-body">
+                        <div class="title">为静态站点添加目录功能</div>
+                        <div class="item meta mg-b-10">
+                            <span class="author">由<a href="javascript:void(0);">errol</a>发表于<a href="#">2024-12-08</a></span>
+                            <span>|</span>
+                            <span class="time">
+                            分类为
+                            <a href="../categories/1.html">编程</a></span>
+                            <span>|</span>
+                            <span class="tags">
+                                标签为<a href="javascript:void(0);">博客</a>、<a href="javascript:void(0);">静态站点</a>、<a href="javascript:void(0);">js</a>、<a href="javascript:void(0);">markdown</a>、<a href="javascript:void(0);">目录</a>
+                            </span>
+                        </div>
+                        <div class="content">
+                            <p>最近阅读自己的文章时有感，没有目录的体验真的很糟糕。</p>
+<p>首先是汲取信息方面，缺少目录就意味着失去了一种概览全文的重要途径，只能将文章从头看到尾；其次是操作方面，缺少目录说明文章内容没有导航，体现为无法使用锚点跳转，只能依靠滚动&amp;滑动。</p>
+<p>而当文章较长时，无论是从哪个方面，阅读文章似乎都会变为一种令人厌烦的事情，所以思来想去，还是觉得给文章加个目录为好。</p>
+<h4 id="hidp-heading-0">一、方法设计思路</h4>
+<p>注，本文将在前端层面，基于Markdown文本转换的dom实现方法。</p>
+<p>Markdown是一种轻量级标记语言，使用纯文本格式编写，具有轻量化、易读易写的特点，如下一段含标题元素的md示例文本。</p>
+<pre><code class="language-text"># 节点1
+
+## 节点2
+
+### 节点3
+
+### 节点4
+
+## 节点5
+</code></pre>
+<p><strong>其文体结构呈扁平化，且层次分明</strong>。规则很明显，<strong>相邻&amp;处于同一层次的节点，必定是兄弟节点</strong>，如“节点3”与“节点4”、“节点2”与“节点5”；<strong>也必定是上一层次节点的子节点</strong>，如“节点3”与“节点4”是“节点2”的子节点，“节点2”与“节点5”是“节点1”的子节点。</p>
+<p>因此，可利用具有层次关系的标题元素，作为生成目录的依据。</p>
+<p>在转为dom后，也依然保持这样的规律。这其实很好理解，md标题会根据“#”的数量，一比一转换为对应的heading标签，如“# 节点1”将转为<code>&lt;h1&gt;节点1&lt;/h1&gt;</code>，&quot;## 节点2&quot;将转为<code>&lt;h2&gt;节点二&lt;/h2&gt;</code>，以此类推。</p>
+<p>所以，现在只需设计一个自上往下循环heading标签，并找出其全部子节点（包括子节点的子节点）的方法。</p>
+<p>如上述md转为dom节点后，应该为：</p>
+<pre><code class="language-text"># 省略了一些步骤...
+[h1, h2, h3, h3, h2]
+</code></pre>
+<p>调用方法后，应该得到如下数据：</p>
+<pre><code class="language-text">[
+    {
+        h1, 
+        children: [
+            {h2, children: [{h3, h3}]}, 
+            {h2}
+        ]
+    }
+]
+</code></pre>
+<h4 id="hidp-heading-1">二、方法实现</h4>
+<p>分为两个步骤来完成，generateTree()用于创建最外层的节点，makeChildren()用于创建某个的子节点。</p>
+<p>实现方式也简单，只是一些朴实无华的循环和递归。</p>
+<h5 id="hidp-heading-2">1、generateTree()</h5>
+<pre><code class="language-js">// nodes为doc文档中获取的heading元素数组
+function generateTree(nodes) {
+    const tree = [];
+    while (nodes.length &gt; 0) {
+        const current = nodes.pop();
+        current.level = 1;
+        tree.push({
+            text: current._node.textContent,
+            children: makeChildren(current, nodes),
+            ...current
+        });
+    }
+    return tree;
+}
+</code></pre>
+<h5 id="hidp-heading-3">2、makeChildren()</h5>
+<pre><code class="language-js">function makeChildren(current, nodes) {
+    const children = [];
+    while (nodes.length &gt; 0) {
+        const node = nodes[nodes.length - 1];
+        // num为h标签的序号；当遇到大于当前节点的节点时，表明下个节点node并非上个节点current的子节点，结束循环
+        if (node.num &lt;= current.num) {
+            return children;
+        }
+        // 移除节点
+        nodes.pop();
+        node.level = current.level + 1;
+        children.push({
+            text: node._node.textContent,
+            children: makeChildren(node, nodes),
+            ...node
+        });
+    }
+    return children;
+}
+</code></pre>
+<h4 id="hidp-heading-4">三、使用方法</h4>
+<h5 id="hidp-heading-5">1、获取dom节点</h5>
+<p>以下假设“.markdown-body &gt; .content”是由某个markdown转换的dom元素。</p>
+<pre><code class="language-js">const mbc = document.querySelector('.markdown-body &gt; .content');
+const children = mbc.children;
+const hChildren = [];
+const reg = /^H\d$/;
+for (let child of children) {
+    // 使用正则表达式筛选出heading元素。
+    if (reg.test(child.tagName)) {
+        hChildren.push({
+            _node: child,
+            num: +child.tagName.slice(1)
+        });
+    }
+}
+
+// 将数组反转，以供后续使用pop()取出数据
+hChildren.reverse();
+</code></pre>
+<h5 id="hidp-heading-6">2、根据dom节点生成树</h5>
+<p>将步骤1中得到的数据传入方法。</p>
+<pre><code class="language-js">const tree = generateTree(hChildren);
+</code></pre>
+<p>以文章<a href="./articles/69.html">某云滑动认证码逆向</a>为例，其部分内容截图如下：</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202412/51a6526762604800835c0bff20406a8d-02E11B406BD0B992B5F07F25A79BF7BF.png?project=easyblog" /></p>
+<p><em>图1 《某云滑动认证码逆向》- 截图1</em></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202412/1ebbdf5c79fa414186e487929c73d57e-720A5A1E326F853D1223DE9D1F3F8E15.png?project=easyblog" /></p>
+<p><em>图2 《某云滑动认证码逆向》- 截图2</em></p>
+<p>调用方法后应该得到如下结果：</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202412/6f22462968de4359b3f5554e637f69db-3DA9055E63CD1D320B01BBD2D47A8306.png?project=easyblog" /></p>
+<p><em>图3 树形结构数据</em></p>
+<p>之后使用该数据生成目录即可。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202412/e681d334f01a4184b23fd267e63d3167-9480583E821A10B44B2A6AC232773701.png?project=easyblog" /></p>
+<p><em>图4 使用树形结构数据生成的文章目录</em></p>
+<hr />
+<p>之前总觉得文章页面缺了些什么，仔细想想目录就是其中一个，现在整体看上去充实了很多。</p>
+<p>说起来，这个功能其实很早就纳入开发计划中，只是久而久之忘记了。</p>
+<p>以上。</p>
+
+                        </div>
+                    </div>
+                </article>
+                <div class="comment-wrap">
+                        <div class="t-a close">评论区已关闭</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="back">返回</div>
+</div>
+    <script src="../js/dataList.js"></script>
+    <script src="../js/lazy.js"></script>
+    <script src="../js/search.js"></script>
+    <script src="../js/menu.js"></script>
+<script src="../js/toc.js"></script>
+<script>
+    let back = document.querySelector(".back");
+    back.addEventListener("click", function () {
+        window.history.go(-1);
+    });
+</script>
+</body>
+</html>
