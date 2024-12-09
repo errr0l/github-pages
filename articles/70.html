@@ -26,7 +26,8 @@
             let eleHeight = headerEle.offsetHeight;
             let lastScrollTop = 0;
             let topAnchor = 0; // 某个方向的锚点
-            let downAnchor = 0;
+       
+     let downAnchor = 0;
             let stylTop = "-" + eleHeight + "px";
             let stylTop2 = "0";
             let threshold = 180;
@@ -81,7 +82,8 @@
                     timer = -1;
                     let result = fn.apply(this, args);
                     _setTimeout();
-                    return result;
+                    re
+turn result;
                 }
             }
 
@@ -113,17 +115,20 @@
             <div class="right">
                 <ul class="nav f-l">
                         <li class="nav-item">
-                            <a href="../index.html" class="nav-link active">
+                            <a href="../index.html" class="nav-link 
+active">
                                 <span>首页</span>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="../category.html" class="nav-link ">
+                            <a href="../category.html" class="nav-link 
+">
                                 <span>分类</span>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="../about.html" class="nav-link ">
+                            <a href="../about.html" class="nav-link 
+">
                                 <span>关于</span>
                             </a>
                         </li>
@@ -155,7 +160,8 @@
                         <div class="side-card b-s-1 mg-b-10">
                             <div class="wrapper">
                                 <h2 class="item title">
-                                    <span>相关文章</span>
+                                    <s
+pan>相关文章</span>
                                 </h2>
                                 <div class="item content">
                                         <div class="item1 ">
@@ -216,9 +222,10 @@
                         <div class="content">
                             <p>最近阅读自己的文章时有感，没有目录的体验真的很糟糕。</p>
 <p>首先是汲取信息方面，缺少目录就意味着失去了一种概览全文的重要途径，想要进一步了解文章只能从头看到尾；其次是操作方面，缺少目录说明没有内容导航，如体现为无法使用锚点跳转，只能依靠滚动&amp;滑动的方式查看文章内容。</p>
-<p>当文章较长时，无论是从哪个方面，阅读文章似乎都会变为一种令人厌烦的事情，此乃大忌，所以还是觉得给文章加上目录功能为好。</p>
+<p>当文章较长时，无论是从哪个方面，阅读文章似乎都会变为一种令人厌烦的事情，此乃大忌，所以还是觉得给文章加上目录为好。</p>
+<p>本着尽量不改动代码的原则，所以决定在前端层面实现该功能，类似于插件，无非就是新增个js文件，并同步修改生成html的模板。</p>
 <h4 id="hidp-heading-0">一、方法设计思路</h4>
-<p>注，本文将在前端层面，基于Markdown文本转换的dom实现方法。</p>
+<p>注，本文是基于Markdown文本转换的dom实现方法。</p>
 <p>Markdown是一种轻量级标记语言，使用纯文本格式编写，具有轻量化、易读易写的特点，如下一段的md文本。</p>
 <pre><code class="language-text"># 节点1
 
@@ -252,8 +259,8 @@
 ]
 </code></pre>
 <h4 id="hidp-heading-1">二、方法实现</h4>
-<p>分为两个步骤来完成，generateTree()用于创建最外层的节点，makeChildren()用于创建某个的子节点。</p>
-<p>实现方式也简单，只是一些朴实无华的循环和递归。</p>
+<p>分为两个步骤来完成，generateTree()用于创建最外层的节点，makeChildren()用于创建某个节点的子节点。</p>
+<p>实现方式也较简单，只是一些朴实无华的递归和循环。</p>
 <h5 id="hidp-heading-2">1、generateTree()</h5>
 <pre><code class="language-js">// nodes为doc文档中获取的heading元素数组
 function generateTree(nodes) {
@@ -328,7 +335,7 @@ hChildren.reverse();
 <p><em>图4 使用树形结构数据生成的文章目录</em></p>
 <hr />
 <p>之前总觉得文章页面缺了些什么，仔细想想目录就是其中一个，现在整体看上去充实了很多，也比较实用。</p>
-<p>说起来，这个功能其实很早就纳入开发计划中，只是久而久之忘记了，以至于今日才把它加上。</p>
+<p>说起来，这个功能其实很早就纳入开发计划中，只是久而久之忘记了，以至于今日才落地实现。</p>
 <p>以上。</p>
 
                         </div>
