@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>记录一次打包静态站点资源的优化 - 小埃的个人博客</title>
+    <link rel="stylesheet" href="../css/reset.css">
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/index.css">
+    <link rel="stylesheet" href="../css/header.css">
+    <link rel="stylesheet" href="../css/mobile.css">
+    <link rel="stylesheet" href="../css/theme-light.css">
+    <link rel="shortcut icon" href="../favicon.ico" type="image/x-icon">
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?d1fc0144cbb354a3f8442b7ba568bc2f";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+
+        window.addEventListener('DOMContentLoaded', () => {
+            let headerEle = document.getElementById('header');
+            let eleHeight = headerEle.offsetHeight;
+            let lastScrollTop = 0;
+            let topAnchor = 0; // 某个方向的锚点
+            let downAnchor = 0;
+            let stylTop = "-" + eleHeight + "px";
+            let stylTop2 = "0";
+            let threshold = 180;
+            function headerEleVisibleHandler() {
+                let scrollTop = document.documentElement.scrollTop;
+                // 向下滚动
+                if (scrollTop > lastScrollTop) {
+                    if (downAnchor !== 0) {
+                        downAnchor = 0;
+                    }
+                    if (topAnchor === 0) {
+                        topAnchor = scrollTop;
+                    }
+                    if ((scrollTop > threshold || scrollTop - topAnchor > threshold) && headerEle.style.top !== stylTop) {
+                        headerEle.style.top =  stylTop;
+                    }
+                }
+                // 向上
+                else {
+                    if (topAnchor !== 0) {
+                        topAnchor = 0;
+                    }
+                    if (downAnchor === 0) {
+                        downAnchor = scrollTop;
+                    }
+                    if ((scrollTop + threshold > downAnchor) && headerEle.style.top === stylTop) {
+                        headerEle.style.top = stylTop2;
+                    }
+                }
+                lastScrollTop = scrollTop;
+            }
+
+            function throttleWrapper(fn, options) {
+                if (!options) {
+                    options = {};
+                }
+                let timer = null;
+                const { timeout } = options;
+
+                const _setTimeout = () => {
+                    timer = window.setTimeout(() => {
+                        window.clearTimeout(timer);
+                        timer = null;
+                    }, timeout);
+                    return timer;
+                }
+
+                return function (...args) {
+                    if (timer) {
+                        return;
+                    }
+                    timer = -1;
+                    let result = fn.apply(this, args);
+                    _setTimeout();
+                    return result;
+                }
+            }
+            headerEleVisibleHandler = throttleWrapper(headerEleVisibleHandler, { timeout: 200 });
+            window.addEventListener("scroll", headerEleVisibleHandler);
+        });
+    </script>
+        <meta name="keywords" content="静态站点,打包,java">
+        <meta name="description" content="记录一次打包静态站点资源的优化；静态站点的含义不再过多复述，简单来说，是一种不包含ajax请求（或不包含数据库）的网站，仅包含以html、css、js、图片为基础的资源。但虽同为静态网站，本博客又与我们学前端时写的静态页面有所区别，它是一种动态生成的静态。即是说，它依赖于数据库&服务器数据，存在着一个名为“打包”的过程。但打包时，采取了全文件覆盖的暴力手段，导致有很多文件在无任何修改的情况下，也会进行拷贝...">
+    <link rel="stylesheet" href="../css/article.css">
+    <link rel="stylesheet" href="../css/markdown/github-markdown.css">
+    <link rel="stylesheet" href="../css/markdown/github-markdown-light.css">
+    <link rel="stylesheet" href="../css/gittalk-cover.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</head>
+<body>
+<div id="app">
+    <div id="header">
+    <div id="bar">
+        <div class="container mg-0-auto d-f pos-r">
+            <div class="logo">
+                <a href="../" class="nav-link" style="margin-right: 10px;">
+                    <img src="../image/portal/logo.jpg" alt="小埃的个人博客">
+                </a>
+            </div>
+            <div class="right">
+                <ul class="nav f-l">
+                        <li class="nav-item">
+                            <a href="../index.html" class="nav-link active">
+                                <span>首页</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="../category.html" class="nav-link ">
+                                <span>分类</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="../about.html" class="nav-link ">
+                                <span>关于</span>
+                            </a>
+                        </li>
+                </ul>
+                <div class="eb-title">
+                    小埃的个人博客
+                </div>
+                    <div id="search">
+                        <input type="text" id="search-input" data-prefix="../" placeholder="搜索" autocomplete="off" />
+                        <span class="search-icon t-a">
+                            <img class="el-icon-search" src="../image/portal/search.png" width="16" height="16">
+                        </span>
+                        <div id="search-result">
+                            <input type="text" class="input-1" id="search-input-2" data-prefix="../" placeholder="请输入" autocomplete="off" />
+                            <div class="content">
+                            </div>
+                            <div class="arrow"></div>
+                        </div>
+                    </div>
+
+                <div class="eb-menu">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-list-ul" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M5 11.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm-3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm0 4a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm0 4a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
+                    </svg>
+                </div>
+            </div>
+            <div id="sd-box">
+                <div class="wrapper">
+                        <div class="side-card b-s-1 mg-b-10">
+                            <div class="wrapper">
+                                <h2 class="item title">
+                                    <span>相关文章</span>
+                                </h2>
+                                <div class="item content">
+                                        <div class="item1 ">
+                                            <a href="../articles/52.html">
+                                                    关于运行jar时，报“没有主清单属性”的问题
+                                            </a>
+                                        </div>
+                                        <div class="item1 ">
+                                            <a href="../articles/70.html">
+                                                    为静态站点添加目录功能
+                                            </a>
+                                        </div>
+                                        <div class="item1 ">
+                                            <a href="../articles/40.html">
+                                                    探究MultipartResolver的运行原理
+                                            </a>
+                                        </div>
+                                        <div class="item1 ">
+                                            <a href="../articles/22.html">
+                                                    为静态站点添加搜索功能
+                                            </a>
+                                        </div>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    <div id="main">
+        <div class="container mg-0-auto pd-t-10">
+            <div class="wrapper">
+                <article class="mg-b-20">
+                    <div class="markdown-body">
+                        <div class="title">记录一次打包静态站点资源的优化</div>
+                        <div class="item meta mg-b-10">
+                            <span class="author">由<a href="javascript:void(0);">errol</a>发表于<a href="#">2024-12-15</a></span>
+                            <span>|</span>
+                            <span class="time">
+                            分类为
+                            <a href="../categories/1.html">编程</a></span>
+                            <span>|</span>
+                            <span class="tags">
+                                标签为<a href="javascript:void(0);">静态站点</a>、<a href="javascript:void(0);">打包</a>、<a href="javascript:void(0);">java</a>
+                            </span>
+                        </div>
+                        <div class="content">
+                            <p>静态站点的含义不再过多复述，简单来说，是一种不包含ajax请求（或不包含数据库）的网站，仅包含以html、css、js、图片为基础的资源。</p>
+<p>但虽同为静态网站，本博客又与我们学前端时写的静态页面有所区别，<strong>它是一种动态生成的静态</strong>。</p>
+<p>即是说，它依赖于数据库&amp;服务器数据，存在着一个名为“打包”的过程。</p>
+<p>但<strong>打包时，采取了全文件覆盖的暴力手段，导致有很多文件在无任何修改的情况下，也会进行拷贝&amp;创建，从而造成性能浪费。</strong></p>
+<p>比如，不少js、css、img资源，在博客建立后就没改动过；更新文章时，本应该只需重新创建其详情页和所在的分页，但实际上把所有分页重新创建了一遍（株连九族）。</p>
+<p>因此，今天针对这个问题，对站点的打包过程做一些优化。</p>
+<p><strong>本文主要以“时间”要素作为依据，为动（文章数据）和静两部分资源添加条件判断，来控制资源的拷贝&amp;创建与否。</strong></p>
+<h3 id="hidp-heading-0">一、拷贝静态资源</h3>
+<blockquote>
+<p>本博客拷贝静态资源使用的是阿帕奇的io工具库<a href="https://commons.apache.org/proper/commons-io/javadocs/api-2.5/org/apache/commons/io/FileUtils.html">FileUtils</a>。</p>
+</blockquote>
+<h4 id="hidp-heading-1">1、LastModifiedFileFilter</h4>
+<p>LastModifiedFileFilter类的构造方法接收一个文件名与其最后修改日期的映射表(map)，并会根据accept()的判断结果更新数据。</p>
+<pre><code class="language-java">// 基于最后修改日期的静态文件过滤器；
+// 根据磁盘上的日期数据（记录上一次执行复制操作的文件的修改日期），判断文件是否应该被复制；
+class LastModifiedFileFilter implements IOFileFilter {
+    // 存储文件名与其最好修改日期的映射表
+    private final Map&lt;String, Long&gt; map;
+    private boolean updated;
+
+    LastModifiedFileFilter(Map&lt;String, Long&gt; map) {
+        this.map = map;
+    }
+
+    public Map&lt;String, Long&gt; getMap() {
+        return map;
+    }
+
+    public boolean getUpdated() {
+        return updated;
+    }
+
+    // 每次判断的同时，记录最后的修改日期
+    public void setFileModified(String name, Long modified) {
+        map.put(name, modified);
+        if (!updated) {
+            updated = true;
+        }
+    }
+
+    @Override
+    public boolean accept(File file) {
+        // 文件夹默认返回true
+        if (file.isDirectory()) {
+            return true;
+        }
+        final String name = file.getName();
+        final Long modified = map.get(name);
+        long lastModified = file.lastModified();
+        if (modified == null || modified &lt; lastModified) {
+            setFileModified(name, lastModified);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean accept(File dir, String name) {
+        return false;
+    }
+}
+</code></pre>
+<h4 id="hidp-heading-2">2、读取&amp;保存静态文件映射表</h4>
+<p><del>虽然感觉不是很必要，挺简单的方法</del></p>
+<h5 id="hidp-heading-3">2.1、readFileCaches()</h5>
+<p>从磁盘上读取以json字符串存储的文件，其基本格式为“文件名-&gt;文件最后修改日期”。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202412/ccca9a028409487bac65219f92942bd1-02CCB0E2ED03396C178E3C89863C0FBC.png?project=easyblog" /></p>
+<p><em>图1 static_caches.json</em></p>
+<pre><code class="language-java">public &lt;T&gt; Map&lt;String, T&gt; readFileCaches(String name) {
+    File file = new File(getResourcePath() + name);
+    if (file.exists()) {
+        try {
+            String jsonStr = FileUtils.readFileToString(file, StandardCharsets.UTF_8.name());
+            return JSON.parseObject(jsonStr, new TypeReference&lt;Map&lt;String, T&gt;&gt;() {});
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new CustomException(&quot;读取配置失败：&quot; + e.getMessage());
+        }
+    }
+    return new HashMap&lt;&gt;();
+}
+</code></pre>
+<h5 id="hidp-heading-4">2.2、saveFileCaches()</h5>
+<pre><code class="language-java">public &lt;T&gt; void saveFileCaches(Map&lt;String, T&gt; map, String name) {
+    try {
+        File file = new File(getResourcePath() + name);
+        FileUtils.writeStringToFile(
+                file,
+                JSON.toJSONString(map, SerializerFeature.DisableCircularReferenceDetect),
+                StandardCharsets.UTF_8.name());
+    } catch (Exception e) {
+        e.printStackTrace();
+        throw new CustomException(&quot;保存配置失败：&quot; + e.getMessage());
+    }
+}
+</code></pre>
+<h5 id="hidp-heading-5">3、拷贝ing</h5>
+<p>调用FileUtils.copyDirectory()，并传入LastModifiedFileFilter实例，拷贝整个静态资源目录。</p>
+<pre><code class="language-java">public void copyStatic() {
+    // 输出目录
+    String outputPath = appConfig.getOutputPath();
+
+    try {
+        // 读取静态文件映射数据
+        final Map&lt;String, Long&gt; staticFilesConfig = appConfig.readFileCaches(&quot;static_caches.json&quot;);
+        LastModifiedFileFilter lastModifiedFileFilter = new LastModifiedFileFilter(staticFilesConfig);
+        String[] excluded = {&quot;admin&quot;, &quot;temp&quot;};
+        val excludedFilter = new NameFileFilter(excluded);
+        IOFileFilter filter = FileFilterUtils.and(FileFilterUtils.notFileFilter(excludedFilter), lastModifiedFileFilter);
+        // 复制服务器静态资源【包括图片
+        FileUtils.copyDirectory(
+                new File(appConfig.getStaticPath()),
+                new File(outputPath), filter
+        );
+        // 根据条件保存映射数据
+        if (lastModifiedFileFilter.getUpdated()) {
+            appConfig.saveFileCaches(lastModifiedFileFilter.getMap(), &quot;static_caches.json&quot;);
+        }
+    } catch (IOException e) {
+        e.printStackTrace();
+        throw new CustomException(&quot;复制静态资源失败：&quot; + e.getMessage());
+    }
+}
+</code></pre>
+<h4 id="hidp-heading-6">二、创建html文件</h4>
+<p>创建html文件，这里主要指代的是，除“文章详情页”以外的页面，至于“文章详情页”仍保持根据“状态”来决定创建与否。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202412/d7081e5715a84788b98c38b0b5a1d7f6-2ED52F3B6A85670B30D4E7A6E85B1970.png?project=easyblog" /></p>
+<p><em>图2 文章状态</em></p>
+<p><strong>不同于静态资源只需要判断最后修改日期，html文件需要从更多的维度来决定是否重新创建，最基础的如文件内容与数据库数据是否相同，编排是否保持一致等。</strong></p>
+<p>但也跟静态资源一样，此处也存在一个文件的数据映射表，不过记录的数据不同，它里面记录的是每种数据的id，及其最后更新时间（数据库字段，lastUpdatedAt）。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202412/531e278b0aaf41f686ad061b98231f35-7DCC1F423F66B3408E63D260C2241B14.png?project=easyblog" /></p>
+<p><em>图3 html_caches.json</em></p>
+<p>下面以创建文章分页页面为例，以思路为主。</p>
+<p><strong>根据创建的html文件名称，读取配置文件中对应的数据，并与当前分页数据一一比较</strong>。</p>
+<p>这其实与拷贝静态文件是一致的，都属于“<strong>判断是否发生了变化</strong>”。</p>
+<h5 id="hidp-heading-7">1、getFileCache()</h5>
+<pre><code class="language-java">private List&lt;String&gt; getFileCache(String key) {
+    // 当key为空时，返回一个长度为0的列表；
+    return htmlFilesConfig.computeIfAbsent(key, k -&gt; new ArrayList&lt;&gt;());
+}
+</code></pre>
+<h5 id="hidp-heading-8">2、创建文章分页html</h5>
+<pre><code class="language-java">private void createIndexHtml() {
+    // 略...
+    for (long i=1; i&lt;=articlePages; i++) {
+        // 生成每页的html文件名，并对应页的配置
+        String htmlName = i &gt; 1 ? String.format(&quot;index_%d.html&quot;, i) : &quot;index.html&quot;;
+        List&lt;String&gt; indexConfig = getFileCache(htmlName);
+        int size = indexConfig.size();
+        // 用于保存每页的文章数据
+        List&lt;Article&gt; articleList = new ArrayList&lt;&gt;();
+        long offset = PaginationUtil.getPaginationOffset(i, PaginationUtil.SIZE); // 1=0-10，10-20
+        long destination = i * PaginationUtil.SIZE;
+        if (total &lt; destination) {
+            destination = total;
+        }
+        int _count = count;
+        for (long j=offset; j&lt;destination; j++) {
+            int index = (int) j;
+            // pending为待处理数据（包括已发布、待发布）
+            Article item = pending.get(index);
+            articleList.add(item);
+            String id = item.getId() + &quot;:&quot; + item.getLastUpdatedAt().getTime();
+            // 当配置不存在时，以当前数据新建
+            if (0 == size) {
+                _count++;
+                indexConfig.add(id);
+            }
+            // 当配置发生变化时，更新数据
+            else if (!indexConfig.get(index % (int) PaginationUtil.SIZE).equals(id)) {
+                _count++;
+                indexConfig.set(index, id);
+            }
+        }
+        dataMap.put(FreemarkerUtil.TEMPLATE_PATH, appConfig.getTemplatePath());
+        dataMap.put(&quot;webConfig&quot;, appConfig.getWebConfig());
+        // 根据判断结果，决定是否需要重新创建html文件
+        if (_count &gt; count) {
+            count++;
+            dataMap.put(&quot;current&quot;, i);
+            dataMap.put(FreemarkerUtil.HTML_NAME, outputPath + File.separator + htmlName);
+            dataMap.put(FreemarkerUtil.TEMPLATE_NAME, INDEX);
+            dataMap.put(&quot;articles&quot;, articleList);
+            dataMap.put(&quot;pages&quot;, articlePages);
+            dataMap.put(&quot;sdList&quot;, Collections.emptyList());
+            // 创建html文件
+            FreemarkerUtil.createHtml(dataMap);
+        }
+    }
+    // 略...
+}
+</code></pre>
+<p>同样地，在调用了创建html文件的方法后，再作一次判断，是否需要写入数据。</p>
+<pre><code class="language-java">public void publish(PublishingForm form) {
+    resetProgress();
+    // html_caches.json，html文件缓存;
+    // 以index.html为例，保存有第一页的文章id及其修改时间(在json文件中，以&quot;id:lastUpdatedAt&quot;的形式存在)，在发布时判断，若发布时的配置与磁盘上的配置不同，则重新创建该index.html，否则保持不变；
+    htmlFilesConfig = appConfig.readFileCaches(&quot;html_caches.json&quot;);
+    publishingForm = form;
+    try {
+        progress.put(PublicationStatusKey.PERCENTAGE, 10);
+        createHtml();
+        progress.put(PublicationStatusKey.PERCENTAGE, 40);
+        delHtml();
+        progress.put(PublicationStatusKey.PERCENTAGE, 60);
+        copyStatic();
+        progress.put(PublicationStatusKey.PERCENTAGE, 80);
+        progress.put(PublicationStatusKey.PERCENTAGE, 100);
+        progress.put(PublicationStatusKey.CODE, 0);
+        
+        // 略...
+
+        // 若html配置发生变动，重新将数据写入磁盘
+        if (count &gt; 0) {
+            appConfig.saveFileCaches(htmlFilesConfig, &quot;html_caches.json&quot;);
+        }
+    } catch (Exception e) {
+        // 略...
+    }
+}
+</code></pre>
+<hr />
+<p>本次打包优化焦点是“时间”，以目标对象是否发生了变化作为下个步骤的前提条件，如拷贝静态文件是根据“最后修改时间”，创建html文件则是根据数据库表的lastUpdatedAt字段。</p>
+<p>加上这个小小的判断之后，可在很大程度上减少文件的拷贝和创建过程，避免了非必要的性能开销。</p>
+<p>以上。</p>
+
+                        </div>
+                    </div>
+                </article>
+                <div class="comment-wrap">
+                        <div class="t-a close">评论区已关闭</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="back">返回</div>
+</div>
+    <script src="../js/dataList.js"></script>
+    <script src="../js/lazy.js"></script>
+    <script src="../js/search.js"></script>
+    <script src="../js/menu.js"></script>
+<script src="../js/toc.js"></script>
+<script>
+    let back = document.querySelector(".back");
+    back.addEventListener("click", function () {
+        window.history.go(-1);
+    });
+</script>
+</body>
+</html>
