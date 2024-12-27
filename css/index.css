@@ -35,14 +35,6 @@
     min-height: 90vh;
 }
 
-#sd-box {
-    position: absolute; top: 74px; right: 0; width: calc(28%);
-    overflow: auto;
-    height: 100vh;
-    box-sizing: border-box;
-    padding: 0 3px 20px 2px;
-}
-
 .card {
     padding: 10px 20px 0 20px;
 }
@@ -87,6 +79,14 @@
     color: var(--c-text-2);
     flex: 1;
     line-height: 1.6;
+}
+
+#sc-box {
+    position: absolute; top: 74px; right: 0; width: calc(28%);
+    overflow: auto;
+    height: 100vh;
+    box-sizing: border-box;
+    padding: 0 3px 20px 2px;
 }
 
 .side-card {
