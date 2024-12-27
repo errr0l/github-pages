@@ -325,7 +325,7 @@ class LastModifiedFileFilter implements IOFileFilter {
     }
 }
 </code></pre>
-<h4 id="hidp-heading-6">二、创建html文件</h4>
+<h3 id="hidp-heading-6">二、创建html文件</h3>
 <p>创建html文件，这里主要指代的是，除“文章详情页”以外的页面，至于“文章详情页”仍保持根据“状态”来决定创建与否。</p>
 <p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202412/d7081e5715a84788b98c38b0b5a1d7f6-2ED52F3B6A85670B30D4E7A6E85B1970.png?project=easyblog" /></p>
 <p><em>图2 文章状态</em></p>
@@ -336,13 +336,13 @@ class LastModifiedFileFilter implements IOFileFilter {
 <p>下面以创建文章分页页面为例，以思路为主。</p>
 <p><strong>根据创建的html文件名称，读取配置文件中对应的数据，并与当前分页数据一一比较</strong>。</p>
 <p>这其实与拷贝静态文件是一致的，都属于“<strong>判断是否发生了变化</strong>”。</p>
-<h5 id="hidp-heading-7">1、getFileCache()</h5>
+<h4 id="hidp-heading-7">1、getFileCache()</h4>
 <pre><code class="language-java">private List&lt;String&gt; getFileCache(String key) {
     // 当key为空时，返回一个长度为0的列表；
     return htmlFilesConfig.computeIfAbsent(key, k -&gt; new ArrayList&lt;&gt;());
 }
 </code></pre>
-<h5 id="hidp-heading-8">2、创建文章分页html</h5>
+<h4 id="hidp-heading-8">2、创建文章分页html</h4>
 <pre><code class="language-java">private void createIndexHtml() {
     // 略...
     for (long i=1; i&lt;=articlePages; i++) {
@@ -431,14 +431,28 @@ class LastModifiedFileFilter implements IOFileFilter {
                     </div>
                 </article>
                 <div class="comment-wrap">
-                        <div class="t-a close">评论区已关闭</div>
+                        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+                        <script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+                        <div id="gitalk-container"></div>
+                        <script>
+                            const gitalk = new Gitalk({
+                                clientID: 'ae1422e500a8b19fb1fc',
+                                clientSecret: '9f387db6a84a4945cdf5dc743c16ce25fdef6b76',
+                                repo: 'github-pages',      // The repository of store comments,
+                                owner: 'xxzhiwei',
+                                admin: ['xxzhiwei'],
+                                id: location.pathname,      // Ensure uniqueness and length less than 50
+                                distractionFreeMode: false  // Facebook-like distraction free mode
+                            });
+                            gitalk.render('gitalk-container');
+                        </script>
                 </div>
             </div>
         </div>
     </div>
     <div class="back">返回</div>
 </div>
-    <script src="../js/dataList.js"></script>
+    <script src="../js/data.js"></script>
     <script src="../js/lazy.js"></script>
     <script src="../js/search.js"></script>
     <script src="../js/menu.js"></script>
