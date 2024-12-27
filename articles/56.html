@@ -84,19 +84,17 @@
                     return result;
                 }
             }
-
             headerEleVisibleHandler = throttleWrapper(headerEleVisibleHandler, { timeout: 200 });
-
             window.addEventListener("scroll", headerEleVisibleHandler);
         });
     </script>
         <meta name="keywords" content="nextcloud,私人网盘,php,apache">
+        <meta name="description" content="nextcloud的折腾&体验；或许很多人没有过手机存储动不动就“红温”的经历，由于空间较小，不敢安装/存放过多的应用和数据，每一次安装/下载还必须要事先腾出些位置，否则根本装不下，这本身倒不是什么问题，关键在于卸载/删除这个节点上，有时令我很难受...">
     <link rel="stylesheet" href="../css/article.css">
     <link rel="stylesheet" href="../css/markdown/github-markdown.css">
     <link rel="stylesheet" href="../css/markdown/github-markdown-light.css">
     <link rel="stylesheet" href="../css/gittalk-cover.css">
-    <link rel="stylesheet"
-          href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
     <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
     <script>hljs.highlightAll();</script>
 </head>
@@ -104,7 +102,7 @@
 <div id="app">
     <div id="header">
     <div id="bar">
-        <div class="container mg-0-auto d-f">
+        <div class="container mg-0-auto d-f pos-r">
             <div class="logo">
                 <a href="../" class="nav-link" style="margin-right: 10px;">
                     <img src="../image/portal/logo.jpg" alt="小埃的个人博客">
@@ -150,17 +148,45 @@
                     </svg>
                 </div>
             </div>
+            <div id="sd-box">
+                <div class="wrapper">
+                        <div class="side-card b-s-1 mg-b-10">
+                            <div class="wrapper">
+                                <h2 class="item title">
+                                    <span>相关文章</span>
+                                </h2>
+                                <div class="item content">
+                                        <div class="item1 ">
+                                            <a href="../articles/64.html">
+                                                    为NC的图片和视频添加缩略图功能
+                                            </a>
+                                        </div>
+                                        <div class="item1 ">
+                                            <a href="../articles/58.html">
+                                                    nextcloud安卓的折腾
+                                            </a>
+                                        </div>
+                                        <div class="item1 ">
+                                            <a href="../articles/57.html">
+                                                    nextcloud插件的折腾
+                                            </a>
+                                        </div>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+            </div>
         </div>
     </div>
     </div>
     <div id="main">
         <div class="container mg-0-auto pd-t-10">
-            <div class="left">
+            <div class="wrapper">
                 <article class="mg-b-20">
                     <div class="markdown-body">
                         <div class="title">nextcloud的折腾&体验</div>
                         <div class="item meta mg-b-10">
-                            <span class="author">由<a href="javascript:void(0);">errol</a>发表于<a href="#">2023-12-23 06:23:17</a></span>
+                            <span class="author">由<a href="javascript:void(0);">errol</a>发表于<a href="#">2023-12-23</a></span>
                             <span>|</span>
                             <span class="time">
                             分类为
@@ -171,7 +197,7 @@
                             </span>
                         </div>
                             <div class="cover mg-b-10">
-                                <img src="../image/portal/202312/7369d36a1e4f43988782bc9db84a2783-QKpV5wCh.png" alt="">
+                                <img src="../image/portal/202312/7369d36a1e4f43988782bc9db84a2783-QKpV5wCh.png?project=easyblog" alt="">
                             </div>
                         <div class="content">
                             <p>或许很多人没有过手机存储动不动就“红温”的经历，由于空间较小，不敢安装/存放过多的应用和数据，每一次安装/下载还必须要事先腾出些位置，否则根本装不下，这本身倒不是什么问题，关键在于卸载/删除这个节点上，有时令我很难受，不知道要移除哪些东西，总觉得每一个都有用，每一个都想保留，纠结一旦开始，就根本停不下来。</p>
@@ -182,16 +208,16 @@
 <p>（搭建参照了<a href="https://cynosure.online/2021/08/16/%E6%A0%91%E8%8E%93%E6%B4%BE%E6%90%AD%E5%BB%BANextcloud%E7%A7%81%E6%9C%89%E4%BA%91/">这篇文章</a>）</p>
 <p>其实这个过程也不算复杂，可以简单地概括为：1）安装php环境，2）部署nextcloud。</p>
 <p>目前是图个方便，开启apache服务，将nextcloud丢了进去；外网环境还是使用内网穿透，通过nginx来转发到apache中（可以考虑直接使用nginx部署，这样更好些）。</p>
-<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202312/f675a03973894837bfcdec908b3d4a90-457A4713FDC36AC3CE8D17685E02841A.jpg" /></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202312/f675a03973894837bfcdec908b3d4a90-457A4713FDC36AC3CE8D17685E02841A.jpg?project=easyblog" /></p>
 <p><em>图1 安卓端</em></p>
 <p>事实上ios也是有对应的app，只是对系统版本有要求，但为一个应用特地升级系统是不可能的，到时手机不得废了。</p>
-<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202312/5a10b4426dd741a0b1ce5b5df046dca2-0DE0C071C85027748DDF4347D66EAB14.jpg" /></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202312/5a10b4426dd741a0b1ce5b5df046dca2-0DE0C071C85027748DDF4347D66EAB14.jpg?project=easyblog" /></p>
 <p><em>图2 web端</em></p>
 <p>其中我感觉最方便的就是同步功能，它允许本地文件夹与nextcloud进行同步，以及实时保存功能，支持将应用中的文件直接保存至nextcloud中，这很大程度上解决了我手机存储空间不足的问题。</p>
-<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202312/79b74c373ac34e8c950392569c9d860b-EF45180858C93263B8C2EF0CB66876FC.jpg" /></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202312/79b74c373ac34e8c950392569c9d860b-EF45180858C93263B8C2EF0CB66876FC.jpg?project=easyblog" /></p>
 <p><em>图3 文件夹同步功能</em></p>
 <p>速度也不错，按我的使用情况来看，一般在6-8m/s之间，峰值可以达到10m/s，如果网络顺畅的话，几乎可以跑满，比xx盘强了不是一点半点...</p>
-<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202312/0e43d2f8d4b748f383196a603d5548aa-8E3810B29C19FA27FD34808675FCD4C1.jpg" /></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202312/0e43d2f8d4b748f383196a603d5548aa-8E3810B29C19FA27FD34808675FCD4C1.jpg?project=easyblog" /></p>
 <p><em>图4 下载</em></p>
 <p>而至于nextcloud存储空间，则是根据部署服务器的硬盘来决定的，并不是说它只有截图所示这点存储空间（用于部署的树莓派所使用的tf卡，只有64g），理论上没有限制。</p>
 <p>但需要注意，以上的使用体验都是在内网中进行的，在外网使用的话（即使用内网穿透映射），效果就没那么好了，究其原因，是由于白嫖来的内网穿透带宽只有1Mbps，换算成上传/下载速度约为128kb/s...</p>
@@ -227,29 +253,15 @@
                         </script>
                 </div>
             </div>
-            <div class="right">
-                    <div class="side-card b-s-1 mg-b-10">
-                        <div class="wrapper">
-                            <h2 class="item title">相关文章</h2>
-                            <div class="item content">
-                                    <div class="item1">
-                                        <a href="../articles/57.html">nextcloud插件的折腾</a>
-                                    </div>
-                                    <div class="item1">
-                                        <a href="../articles/58.html">nextcloud安卓的折腾</a>
-                                    </div>
-                            </div>
-                        </div>
-                    </div>
-            </div>
         </div>
     </div>
     <div class="back">返回</div>
 </div>
-    <script src="../js/dataList.js"></script>
+    <script src="../js/data.js"></script>
     <script src="../js/lazy.js"></script>
     <script src="../js/search.js"></script>
     <script src="../js/menu.js"></script>
+<script src="../js/toc.js"></script>
 <script>
     let back = document.querySelector(".back");
     back.addEventListener("click", function () {

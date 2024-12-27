@@ -84,19 +84,17 @@
                     return result;
                 }
             }
-
             headerEleVisibleHandler = throttleWrapper(headerEleVisibleHandler, { timeout: 200 });
-
             window.addEventListener("scroll", headerEleVisibleHandler);
         });
     </script>
         <meta name="keywords" content="java,打包,没有主清单属性,MANIFEST.MF">
+        <meta name="description" content="关于运行jar时，报“没有主清单属性”的问题；主要是因为jar中“缺少MANIFEST.MF文件”或者是“MANIFEST.MF文件中未包含有主类的路径”，补充完善MANIFEST.MF文件后就能正常运行...">
     <link rel="stylesheet" href="../css/article.css">
     <link rel="stylesheet" href="../css/markdown/github-markdown.css">
     <link rel="stylesheet" href="../css/markdown/github-markdown-light.css">
     <link rel="stylesheet" href="../css/gittalk-cover.css">
-    <link rel="stylesheet"
-          href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
     <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
     <script>hljs.highlightAll();</script>
 </head>
@@ -104,7 +102,7 @@
 <div id="app">
     <div id="header">
     <div id="bar">
-        <div class="container mg-0-auto d-f">
+        <div class="container mg-0-auto d-f pos-r">
             <div class="logo">
                 <a href="../" class="nav-link" style="margin-right: 10px;">
                     <img src="../image/portal/logo.jpg" alt="小埃的个人博客">
@@ -150,17 +148,40 @@
                     </svg>
                 </div>
             </div>
+            <div id="sd-box">
+                <div class="wrapper">
+                        <div class="side-card b-s-1 mg-b-10">
+                            <div class="wrapper">
+                                <h2 class="item title">
+                                    <span>相关文章</span>
+                                </h2>
+                                <div class="item content">
+                                        <div class="item1 ">
+                                            <a href="../articles/71.html">
+                                                    记录一次打包静态站点资源的优化
+                                            </a>
+                                        </div>
+                                        <div class="item1 ">
+                                            <a href="../articles/40.html">
+                                                    探究MultipartResolver的运行原理
+                                            </a>
+                                        </div>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+            </div>
         </div>
     </div>
     </div>
     <div id="main">
         <div class="container mg-0-auto pd-t-10">
-            <div class="left">
+            <div class="wrapper">
                 <article class="mg-b-20">
                     <div class="markdown-body">
                         <div class="title">关于运行jar时，报“没有主清单属性”的问题</div>
                         <div class="item meta mg-b-10">
-                            <span class="author">由<a href="javascript:void(0);">errol</a>发表于<a href="#">2023-10-05 04:20:47</a></span>
+                            <span class="author">由<a href="javascript:void(0);">errol</a>发表于<a href="#">2023-10-05</a></span>
                             <span>|</span>
                             <span class="time">
                             分类为
@@ -224,14 +245,14 @@ Main-Class: com.xxx.xxx.Application
 <p>3）使用idea生成MANIFEST.MF文件</p>
 <p>（此处为macos，windows应该也是类似的）</p>
 <p>第一步：菜单栏 -&gt; File -&gt; Project Structure</p>
-<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202310/18e0b50fdd6c4379ac93b55a3c5abb89-04658B093BE4699911D68DD95F170318.jpg" /></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202310/18e0b50fdd6c4379ac93b55a3c5abb89-04658B093BE4699911D68DD95F170318.jpg?project=easyblog" /></p>
 <p>第二步：Project Settings -&gt; Artifacts -&gt; “+”</p>
-<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202310/a0d7ac35d4de40329ac654d98976080d-640880426E5FA3D81314C5BDF1098450.jpg" /></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202310/a0d7ac35d4de40329ac654d98976080d-640880426E5FA3D81314C5BDF1098450.jpg?project=easyblog" /></p>
 <p>第三步：JAR -&gt; From modules with dependencies</p>
-<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202310/979780998af94d14bd641570026bb657-FAE3E5FA160A8975895AFB4F82DE8FE6.jpg" /></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202310/979780998af94d14bd641570026bb657-FAE3E5FA160A8975895AFB4F82DE8FE6.jpg?project=easyblog" /></p>
 <p>第四步：填写主类以及MANIFEST.MF文件生成的位置</p>
 <p>点击Main Class右侧的菜单图标选择主类；MANIFEST.MF文件生成的位置选择项目的src目录下即可，填写完毕后点击ok。</p>
-<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202310/a91e9f0d531a47d8be1b9161a5c34dc7-3B9EA4D85F8CFE38852EAFF21BECD21A_2.png" /></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202310/a91e9f0d531a47d8be1b9161a5c34dc7-3B9EA4D85F8CFE38852EAFF21BECD21A_2.png?project=easyblog" /></p>
 <p>在完成了以上的操作后，打包为jar时，里面应该就含有MANIFEST.MF文件以及主类的路径了。</p>
 <p><strong>2、打包后（不推荐）</strong></p>
 <p>通过第一点也不难看出，其实MANIFEST.MF是一个很简单的配置文件，自己创建并添加至jar，或修改jar里面的MANIFEST.MF文件也是可以的。</p>
@@ -261,26 +282,15 @@ Main-Class: com.xxx.xxx.Application
                         </script>
                 </div>
             </div>
-            <div class="right">
-                    <div class="side-card b-s-1 mg-b-10">
-                        <div class="wrapper">
-                            <h2 class="item title">相关文章</h2>
-                            <div class="item content">
-                                    <div class="item1">
-                                        <a href="../articles/40.html">探究MultipartResolver的运行原理</a>
-                                    </div>
-                            </div>
-                        </div>
-                    </div>
-            </div>
         </div>
     </div>
     <div class="back">返回</div>
 </div>
-    <script src="../js/dataList.js"></script>
+    <script src="../js/data.js"></script>
     <script src="../js/lazy.js"></script>
     <script src="../js/search.js"></script>
     <script src="../js/menu.js"></script>
+<script src="../js/toc.js"></script>
 <script>
     let back = document.querySelector(".back");
     back.addEventListener("click", function () {

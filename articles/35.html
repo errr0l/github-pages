@@ -84,19 +84,17 @@
                     return result;
                 }
             }
-
             headerEleVisibleHandler = throttleWrapper(headerEleVisibleHandler, { timeout: 200 });
-
             window.addEventListener("scroll", headerEleVisibleHandler);
         });
     </script>
         <meta name="keywords" content="树形结构数据,设计与实现,通用接口">
+        <meta name="description" content="树形结构数据工具类的设计与实现；树形结构数据是一种比较常见的数据格式，主要作为前端树形、级联等控件的数据源，以更清晰、更美观大方地展示数据之间的层次或所属关系，如常常用于表示"权限/菜单"、"分类"、"地区/区域"、"公司部门"等具有隶属关系的信息。">
     <link rel="stylesheet" href="../css/article.css">
     <link rel="stylesheet" href="../css/markdown/github-markdown.css">
     <link rel="stylesheet" href="../css/markdown/github-markdown-light.css">
     <link rel="stylesheet" href="../css/gittalk-cover.css">
-    <link rel="stylesheet"
-          href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
     <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
     <script>hljs.highlightAll();</script>
 </head>
@@ -104,7 +102,7 @@
 <div id="app">
     <div id="header">
     <div id="bar">
-        <div class="container mg-0-auto d-f">
+        <div class="container mg-0-auto d-f pos-r">
             <div class="logo">
                 <a href="../" class="nav-link" style="margin-right: 10px;">
                     <img src="../image/portal/logo.jpg" alt="小埃的个人博客">
@@ -150,17 +148,21 @@
                     </svg>
                 </div>
             </div>
+            <div id="sd-box">
+                <div class="wrapper">
+                </div>
+            </div>
         </div>
     </div>
     </div>
     <div id="main">
         <div class="container mg-0-auto pd-t-10">
-            <div class="left">
+            <div class="wrapper">
                 <article class="mg-b-20">
                     <div class="markdown-body">
                         <div class="title">树形结构数据工具类的设计与实现</div>
                         <div class="item meta mg-b-10">
-                            <span class="author">由<a href="javascript:void(0);">errol</a>发表于<a href="#">2023-06-27 04:22:43</a></span>
+                            <span class="author">由<a href="javascript:void(0);">errol</a>发表于<a href="#">2023-06-27</a></span>
                             <span>|</span>
                             <span class="time">
                             分类为
@@ -172,9 +174,9 @@
                         </div>
                         <div class="content">
                             <p>树形结构数据是一种比较常见的数据格式，主要作为前端树形、级联等控件的数据源，以更清晰、更美观大方地展示数据之间的层次或所属关系，如常常用于表示&quot;权限/菜单&quot;、&quot;分类&quot;、&quot;地区/区域&quot;、&quot;公司部门&quot;等具有隶属关系的信息。</p>
-<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202306/56a7c3cb464745968cb5de1804ff0c9c-D479211871E282822984D1DC5A455E0C.jpg" /></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202306/56a7c3cb464745968cb5de1804ff0c9c-D479211871E282822984D1DC5A455E0C.jpg?project=easyblog" /></p>
 <p><em>图1 级联选择器</em></p>
-<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202306/530614e3815f462c837fecd8ef436869-1AF581EB508FF945E225AEDCA0232687.jpg" /></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202306/530614e3815f462c837fecd8ef436869-1AF581EB508FF945E225AEDCA0232687.jpg?project=easyblog" /></p>
 <p><em>图2 树形控件</em></p>
 <p>组件所使用的数据，即树形结构数据，主要是以下面的格式出现，其中我们称数据中的每个对象为&quot;节点&quot;，按照隶属关系，还可以分为两种类型，一种是父节点，另一种是子节点。有一种父节点更为特殊，由于它处于最顶部，没有父节点，我们常称其为&quot;根节点&quot;；&quot;children&quot;被称为当前节点的&quot;子节点&quot;。</p>
 <pre><code class="language-json">[
@@ -195,7 +197,7 @@
 ]
 </code></pre>
 <p>不过，一般情况下，数据库或其他方式不会直接存储这种具有层次关系的数据，数据往往都以扁平的形式存在，仅通过某个字段属性来表示它们之间的关系（如上面所示的parent_id属性），一方面是为了更容易查询，另一方面是为了让存储数据更通用、更容易操作。</p>
-<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202306/d43f939cded04f42ba1bd963881185c6-8870DE2C3403E4F4AB8F7BF0E32D763A.jpg" /></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202306/d43f939cded04f42ba1bd963881185c6-8870DE2C3403E4F4AB8F7BF0E32D763A.jpg?project=easyblog" /></p>
 <p><em>图3 存储在数据库中的商品分类数据</em></p>
 <p><strong>所以实际上，这种格式的数据，是需要专门编写方法或函数来生成的，这也正是本篇文章的主题所在。</strong></p>
 <p>作者有在网上查找过很多实现的方案，但由于大家的思维个性、编程风格不同，具体的落地实现也不同，堪称五花八门、各显神通... 有的写得比较复杂，让人难以理解；有的虽然写得简单，但有些地方显得很累赘；还有的就是调用特别复杂。</p>
@@ -205,7 +207,7 @@
 </blockquote>
 <p><strong>我想要的是一个更通用、更简单的实现方案。</strong></p>
 <p>因此，以上查询结果并不符合我的需求，于是决定自己手动编写。<del>（在考虑到并不难实现之后...）</del></p>
-<h3>一、定义类</h3>
+<h3 id="hidp-heading-0">一、定义类</h3>
 <p>以下将生成树形结构数据的类声明为&quot;TreeMaker&quot;，这个类只对外暴露一个&quot;make&quot;方法，调用这个方法后，传入的数据就能转为树形结构格式数据。</p>
 <pre><code class="language-java">public class TreeMaker {
     public static &lt;T extends TreeNode&lt;T&gt;&gt; List&lt;T&gt; make(List&lt;T&gt; list) {
@@ -217,7 +219,7 @@
     }
 }
 </code></pre>
-<h3>二、准备接口</h3>
+<h3 id="hidp-heading-1">二、准备接口</h3>
 <p>想要具有通用性，接口是必要的。</p>
 <p>首先要准备的是TreeNode接口，这个接口接收一个泛型参数T，参数对应的正是实际的数据类型，所有想要使用本生成树形结构数据方法的数据类型，都必须要实现该接口。</p>
 <pre><code class="language-java">public interface TreeNode&lt;T&gt; {
@@ -233,8 +235,8 @@
 <li>setChildren(List&lt;T&gt; children)：为节点设置children子节点。</li>
 </ul>
 <p>实现的逻辑需要根据实际的数据类型而定。</p>
-<h3>三、编写TreeMaker类方法的逻辑</h3>
-<h4>1、make方法</h4>
+<h3 id="hidp-heading-2">三、编写TreeMaker类方法的逻辑</h3>
+<h4 id="hidp-heading-3">1、make方法</h4>
 <pre><code class="language-java">public static &lt;T extends TreeNode&lt;T&gt;&gt; List&lt;T&gt; make(List&lt;T&gt; list) {
     if (list == null || list.size() == 0) {
         return new ArrayList&lt;&gt;();
@@ -255,7 +257,7 @@
     return rootNodes;
 }
 </code></pre>
-<h4>2、makeChildren</h4>
+<h4 id="hidp-heading-4">2、makeChildren</h4>
 <pre><code class="language-java">private static &lt;T extends TreeNode&lt;T&gt;&gt; List&lt;T&gt; makeChildren(T parent, List&lt;T&gt; list, List&lt;T&gt; toRemove) {
 
     List&lt;T&gt; children = new ArrayList&lt;&gt;();
@@ -276,11 +278,11 @@
     return null;
 }
 </code></pre>
-<h3>四、使用TreeMaker</h3>
+<h3 id="hidp-heading-5">四、使用TreeMaker</h3>
 <p>本篇文章的<a href="https://github.com/xxzhiwei/demo/tree/main/treeMaker-demo">demo</a>放在这里，需要的读者自行下载。</p>
 <p>在完成了以上的逻辑后，整个生成树形结构数据的方案也宣告完成了，但在使用TreeMaker之前，还差最后一步。</p>
 <p>其实前面也有提到过，<strong>想要使用TreeMaker的数据类型，必须要实现TreeNode接口。</strong></p>
-<h4>1、实现TreeNode接口</h4>
+<h4 id="hidp-heading-6">1、实现TreeNode接口</h4>
 <p>下面的测试数据TestNode类型为例，该类型判断为&quot;根节点&quot;的逻辑比较简单，如果&quot;parentId&quot;属性为null，则认定其为根节点；而如果判断某个节点的&quot;parentId&quot;与当前节点的&quot;id&quot;相同，则会认定传入的节点为当前节点的子节点。</p>
 <pre><code class="language-java">public class TestNode implements TreeMaker.TreeNode&lt;TestNode&gt; {
     // ... 省略
@@ -323,7 +325,7 @@
     }
 }
 </code></pre>
-<h4>2、准备测试类、测试数据和测试方法</h4>
+<h4 id="hidp-heading-7">2、准备测试类、测试数据和测试方法</h4>
 <pre><code class="language-java">public class Test {
     public static void main(String[] args) {
         example1();
@@ -453,9 +455,9 @@
 }
 </code></pre>
 <p>执行测试类的入口方法后，将会得到以下的数据。</p>
-<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202306/f2985a66f6714bdcb4e1be8c7ebba2a8-257E814066EEAFF865E8D07FCC67A1BF.png" /></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202306/f2985a66f6714bdcb4e1be8c7ebba2a8-257E814066EEAFF865E8D07FCC67A1BF.png?project=easyblog" /></p>
 <p><em>图4 结果1</em></p>
-<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202306/6acf667150ae4012bf0459fbb41c39f3-42E80EB9-090F-4B94-8EBA-48F19B2506E9.png" /></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202306/6acf667150ae4012bf0459fbb41c39f3-42E80EB9-090F-4B94-8EBA-48F19B2506E9.png?project=easyblog" /></p>
 <p><em>图5 结果2</em></p>
 <hr />
 <p>至此，本篇文章也进入尾声了。</p>
@@ -484,16 +486,15 @@
                         </script>
                 </div>
             </div>
-            <div class="right">
-            </div>
         </div>
     </div>
     <div class="back">返回</div>
 </div>
-    <script src="../js/dataList.js"></script>
+    <script src="../js/data.js"></script>
     <script src="../js/lazy.js"></script>
     <script src="../js/search.js"></script>
     <script src="../js/menu.js"></script>
+<script src="../js/toc.js"></script>
 <script>
     let back = document.querySelector(".back");
     back.addEventListener("click", function () {

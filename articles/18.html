@@ -84,19 +84,17 @@
                     return result;
                 }
             }
-
             headerEleVisibleHandler = throttleWrapper(headerEleVisibleHandler, { timeout: 200 });
-
             window.addEventListener("scroll", headerEleVisibleHandler);
         });
     </script>
         <meta name="keywords" content="猪队友,游戏,血压升高">
+        <meta name="description" content="玩游戏时血压是这么上来的；但他们还是会穿梭于各种游戏之间，用撇脚的操作水平，不断地拖团队的后腿，坑己方队友；有的是从不考虑团队配合，甚至是打乱其他人的游戏节奏，跟队友唱反调，非常蛮横无理；有的则是动不动就摆烂挂机...">
     <link rel="stylesheet" href="../css/article.css">
     <link rel="stylesheet" href="../css/markdown/github-markdown.css">
     <link rel="stylesheet" href="../css/markdown/github-markdown-light.css">
     <link rel="stylesheet" href="../css/gittalk-cover.css">
-    <link rel="stylesheet"
-          href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
     <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
     <script>hljs.highlightAll();</script>
 </head>
@@ -104,7 +102,7 @@
 <div id="app">
     <div id="header">
     <div id="bar">
-        <div class="container mg-0-auto d-f">
+        <div class="container mg-0-auto d-f pos-r">
             <div class="logo">
                 <a href="../" class="nav-link" style="margin-right: 10px;">
                     <img src="../image/portal/logo.jpg" alt="小埃的个人博客">
@@ -150,17 +148,45 @@
                     </svg>
                 </div>
             </div>
+            <div id="sd-box">
+                <div class="wrapper">
+                        <div class="side-card b-s-1 mg-b-10">
+                            <div class="wrapper">
+                                <h2 class="item title">
+                                    <span>相关文章</span>
+                                </h2>
+                                <div class="item content">
+                                        <div class="item1 ">
+                                            <a href="../articles/49.html">
+                                                    pqt退出（切换）游戏账号的解决方案
+                                            </a>
+                                        </div>
+                                        <div class="item1 ">
+                                            <a href="../articles/30.html">
+                                                    “游戏账号已被拉入黑名单”
+                                            </a>
+                                        </div>
+                                        <div class="item1 ">
+                                            <a href="../articles/24.html">
+                                                    普通玩家如何获取更多的PvP奖励
+                                            </a>
+                                        </div>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+            </div>
         </div>
     </div>
     </div>
     <div id="main">
         <div class="container mg-0-auto pd-t-10">
-            <div class="left">
+            <div class="wrapper">
                 <article class="mg-b-20">
                     <div class="markdown-body">
                         <div class="title">玩游戏时血压是这么上来的</div>
                         <div class="item meta mg-b-10">
-                            <span class="author">由<a href="javascript:void(0);">errol</a>发表于<a href="#">2023-04-14 03:40:38</a></span>
+                            <span class="author">由<a href="javascript:void(0);">errol</a>发表于<a href="#">2023-04-14</a></span>
                             <span>|</span>
                             <span class="time">
                             分类为
@@ -171,7 +197,7 @@
                             </span>
                         </div>
                             <div class="cover mg-b-10">
-                                <img src="../image/portal/202304/cover/d1047e0690044b3cab37b87f646a2486-images.jpeg" alt="">
+                                <img src="../image/portal/202304/cover/d1047e0690044b3cab37b87f646a2486-images.jpeg?project=easyblog" alt="">
                             </div>
                         <div class="content">
                             <p>玩游戏本应该是一件很开心、享受的事情，<strong>但有那么一种人，总会时不时来破坏你的游戏体验，让你的血压上升，不得安宁，他们就是被称为“猪队友”的群体</strong>。</p>
@@ -220,32 +246,15 @@
                         </script>
                 </div>
             </div>
-            <div class="right">
-                    <div class="side-card b-s-1 mg-b-10">
-                        <div class="wrapper">
-                            <h2 class="item title">相关文章</h2>
-                            <div class="item content">
-                                    <div class="item1">
-                                        <a href="../articles/24.html">普通玩家如何获取更多的PvP奖励</a>
-                                    </div>
-                                    <div class="item1">
-                                        <a href="../articles/30.html">“游戏账号已被拉入黑名单”</a>
-                                    </div>
-                                    <div class="item1">
-                                        <a href="../articles/49.html">pqt退出（切换）游戏账号的解决方案</a>
-                                    </div>
-                            </div>
-                        </div>
-                    </div>
-            </div>
         </div>
     </div>
     <div class="back">返回</div>
 </div>
-    <script src="../js/dataList.js"></script>
+    <script src="../js/data.js"></script>
     <script src="../js/lazy.js"></script>
     <script src="../js/search.js"></script>
     <script src="../js/menu.js"></script>
+<script src="../js/toc.js"></script>
 <script>
     let back = document.querySelector(".back");
     back.addEventListener("click", function () {

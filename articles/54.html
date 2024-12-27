@@ -84,19 +84,17 @@
                     return result;
                 }
             }
-
             headerEleVisibleHandler = throttleWrapper(headerEleVisibleHandler, { timeout: 200 });
-
             window.addEventListener("scroll", headerEleVisibleHandler);
         });
     </script>
         <meta name="keywords" content="商场,支付">
+        <meta name="description" content="关于个人支付；商城项目已经接近尾声（？），只差最后的支付功能，不过由于并没有真正接触过支付的领域，不知道从什么方面入手，很苦恼。明明已经触手可及，却怎么也够不着，这种心情真的难以形容...">
     <link rel="stylesheet" href="../css/article.css">
     <link rel="stylesheet" href="../css/markdown/github-markdown.css">
     <link rel="stylesheet" href="../css/markdown/github-markdown-light.css">
     <link rel="stylesheet" href="../css/gittalk-cover.css">
-    <link rel="stylesheet"
-          href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
     <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
     <script>hljs.highlightAll();</script>
 </head>
@@ -104,7 +102,7 @@
 <div id="app">
     <div id="header">
     <div id="bar">
-        <div class="container mg-0-auto d-f">
+        <div class="container mg-0-auto d-f pos-r">
             <div class="logo">
                 <a href="../" class="nav-link" style="margin-right: 10px;">
                     <img src="../image/portal/logo.jpg" alt="小埃的个人博客">
@@ -150,17 +148,21 @@
                     </svg>
                 </div>
             </div>
+            <div id="sd-box">
+                <div class="wrapper">
+                </div>
+            </div>
         </div>
     </div>
     </div>
     <div id="main">
         <div class="container mg-0-auto pd-t-10">
-            <div class="left">
+            <div class="wrapper">
                 <article class="mg-b-20">
                     <div class="markdown-body">
                         <div class="title">关于个人支付</div>
                         <div class="item meta mg-b-10">
-                            <span class="author">由<a href="javascript:void(0);">errol</a>发表于<a href="#">2023-11-04 03:12:09</a></span>
+                            <span class="author">由<a href="javascript:void(0);">errol</a>发表于<a href="#">2023-11-04</a></span>
                             <span>|</span>
                             <span class="time">
                             分类为
@@ -225,16 +227,15 @@
                         </script>
                 </div>
             </div>
-            <div class="right">
-            </div>
         </div>
     </div>
     <div class="back">返回</div>
 </div>
-    <script src="../js/dataList.js"></script>
+    <script src="../js/data.js"></script>
     <script src="../js/lazy.js"></script>
     <script src="../js/search.js"></script>
     <script src="../js/menu.js"></script>
+<script src="../js/toc.js"></script>
 <script>
     let back = document.querySelector(".back");
     back.addEventListener("click", function () {

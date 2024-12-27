@@ -84,19 +84,17 @@
                     return result;
                 }
             }
-
             headerEleVisibleHandler = throttleWrapper(headerEleVisibleHandler, { timeout: 200 });
-
             window.addEventListener("scroll", headerEleVisibleHandler);
         });
     </script>
         <meta name="keywords" content="树莓派,文件服务器,fastdfs,nginx">
+        <meta name="description" content="树莓派搭建文件服务器（二）：安装fastdfs及其依赖的基础软件；突然想起来还有这样的一个坑没填，上次的装机篇不知道已经过去多久了... 本文会接着树莓派装机篇完成剩下的内容，概览如下：首先安装fastdfs以及其相关模块，然后安装nginx，最后安装内网穿透软件...">
     <link rel="stylesheet" href="../css/article.css">
     <link rel="stylesheet" href="../css/markdown/github-markdown.css">
     <link rel="stylesheet" href="../css/markdown/github-markdown-light.css">
     <link rel="stylesheet" href="../css/gittalk-cover.css">
-    <link rel="stylesheet"
-          href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
     <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
     <script>hljs.highlightAll();</script>
 </head>
@@ -104,7 +102,7 @@
 <div id="app">
     <div id="header">
     <div id="bar">
-        <div class="container mg-0-auto d-f">
+        <div class="container mg-0-auto d-f pos-r">
             <div class="logo">
                 <a href="../" class="nav-link" style="margin-right: 10px;">
                     <img src="../image/portal/logo.jpg" alt="小埃的个人博客">
@@ -150,17 +148,35 @@
                     </svg>
                 </div>
             </div>
+            <div id="sd-box">
+                <div class="wrapper">
+                        <div class="side-card b-s-1 mg-b-10">
+                            <div class="wrapper">
+                                <h2 class="item title">
+                                    <span>相关文章</span>
+                                </h2>
+                                <div class="item content">
+                                        <div class="item1 ">
+                                            <a href="../articles/42.html">
+                                                    树莓派搭建文件服务器（一）：装机
+                                            </a>
+                                        </div>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+            </div>
         </div>
     </div>
     </div>
     <div id="main">
         <div class="container mg-0-auto pd-t-10">
-            <div class="left">
+            <div class="wrapper">
                 <article class="mg-b-20">
                     <div class="markdown-body">
                         <div class="title">树莓派搭建文件服务器（二）：安装fastdfs及其依赖的基础软件</div>
                         <div class="item meta mg-b-10">
-                            <span class="author">由<a href="javascript:void(0);">errol</a>发表于<a href="#">2023-09-23 05:14:37</a></span>
+                            <span class="author">由<a href="javascript:void(0);">errol</a>发表于<a href="#">2023-09-23</a></span>
                             <span>|</span>
                             <span class="time">
                             分类为
@@ -176,7 +192,7 @@
 <p>首先安装fastdfs以及其相关模块，然后安装nginx，最后安装内网穿透软件。</p>
 <p>fastdfs是文件服务器的核心基础这点不用多说，提供了文件存储&amp;同步&amp;访问等功能，nginx作为与外界建立连接的服务器，而内网穿透使得文件服务器可以通过公网进行访问。</p>
 <p>在完成安装之后，就可以拥有一个属于自己的小型文件服务器了。一般情况下，fastdfs适合存储大小为4kb-500MB的单文件，超过该范围之后则需要做适配处理，如做分片存储。虽然比不了市面上那些同类型应用系统，但也足够个人使用（主要是开源）。</p>
-<h3>一、安装fastdfs及其相关模块</h3>
+<h3 id="hidp-heading-0">一、安装fastdfs及其相关模块</h3>
 <p>先下载几个需要的软件包：<a href="https://github.com/happyfish100/fastdfs/archive/refs/tags/V6.9.5.tar.gz">fastdfs-6.9.5</a>、<a href="https://github.com/happyfish100/libfastcommon/archive/refs/tags/V1.0.69.tar.gz">libfastcommon-1.0.69、</a><a href="https://github.com/happyfish100/libserverframe/archive/refs/tags/V1.1.29.tar.gz">libserverframe-1.1.29</a>。</p>
 <p>其中要注意的是，软件最好下载与本文相同的版本，否则安装过程中可能会出错。</p>
 <p>0、安装c++运行环境，以及其他的依赖</p>
@@ -288,7 +304,7 @@ echo 123 &gt; test.txt
 
 # 输出类似'/group1/M00/00/00/...'的信息表示成功
 </code></pre>
-<h3>二、安装nginx及其相关模块</h3>
+<h3 id="hidp-heading-1">二、安装nginx及其相关模块</h3>
 <p>目前虽然已经具备了上传和存储文件的功能，但还没有提供给外部访问这些文件的途径，所以现在需要一个服务器读取文件并传输出去，此处的职责由nginx承担。</p>
 <p>1、安装<a href="https://nginx.org/download/nginx-1.24.0.tar.gz">nginx</a>和<a href="https://github.com/happyfish100/fastdfs-nginx-module/archive/refs/tags/V1.23.tar.gz">fastdfs-nginx-module</a>模块</p>
 <pre><code class="language-bash">cp /home/errol/nginx-1.24.0.tar.gz /usr/local
@@ -339,12 +355,12 @@ url_have_group_name = true # 在当前版本下，默认值为false，及url中�
 <pre><code class="language-bash">/usr/local/nginx-1.24.0/sbin/nginx
 </code></pre>
 <p>在浏览器打开树莓派的ip地址，不出意外的话，应该可以看到nginx的默认页面。</p>
-<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202309/52abaa7810c24b0d8e8b519a04f661ff-image-20230923104746868.png" /></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202309/52abaa7810c24b0d8e8b519a04f661ff-image-20230923104746868.png?project=easyblog" /></p>
 <p><em>图1 nginx默认显示页面</em></p>
 <p>此时可以在ip地址后加上先前上传文件时返回的路径信息：'/group1/M00/00/00/wKgDH2UKwl-ASsN6AAAABFqC_Qg190.txt'，可以看到已经可以成功访问文件了。</p>
-<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202309/80ecad2e1f8c4365982072194c445209-77CE803057C60581541112F935544942.png" /></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202309/80ecad2e1f8c4365982072194c445209-77CE803057C60581541112F935544942.png?project=easyblog" /></p>
 <p><em>图2 访问test.txt文件</em></p>
-<h3>三、安装内网穿透软件</h3>
+<h3 id="hidp-heading-2">三、安装内网穿透软件</h3>
 <p>到目前为此，已经可以通过在外部浏览器访问树莓派中存储的文件了，但这仅限于局域网内，而不能通过外部网络进行访问，这就是需要内外穿透的原因。</p>
 <p>内网穿透软件有很多，比较常见的如花生壳、ngrok、frp等，但综合之下，作者选用了神卓互联。</p>
 <p>由于神桌互联提供了<a href="https://www.shenzhuohl.com/ArticleAction?num=16877648022412992&amp;up=1">完整的安装过程</a>，下面会尽量简化。</p>
@@ -366,7 +382,7 @@ mv /home/errol/client shenzhuo/
 <pre><code class="language-bash">./client [神桌互联账号] [密码]
 </code></pre>
 <p>在这之后，就可以通过神桌互联提供的地址访问文件了（可能会有一定的延迟）。</p>
-<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202309/ef727acf83794c2382d29a34aeb992b3-7F7A8A409173016D7FA5502A9B9147E3.jpg" /></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202309/ef727acf83794c2382d29a34aeb992b3-7F7A8A409173016D7FA5502A9B9147E3.jpg?project=easyblog" /></p>
 <p><em>图3 通过映射地址（公网）访问文件</em></p>
 <hr />
 <p>至此，关于使用树莓派搭建文件服务器的篇章就告一段落了。</p>
@@ -394,26 +410,15 @@ mv /home/errol/client shenzhuo/
                         </script>
                 </div>
             </div>
-            <div class="right">
-                    <div class="side-card b-s-1 mg-b-10">
-                        <div class="wrapper">
-                            <h2 class="item title">相关文章</h2>
-                            <div class="item content">
-                                    <div class="item1">
-                                        <a href="../articles/42.html">树莓派搭建文件服务器（一）：装机</a>
-                                    </div>
-                            </div>
-                        </div>
-                    </div>
-            </div>
         </div>
     </div>
     <div class="back">返回</div>
 </div>
-    <script src="../js/dataList.js"></script>
+    <script src="../js/data.js"></script>
     <script src="../js/lazy.js"></script>
     <script src="../js/search.js"></script>
     <script src="../js/menu.js"></script>
+<script src="../js/toc.js"></script>
 <script>
     let back = document.querySelector(".back");
     back.addEventListener("click", function () {

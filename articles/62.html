@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>pqt退出（切换）游戏账号的解决方案 - 小埃的个人博客</title>
+    <title>新一年的计划 - 小埃的个人博客</title>
     <link rel="stylesheet" href="../css/reset.css">
     <link rel="stylesheet" href="../css/base.css">
     <link rel="stylesheet" href="../css/index.css">
@@ -88,8 +88,8 @@
             window.addEventListener("scroll", headerEleVisibleHandler);
         });
     </script>
-        <meta name="keywords" content="pqt,游戏,策划发病">
-        <meta name="description" content="pqt退出（切换）游戏账号的解决方案；说真的，一个游戏策划，没个十年脑血栓，想不出把“游戏的退出账号功能移除”这件事... 这个功能之前本来是有的，玩家也用得没问题，一切都正常。然而，在某一个版本中，不知道是哪个小聪明策划发了大病，把它移除了，也就导致了现在的这种状况：玩家无法正常退出游戏账号...">
+        <meta name="keywords" content="爬虫,计划">
+        <meta name="description" content="新一年的计划；自上次做完签到程序之后，突然觉得爬虫挺更好玩了，这种自动化的小东西真令人上瘾...">
     <link rel="stylesheet" href="../css/article.css">
     <link rel="stylesheet" href="../css/markdown/github-markdown.css">
     <link rel="stylesheet" href="../css/markdown/github-markdown-light.css">
@@ -157,33 +157,28 @@
                                 </h2>
                                 <div class="item content">
                                         <div class="item1 ">
-                                            <a href="../articles/51.html">
-                                                    pqt活动文本提取器重构
+                                            <a href="../articles/69.html">
+                                                    某云滑动认证码逆向
+                                            </a>
+                                        </div>
+                                        <div class="item1 ">
+                                            <a href="../articles/65.html">
+                                                    一种可能可行的滑动认证码处理方案
+                                            </a>
+                                        </div>
+                                        <div class="item1 ">
+                                            <a href="../articles/60.html">
+                                                    nutaku自动签到程序实现
+                                            </a>
+                                        </div>
+                                        <div class="item1 ">
+                                            <a href="../articles/59.html">
+                                                    nutaku自动签到程序计划
                                             </a>
                                         </div>
                                         <div class="item1 ">
                                             <a href="../articles/45.html">
                                                     pqt活动文本提取小结
-                                            </a>
-                                        </div>
-                                        <div class="item1 ">
-                                            <a href="../articles/30.html">
-                                                    “游戏账号已被拉入黑名单”
-                                            </a>
-                                        </div>
-                                        <div class="item1 ">
-                                            <a href="../articles/29.html">
-                                                    PQT激励奖励“风波”
-                                            </a>
-                                        </div>
-                                        <div class="item1 ">
-                                            <a href="../articles/24.html">
-                                                    普通玩家如何获取更多的PvP奖励
-                                            </a>
-                                        </div>
-                                        <div class="item1 ">
-                                            <a href="../articles/18.html">
-                                                    玩游戏时血压是这么上来的
                                             </a>
                                         </div>
                                 </div>
@@ -199,86 +194,38 @@
             <div class="wrapper">
                 <article class="mg-b-20">
                     <div class="markdown-body">
-                        <div class="title">pqt退出（切换）游戏账号的解决方案</div>
+                        <div class="title">新一年的计划</div>
                         <div class="item meta mg-b-10">
-                            <span class="author">由<a href="javascript:void(0);">errol</a>发表于<a href="#">2023-09-10</a></span>
+                            <span class="author">由<a href="javascript:void(0);">errol</a>发表于<a href="#">2024-01-29</a></span>
                             <span>|</span>
                             <span class="time">
                             分类为
-                            <a href="../categories/3.html">游戏</a></span>
+                            <a href="../categories/6.html">随说</a></span>
                             <span>|</span>
                             <span class="tags">
-                                标签为<a href="javascript:void(0);">pqt</a>、<a href="javascript:void(0);">游戏</a>、<a href="javascript:void(0);">策划发病</a>
+                                标签为<a href="javascript:void(0);">爬虫</a>、<a href="javascript:void(0);">计划</a>
                             </span>
                         </div>
                         <div class="content">
-                            <p>说真的，一个游戏策划，没个十年脑血栓，想不出把“游戏的退出账号功能移除”这件事...</p>
-<p>这个功能之前本来是有的，玩家也用得没问题，一切都正常。然而，在某一个版本中，不知道是哪个小聪明策划发了大病，把它移除了，也就导致了现在的这种状况：玩家无法正常退出游戏账号...</p>
-<p>是的，现在游戏界面上连个登出的按钮都没有。</p>
-<blockquote>
-<p>策划难道是在致敬刀剑神域么？</p>
-</blockquote>
-<p>在这之后，当有玩家需要退出或切换游戏账号时，不得不跑来群里询问，虽然也可以得到相应的答复，但是算不上好用。</p>
-<p>比如，有的人给出了删除游戏数据的方案，这种方式虽然可以达成退出账号的目的，同时也把很多必要的游戏数据删除了，导致再次登录游戏的时候，需要下载海量的内容；有的人则更极端，直接把游戏卸载重装...</p>
-<p>这两种方式可以说是“杀敌一千自损八百”，是下下策；而且如果是想要切换账号的话，还很可能会失败。枉费了大把时间精力，进入游戏后发现还是原来的账号，我想这一定会让人抓狂的吧...</p>
-<p>出于以上的原因，在此总结了一个比较简单的退出游戏账号方案。</p>
-<h3 id="hidp-heading-0">一、账号授权认证的基本流程</h3>
-<p>首先来梳理一下账号授权认证的基本流程：</p>
-<p>1）通过某个地址，输入账号密码进行登录</p>
-<p>2）后续为了避免重复登陆，还会缓存授权认证信息，该信息在指定的时间内一直有效</p>
-<p>此外，由于pqt采用的是第三方授权机制，所以还有一部分缓存数据：如果账号已经在网页中登录了的情况下，从游戏跳转到浏览器时，就会使用当前账号进行登录游戏，这就是前面所说的切换账号可能会失败的原因。</p>
-<p>要处理这个问题也不难，只要在跳转登录前，事先在网页中退出账号就行了。（到此一共提及了两种账号，一种是网站账号，另一种是游戏账号。严格一点说，pqt是没有“账号”这个概念的，pqt只是通过网站账号进行授权进入游戏）</p>
-<h3 id="hidp-heading-1">二、退出游戏账号</h3>
-<p>一般情况下，所谓的退出游戏，无非就是把授权认证信息删除了而已。</p>
-<p>因此，思路也浮现了出来：只要把设备上的&quot;某些文件&quot;删除，就可以达到退出游戏账号的目的。</p>
-<p>遗憾的是，这些文件保存在应用的内部存储空间中，没有root权限无法进行查看或操作（作者已经亲自看过了）。</p>
-<p>当然，也并不是说，只有经过root的手机才能退出账号，未获得root权限的手机也可以达到类似的效果。</p>
-<p>因此，退出游戏账号分为以下两种情况，请玩家读者自行判断情况，然后查看对应的内容部分。</p>
-<h4 id="hidp-heading-2">1、有root权限</h4>
-<p>在已获取到root权限的情况下，将授权文件删除后，进入游戏时，将会弹出需要登陆的对话框，点击下方的按钮在浏览器打开网址（需要挂梯子），输入账号密码并完成登陆后，可以跳回游戏，大致的流程就是这样。</p>
-<p>（由于作者的手机并没有root过，这里使用了虚拟机作为演示）</p>
-<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202309/646b5800047e4dc9afd0da7d0b1bfa05-71E2A473D42E58120F8FA9337EB10654.jpg?project=easyblog" /></p>
-<p><em>图1 告知需登陆对话框</em></p>
-<p>授权文件的位置在：</p>
-<blockquote>
-<p>/data/user/0/com.ignite.qt/files 或者 /data/data/com.ignite.qt/files</p>
-</blockquote>
-<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202309/4bae1a6006214e75a50ac4453bb7a735-570C71D735E8CFDAA4CF983A2A0844BC.jpg?project=easyblog" /></p>
-<p><em>图2 授权文件存储路径</em></p>
-<p><strong>将红圈框住的文件删除后，可令游戏弹出上述的对话框。</strong></p>
-<p>请进行如下步骤：</p>
-<p>1）删除授权文件</p>
-<p>2）点击弹窗下方的'RE-LAUNCH BROWSER LOGIN'按钮</p>
-<p>3）在网页中完成账号登录</p>
-<p>还是在这里多提一嘴：如果先前已经在网页登录了账号时，需要在打开网页前把该账号登出，否则就会以该账号进行登录游戏。</p>
-<h4 id="hidp-heading-3">2、无root权限</h4>
-<p>虽然无法做到如具有root权限那样，进行物理删除退出当前账号，但也可以通过一定的手段来达到相同的目的（指切换账号）。</p>
-<p>简单的来说，是利用了断网进入游戏时，会弹出一个对话框卡住游戏界面，此时可以打开对应的网址，在网页上完成登陆后，会跳回游戏（流程跟上面是一样的），这样就可以覆盖原来的授权数据，即完成了切换账号。</p>
-<p>此前，我们需要准备一个url路径：</p>
-<blockquote>
-<p>https://www.nutaku.net/login/?prompt=consent&amp;scheme=com.ignite.qt&amp;appId=54470</p>
-</blockquote>
-<p>这个路径其实也就是游戏需要登陆时跳转的路径（在1中演示过），该路径是固定的。</p>
-<p>随后进行如下步骤：</p>
-<p>1）断网</p>
-<p>2）打开游戏</p>
-<p>2.5）重新连接网络...</p>
-<p>3）打开浏览器，并输入上面列出的网址</p>
-<p>4）在网页中完成账号登录</p>
-<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202309/fcd0527ff1904973a4207b7d8207fb25-83B443B2A0DF8D3A195C46B62D0558B5.jpg?project=easyblog" /></p>
-<p><em>图3 游戏无网络的对话框</em></p>
-<p>完成上述的步骤后，已经成功切换账号了。</p>
-<p>另外，当前方式还有一种比较便利的用法：可以在不同的浏览器中登录不同的账号，需要切换账号时，使用对应的浏览器打开授权网址就可以完成切换账号了，免去“退出已登陆账号”、“登陆当前账号”的步骤，有时甚至都不用打开梯子，这也是我现在使用的方式。</p>
-<p>账号不多的话，可以这样使用，而如果账号较多的话，还是按部就班地进行吧，毕竟没有那么多的浏览器可供使用...</p>
-<p>附上一个切换账号的<a href="https://pan.baidu.com/s/1e6VS71sFnmpoIRdPt4Kw8g?pwd=g6bu">操作视频</a>，视频中，作者使用chrome浏览器登录了另一个账号。</p>
-<blockquote>
-<p>https://pan.baidu.com/s/1e6VS71sFnmpoIRdPt4Kw8g?pwd=g6bu</p>
-</blockquote>
-<hr />
-<p>除此之外，如果玩家读者使用pc进行游玩的话，还有一种比较便利的方案：采用（虚拟机&amp;模拟器）多开机制，每个进程对应一个账号，从而避免了退出【切换】账号的场景，这种方式也是比较好的。</p>
-<p>这个游戏的策划就是这样，时不时会发病，都习以为常了。优化、平衡游戏不见他们去做，恶心玩家倒是挺有一手的，不要脸也得有个限度。</p>
-<p>不过，好在还能找到代替的方案，并且操作也谈不上复杂，只需要根据情况，按照步骤动动小手就可以。</p>
-<p>以上。</p>
+                            <p>自上次做完签到程序之后，突然觉得爬虫挺更好玩了，这种自动化的小东西真令人上瘾...</p>
+<p>（那玩意儿已经帮助小群里的几位群友解放了双手，目前打算等稳定一些后，再传到大群给更多人使用）</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202401/c0b3ee2032064de8ab42b851e2944298-29BD939C34232A804215D72121ED0443.jpg?project=easyblog" /></p>
+<p><em>图1 其中一位群友如是说</em></p>
+<p>而我也是使用该程序完成了本月的签到活动，金币自动入账的感觉真好。。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202401/bfd56838cd3741449b92a783711ea160-300137B3CAF6A6DD1934DBAEA10233D0.png?project=easyblog" /></p>
+<p><em>图2 “大满贯”</em></p>
+<p>通过编写程序，而不是浏览器这种“正规手段”获取数据有一种莫名的爽快感，<strong>除了足够高效以外，还可以把数据“占为己有”，将其二次加工后作对外提供服务。</strong></p>
+<p>如“b站番剧爬虫”，“b站视频评论爬虫”，“b站用户动态爬虫”，“微博热搜爬虫”、“pixivxx爬虫”、“推特xx爬虫”等等。</p>
+<p>在现在这个数据信息时代，有一些属于自己的资源也很不错，如果以后想做点什么，其中需要的数据，可能就是某个爬虫所抓取的数据，这样一来就很方便，不再需要为缺少数据而烦恼。</p>
+<p>本应该是这样的，但实际上要复杂一些...</p>
+<p>由于爬虫之间都是相互独立的，即每个爬虫都是一个独立的项目，都需要做单独的维护和部署，而当数量堆积起来之后，没有统一管理的手段，这个过程会显得非常麻烦，一想到到要维护十几，几十，甚至上百个分散的爬虫就觉得头大，更何况爬虫经常会发生变动；同时也无法有效管理抓取的数据。</p>
+<p><strong>因此，最近有搭建“爬虫平台”的打算。</strong></p>
+<p>平台以爬虫为基础，负责统一的调度和管理，如爬虫的上线部署、日常活动监控等，还有最重要的数据管理，如以爬虫作为单位对外提供数据接口服务。</p>
+<p>这样一来就解决了上述的问题。</p>
+<p>不过，虽然想象很美好，现实却很残酷...</p>
+<p>这种类型的项目，别说教程，连项目都少得可怜，还基本都没人维护了... （挺纳闷的，这样的项目难道真的没意思，毫无吸引力吗？以至于找不到一套完整可用的方案？但从另一角度来说，可能是由于需求不明确，没什么人做吧，加上爬虫的不确定因素太多，人更少了）</p>
+<p>只能说，任重道远，除了慢慢摸索之外别无他法。</p>
+<p>当然，目前的首要任务还是加强爬虫功底，不然到时连数据都抓不到，爬虫平台根本就是痴心妄想。</p>
 
                         </div>
                     </div>

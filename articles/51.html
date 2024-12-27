@@ -84,19 +84,17 @@
                     return result;
                 }
             }
-
             headerEleVisibleHandler = throttleWrapper(headerEleVisibleHandler, { timeout: 200 });
-
             window.addEventListener("scroll", headerEleVisibleHandler);
         });
     </script>
         <meta name="keywords" content="pqt,重构">
+        <meta name="description" content="pqt活动文本提取器重构；这两天把pqt活动文本提取器进行重构了，理由也很简单，纯粹就是程序不好使... 就跟前面说的那样，程序的启动极其复杂、笨重，必须要人力干预，用肉眼查看、搜索定位“锚点”，还要保证其唯一性，否则根本无法运行，真的给“程序”这个词蒙羞了...">
     <link rel="stylesheet" href="../css/article.css">
     <link rel="stylesheet" href="../css/markdown/github-markdown.css">
     <link rel="stylesheet" href="../css/markdown/github-markdown-light.css">
     <link rel="stylesheet" href="../css/gittalk-cover.css">
-    <link rel="stylesheet"
-          href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
     <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
     <script>hljs.highlightAll();</script>
 </head>
@@ -104,7 +102,7 @@
 <div id="app">
     <div id="header">
     <div id="bar">
-        <div class="container mg-0-auto d-f">
+        <div class="container mg-0-auto d-f pos-r">
             <div class="logo">
                 <a href="../" class="nav-link" style="margin-right: 10px;">
                     <img src="../image/portal/logo.jpg" alt="小埃的个人博客">
@@ -150,17 +148,45 @@
                     </svg>
                 </div>
             </div>
+            <div id="sd-box">
+                <div class="wrapper">
+                        <div class="side-card b-s-1 mg-b-10">
+                            <div class="wrapper">
+                                <h2 class="item title">
+                                    <span>相关文章</span>
+                                </h2>
+                                <div class="item content">
+                                        <div class="item1 ">
+                                            <a href="../articles/49.html">
+                                                    pqt退出（切换）游戏账号的解决方案
+                                            </a>
+                                        </div>
+                                        <div class="item1 ">
+                                            <a href="../articles/45.html">
+                                                    pqt活动文本提取小结
+                                            </a>
+                                        </div>
+                                        <div class="item1 ">
+                                            <a href="../articles/29.html">
+                                                    PQT激励奖励“风波”
+                                            </a>
+                                        </div>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+            </div>
         </div>
     </div>
     </div>
     <div id="main">
         <div class="container mg-0-auto pd-t-10">
-            <div class="left">
+            <div class="wrapper">
                 <article class="mg-b-20">
                     <div class="markdown-body">
                         <div class="title">pqt活动文本提取器重构</div>
                         <div class="item meta mg-b-10">
-                            <span class="author">由<a href="javascript:void(0);">errol</a>发表于<a href="#">2023-10-04 12:33:51</a></span>
+                            <span class="author">由<a href="javascript:void(0);">errol</a>发表于<a href="#">2023-10-04</a></span>
                             <span>|</span>
                             <span class="time">
                             分类为
@@ -178,7 +204,7 @@
 <p>回头看了一眼代码，确实能感觉到很烂，根本就没个样，总觉得下一秒就会散架，简陋到爆炸，当时确实没有考虑到程序设计问题，写得很随意，怎么快怎么来，只想着赶紧得到结果。</p>
 <p>现在一想到这是一堆啰里八嗦、毫无编程思想可言的东西，就对出现的这种情况感到释怀了，有时甚至觉得它之前能正常运行都是件不可思议的事情...</p>
 <p>以上就是本次重构的前提，目前工作已经完成了个七七八八，下面大致介绍一下主要的改动以及思路。</p>
-<h3>一、改动&amp;思路</h3>
+<h3 id="hidp-heading-0">一、改动&amp;思路</h3>
 <p>相较于先前的版本，本次注重的是代码设计，更多地考虑拓展性、可维护性、易用性。</p>
 <p>在代码层面，全面采用面向对象编程思想，并对程序输入进行了配置化，达到了减少冗余和动静分离的效果。</p>
 <p>在逻辑判断方面，为程序重新寻找了锚点：起始锚点均采用了角色通用的标识，如角色id、角色名称，而结尾锚点则采用了固定点位，这是可配置化的基础。</p>
@@ -284,7 +310,7 @@ public interface FileResolver extends Resolver&lt;String, StringBuilder&gt; {
     StringBuilder resolve(String filePath);
 }
 </code></pre>
-<h3>二、项目结构</h3>
+<h3 id="hidp-heading-1">二、项目结构</h3>
 <p>在介绍了主要的改动和设计思路后，再来了解项目的构成。（其实主要是配置文件）</p>
 <p>除了filter和handler两个包是翻译器（translator）专用的之外，其他的包&amp;文件，活动处理器（ActivityProcessor）均有直接或间接使用到。</p>
 <pre><code class="language-bash">└── main
@@ -399,13 +425,13 @@ talkingPosition.starting=[第一句对白]
 talkingPosition.ending=timeslot_type,timeslot_detail
 </code></pre>
 <p>玩家用户需要做的是，正确地填写配置信息，然后运行程序，程序会根据这两种配置文件来输出不同的结果。</p>
-<h3>三、小结</h3>
+<h3 id="hidp-heading-2">三、小结</h3>
 <p>程序在重构之后，已经从原来的“脚本代码”升级为“小程序”了，面向对象、接口、抽象、配置、反射等概念贯穿于整个项目，把变化与不变抽取分离，使得程序具有一定的可维护性与拓展性，用法也比之前简单得多。</p>
 <p>打包丢给别人使用也是可以的，除了目录文件的路径之外，其他没有变化。当然，肯定还需要jre环境，不然无法运行。</p>
-<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202310/9a74dc67382f4a7b84101d39d7cafb2b-image-20231004110506064.png" /></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202310/9a74dc67382f4a7b84101d39d7cafb2b-image-20231004110506064.png?project=easyblog" /></p>
 <p><em>图1 打包后程序的目录结构</em></p>
 <p>总的来说，这个程序已经基本符合<a href="https://xxzhiwei.github.io/github-pages/articles/37.html">当初的设想</a>了。</p>
-<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202310/7965b2b5760d46358c4074cfd4d216be-image-20231004113246878.png" /></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202310/7965b2b5760d46358c4074cfd4d216be-image-20231004113246878.png?project=easyblog" /></p>
 <p><em>图2 之前一篇文章中的片段</em></p>
 <p>目前程序的稳定性也还算可以，已经测试了好几个角色，均能得到正确的结果，相信只要数据源文件的结构不发生变动，程序就能正常运行下去。关于这一点，之前也有提到过，就跟web爬虫一样，如果目标网站的html结构有变化，原来的抓取逻辑就不再生效，需要重新编码，这是不可抗拒的因素。</p>
 <p>所以我希望它永远都不要变动...</p>
@@ -435,35 +461,15 @@ talkingPosition.ending=timeslot_type,timeslot_detail
                         </script>
                 </div>
             </div>
-            <div class="right">
-                    <div class="side-card b-s-1 mg-b-10">
-                        <div class="wrapper">
-                            <h2 class="item title">相关文章</h2>
-                            <div class="item content">
-                                    <div class="item1">
-                                        <a href="../articles/29.html">PQT激励奖励“风波”</a>
-                                    </div>
-                                    <div class="item1">
-                                        <a href="../articles/37.html">关于PQT活动文本提取器以及后期的计划安排</a>
-                                    </div>
-                                    <div class="item1">
-                                        <a href="../articles/45.html">pqt活动文本提取小结</a>
-                                    </div>
-                                    <div class="item1">
-                                        <a href="../articles/49.html">pqt退出（切换）游戏账号的解决方案</a>
-                                    </div>
-                            </div>
-                        </div>
-                    </div>
-            </div>
         </div>
     </div>
     <div class="back">返回</div>
 </div>
-    <script src="../js/dataList.js"></script>
+    <script src="../js/data.js"></script>
     <script src="../js/lazy.js"></script>
     <script src="../js/search.js"></script>
     <script src="../js/menu.js"></script>
+<script src="../js/toc.js"></script>
 <script>
     let back = document.querySelector(".back");
     back.addEventListener("click", function () {

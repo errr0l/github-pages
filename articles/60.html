@@ -84,19 +84,17 @@
                     return result;
                 }
             }
-
             headerEleVisibleHandler = throttleWrapper(headerEleVisibleHandler, { timeout: 200 });
-
             window.addEventListener("scroll", headerEleVisibleHandler);
         });
     </script>
         <meta name="keywords" content="nutaku,爬虫,python">
+        <meta name="description" content="nutaku自动签到程序实现；这两天花了点时间把n站金币活动自动签到脚本（初版）写出来了...">
     <link rel="stylesheet" href="../css/article.css">
     <link rel="stylesheet" href="../css/markdown/github-markdown.css">
     <link rel="stylesheet" href="../css/markdown/github-markdown-light.css">
     <link rel="stylesheet" href="../css/gittalk-cover.css">
-    <link rel="stylesheet"
-          href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
     <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
     <script>hljs.highlightAll();</script>
 </head>
@@ -104,7 +102,7 @@
 <div id="app">
     <div id="header">
     <div id="bar">
-        <div class="container mg-0-auto d-f">
+        <div class="container mg-0-auto d-f pos-r">
             <div class="logo">
                 <a href="../" class="nav-link" style="margin-right: 10px;">
                     <img src="../image/portal/logo.jpg" alt="小埃的个人博客">
@@ -150,17 +148,50 @@
                     </svg>
                 </div>
             </div>
+            <div id="sd-box">
+                <div class="wrapper">
+                        <div class="side-card b-s-1 mg-b-10">
+                            <div class="wrapper">
+                                <h2 class="item title">
+                                    <span>相关文章</span>
+                                </h2>
+                                <div class="item content">
+                                        <div class="item1 ">
+                                            <a href="../articles/65.html">
+                                                    一种可能可行的滑动认证码处理方案
+                                            </a>
+                                        </div>
+                                        <div class="item1 ">
+                                            <a href="../articles/69.html">
+                                                    某云滑动认证码逆向
+                                            </a>
+                                        </div>
+                                        <div class="item1 ">
+                                            <a href="../articles/62.html">
+                                                    新一年的计划
+                                            </a>
+                                        </div>
+                                        <div class="item1 ">
+                                            <a href="../articles/59.html">
+                                                    nutaku自动签到程序计划
+                                            </a>
+                                        </div>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+            </div>
         </div>
     </div>
     </div>
     <div id="main">
         <div class="container mg-0-auto pd-t-10">
-            <div class="left">
+            <div class="wrapper">
                 <article class="mg-b-20">
                     <div class="markdown-body">
                         <div class="title">nutaku自动签到程序实现</div>
                         <div class="item meta mg-b-10">
-                            <span class="author">由<a href="javascript:void(0);">errol</a>发表于<a href="#">2024-01-08 09:44:17</a></span>
+                            <span class="author">由<a href="javascript:void(0);">errol</a>发表于<a href="#">2024-01-08</a></span>
                             <span>|</span>
                             <span class="time">
                             分类为
@@ -172,13 +203,13 @@
                         </div>
                         <div class="content">
                             <p>这两天花了点时间把n站金币活动自动签到脚本（初版）写出来了，其运行效果如下。</p>
-<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202401/2631f40fac3d4e6cb0d32972c0088892-441327F2BB358D64AA823A595C5F475B.png" /></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202401/2631f40fac3d4e6cb0d32972c0088892-441327F2BB358D64AA823A595C5F475B.png?project=easyblog" /></p>
 <p><em>图1 macos下运行</em></p>
-<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202401/a9d8bbe68eaf45b6b4f0c377be34c741-2BE7C2F2BB9507FAB51D2D19E7D26FB5.png" /></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202401/a9d8bbe68eaf45b6b4f0c377be34c741-2BE7C2F2BB9507FAB51D2D19E7D26FB5.png?project=easyblog" /></p>
 <p><em>图2 windows下运行</em></p>
-<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202401/5b3bf6dd75ba4c02870c8380f3898668-36AD7152D92C9C88955138BF09BD432D.png" /></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202401/5b3bf6dd75ba4c02870c8380f3898668-36AD7152D92C9C88955138BF09BD432D.png?project=easyblog" /></p>
 <p><em>图3 unix可执行文件</em></p>
-<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202401/86ab64987f9e47b5aa9b02d3a301b81a-03E6E186F41A1C7548C4E91148301436.png" /></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202401/86ab64987f9e47b5aa9b02d3a301b81a-03E6E186F41A1C7548C4E91148301436.png?project=easyblog" /></p>
 <p><em>图4 windows可执行文件</em></p>
 <p>（稍微吐槽一下，由于打包工具不是跨平台的，所以得分别跑到对应的系统进行打包，有点麻烦。）</p>
 <p>可以简单概括它的业务：</p>
@@ -260,29 +291,15 @@ execution_mode=2
                         </script>
                 </div>
             </div>
-            <div class="right">
-                    <div class="side-card b-s-1 mg-b-10">
-                        <div class="wrapper">
-                            <h2 class="item title">相关文章</h2>
-                            <div class="item content">
-                                    <div class="item1">
-                                        <a href="../articles/59.html">nutaku自动签到程序计划</a>
-                                    </div>
-                                    <div class="item1">
-                                        <a href="../articles/62.html">新一年的计划</a>
-                                    </div>
-                            </div>
-                        </div>
-                    </div>
-            </div>
         </div>
     </div>
     <div class="back">返回</div>
 </div>
-    <script src="../js/dataList.js"></script>
+    <script src="../js/data.js"></script>
     <script src="../js/lazy.js"></script>
     <script src="../js/search.js"></script>
     <script src="../js/menu.js"></script>
+<script src="../js/toc.js"></script>
 <script>
     let back = document.querySelector(".back");
     back.addEventListener("click", function () {

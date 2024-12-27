@@ -84,19 +84,18 @@
                     return result;
                 }
             }
-
             headerEleVisibleHandler = throttleWrapper(headerEleVisibleHandler, { timeout: 200 });
-
             window.addEventListener("scroll", headerEleVisibleHandler);
         });
     </script>
         <meta name="keywords" content="计划,pqt,日常收菜">
+        <meta name="description" content="pqt活动文本提取小结；目前pqt的活动文本提取程序已经基本完成了...
+">
     <link rel="stylesheet" href="../css/article.css">
     <link rel="stylesheet" href="../css/markdown/github-markdown.css">
     <link rel="stylesheet" href="../css/markdown/github-markdown-light.css">
     <link rel="stylesheet" href="../css/gittalk-cover.css">
-    <link rel="stylesheet"
-          href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
     <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
     <script>hljs.highlightAll();</script>
 </head>
@@ -104,7 +103,7 @@
 <div id="app">
     <div id="header">
     <div id="bar">
-        <div class="container mg-0-auto d-f">
+        <div class="container mg-0-auto d-f pos-r">
             <div class="logo">
                 <a href="../" class="nav-link" style="margin-right: 10px;">
                     <img src="../image/portal/logo.jpg" alt="小埃的个人博客">
@@ -150,17 +149,55 @@
                     </svg>
                 </div>
             </div>
+            <div id="sd-box">
+                <div class="wrapper">
+                        <div class="side-card b-s-1 mg-b-10">
+                            <div class="wrapper">
+                                <h2 class="item title">
+                                    <span>相关文章</span>
+                                </h2>
+                                <div class="item content">
+                                        <div class="item1 ">
+                                            <a href="../articles/62.html">
+                                                    新一年的计划
+                                            </a>
+                                        </div>
+                                        <div class="item1 ">
+                                            <a href="../articles/59.html">
+                                                    nutaku自动签到程序计划
+                                            </a>
+                                        </div>
+                                        <div class="item1 ">
+                                            <a href="../articles/51.html">
+                                                    pqt活动文本提取器重构
+                                            </a>
+                                        </div>
+                                        <div class="item1 ">
+                                            <a href="../articles/49.html">
+                                                    pqt退出（切换）游戏账号的解决方案
+                                            </a>
+                                        </div>
+                                        <div class="item1 ">
+                                            <a href="../articles/29.html">
+                                                    PQT激励奖励“风波”
+                                            </a>
+                                        </div>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+            </div>
         </div>
     </div>
     </div>
     <div id="main">
         <div class="container mg-0-auto pd-t-10">
-            <div class="left">
+            <div class="wrapper">
                 <article class="mg-b-20">
                     <div class="markdown-body">
                         <div class="title">pqt活动文本提取小结</div>
                         <div class="item meta mg-b-10">
-                            <span class="author">由<a href="javascript:void(0);">errol</a>发表于<a href="#">2023-08-20 03:48:15</a></span>
+                            <span class="author">由<a href="javascript:void(0);">errol</a>发表于<a href="#">2023-08-20</a></span>
                             <span>|</span>
                             <span class="time">
                             分类为
@@ -204,38 +241,15 @@
                         </script>
                 </div>
             </div>
-            <div class="right">
-                    <div class="side-card b-s-1 mg-b-10">
-                        <div class="wrapper">
-                            <h2 class="item title">相关文章</h2>
-                            <div class="item content">
-                                    <div class="item1">
-                                        <a href="../articles/29.html">PQT激励奖励“风波”</a>
-                                    </div>
-                                    <div class="item1">
-                                        <a href="../articles/37.html">关于PQT活动文本提取器以及后期的计划安排</a>
-                                    </div>
-                                    <div class="item1">
-                                        <a href="../articles/49.html">pqt退出（切换）游戏账号的解决方案</a>
-                                    </div>
-                                    <div class="item1">
-                                        <a href="../articles/51.html">pqt活动文本提取器重构</a>
-                                    </div>
-                                    <div class="item1">
-                                        <a href="../articles/59.html">nutaku自动签到程序计划</a>
-                                    </div>
-                            </div>
-                        </div>
-                    </div>
-            </div>
         </div>
     </div>
     <div class="back">返回</div>
 </div>
-    <script src="../js/dataList.js"></script>
+    <script src="../js/data.js"></script>
     <script src="../js/lazy.js"></script>
     <script src="../js/search.js"></script>
     <script src="../js/menu.js"></script>
+<script src="../js/toc.js"></script>
 <script>
     let back = document.querySelector(".back");
     back.addEventListener("click", function () {

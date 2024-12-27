@@ -84,19 +84,17 @@
                     return result;
                 }
             }
-
             headerEleVisibleHandler = throttleWrapper(headerEleVisibleHandler, { timeout: 200 });
-
             window.addEventListener("scroll", headerEleVisibleHandler);
         });
     </script>
         <meta name="keywords" content="vue,提示保存,vue-router,页面刷新,关闭页面,js">
+        <meta name="description" content="为vue单页面应用添加提示保存功能；在实际的生产应用中，提示保存是一个非常普遍且有用的功能之一，可以有效避免在用户填写或修改数据信息之后因误操作而导致数据丢失的情况，如不小心点到返回按钮、关闭按钮、刷新按钮等等，尤其是在需要填写大量数据信息的场景...">
     <link rel="stylesheet" href="../css/article.css">
     <link rel="stylesheet" href="../css/markdown/github-markdown.css">
     <link rel="stylesheet" href="../css/markdown/github-markdown-light.css">
     <link rel="stylesheet" href="../css/gittalk-cover.css">
-    <link rel="stylesheet"
-          href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
     <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
     <script>hljs.highlightAll();</script>
 </head>
@@ -104,7 +102,7 @@
 <div id="app">
     <div id="header">
     <div id="bar">
-        <div class="container mg-0-auto d-f">
+        <div class="container mg-0-auto d-f pos-r">
             <div class="logo">
                 <a href="../" class="nav-link" style="margin-right: 10px;">
                     <img src="../image/portal/logo.jpg" alt="小埃的个人博客">
@@ -150,17 +148,55 @@
                     </svg>
                 </div>
             </div>
+            <div id="sd-box">
+                <div class="wrapper">
+                        <div class="side-card b-s-1 mg-b-10">
+                            <div class="wrapper">
+                                <h2 class="item title">
+                                    <span>相关文章</span>
+                                </h2>
+                                <div class="item content">
+                                        <div class="item1 ">
+                                            <a href="../articles/70.html">
+                                                    为静态站点添加目录功能
+                                            </a>
+                                        </div>
+                                        <div class="item1 ">
+                                            <a href="../articles/66.html">
+                                                    关于nodejs使用相对路径读取文件的问题
+                                            </a>
+                                        </div>
+                                        <div class="item1 ">
+                                            <a href="../articles/55.html">
+                                                    解耦在js中的应用
+                                            </a>
+                                        </div>
+                                        <div class="item1 ">
+                                            <a href="../articles/22.html">
+                                                    为静态站点添加搜索功能
+                                            </a>
+                                        </div>
+                                        <div class="item1 ">
+                                            <a href="../articles/15.html">
+                                                    兼容部署在Github Pages与其他服务器的应用引入资源的解决方案
+                                            </a>
+                                        </div>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+            </div>
         </div>
     </div>
     </div>
     <div id="main">
         <div class="container mg-0-auto pd-t-10">
-            <div class="left">
+            <div class="wrapper">
                 <article class="mg-b-20">
                     <div class="markdown-body">
                         <div class="title">为vue单页面应用添加提示保存功能</div>
                         <div class="item meta mg-b-10">
-                            <span class="author">由<a href="javascript:void(0);">errol</a>发表于<a href="#">2023-04-15 02:38:28</a></span>
+                            <span class="author">由<a href="javascript:void(0);">errol</a>发表于<a href="#">2023-04-15</a></span>
                             <span>|</span>
                             <span class="time">
                             分类为
@@ -193,7 +229,7 @@
 <p>守卫以钩子函数的形式出现，每种守卫的调用时机都不同：beforeRouteEnter是在进入路由组件之前（组件实例还没创建完成）调用，beforeRouteUpdate是在路由组件更新之前调用，<strong>最后的beforeRouteLeave则是在离开路由组件之前调用。</strong></p>
 <p>看起来可能会显得有一点复杂，<strong>但庆幸的是，提示保存功能仅仅需要用到其中的一个钩子函数：beforeRouteLeave。</strong></p>
 <p>下面开始着手实现这一功能。</p>
-<h2>给组件添加beforeRouteLeave钩子</h2>
+<h2 id="hidp-heading-0">给组件添加beforeRouteLeave钩子</h2>
 <p>为了更接近真实的应用场景，除了添加钩子内的逻辑外，还需要额外添加一些方法和数据，如表单字段、比较函数等。</p>
 <pre><code class="language-javascript">const defaultFormData = {
     id: &quot;&quot;,
@@ -246,13 +282,13 @@ export default {
 }
 </code></pre>
 <p>最后别忘了将属性绑在表单元素上。</p>
-<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202304/f13d0eb2c5814767a3f9e9394eeda573-d.png" /></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202304/f13d0eb2c5814767a3f9e9394eeda573-d.png?project=easyblog" /></p>
 <p>在编写了上述简单的代码后，我们已经成功实现了离开当前路由组件时提示保存的功能，
 由于填写了数据又没保存，所以点击返回时，应用弹出了提示对话框。</p>
-<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202304/0ca85b9f9e3c4c3cb6f6ac2c99ab4bbf-720C90F2B0798C32F40B1BB40649F3F4.jpg" /></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202304/0ca85b9f9e3c4c3cb6f6ac2c99ab4bbf-720C90F2B0798C32F40B1BB40649F3F4.jpg?project=easyblog" /></p>
 <p><strong>但有一点需要注意的地方。</strong></p>
 <p>插件的router.go(n)方法，类似于window.history.go(n)，是在浏览器的history记录中向前或者后退，并不经过vue-router。所以使用该方法返回上一个路由组件时，会出现钩子逻辑不能正常运行的现象，因此想要正常触发提示保存功能，就不能使用这个函数，可以使用push()或者replace()作为代替。</p>
-<h2>添加侦听器监听beforeunload事件</h2>
+<h2 id="hidp-heading-1">添加侦听器监听beforeunload事件</h2>
 <p>实际上，虽然我们已经实现了路由组件返回前的提示功能，但是以上的逻辑并不能应用于<strong>关闭浏览器标签页或刷新浏览器页面，这两种情况还需要做额外的处理</strong>，不过也不必担心，这部分逻辑也相当简单的，只需要往window对象添加一个侦听器监听beforeunload事件即可。</p>
 <p>该侦听器会在相应的时候，对以上两种情况进行拦截。</p>
 <pre><code class="language-javascript">export default {
@@ -280,11 +316,11 @@ export default {
 <blockquote>
 <p>未保存数据，点击刷新页面时的提示信息</p>
 </blockquote>
-<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202304/7d2b140e55c44c14b920fb47c64ce898-a.png" /></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202304/7d2b140e55c44c14b920fb47c64ce898-a.png?project=easyblog" /></p>
 <blockquote>
 <p>未保存数据，关闭标签页时的提示信息</p>
 </blockquote>
-<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202304/6822b988f6c4416f88de1ca9564e8429-c.png" /></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202304/6822b988f6c4416f88de1ca9564e8429-c.png?project=easyblog" /></p>
 <p>目前，我们已经为所有的情况添加了提示保存功能：离开当前路由组件、关闭标签页、刷新页面，原理和实现还是比较简单的，唯一要注意的是，检测数据是否发生改动的方法很可能会因项目而异，有的比较简单（如文中的示例），有的就比较复杂，可能是因为属性多，或者属性的结构复杂等等，这需要根据项目的实际的情况来实现该方法。</p>
 <p>此外，还可以考虑把以上的逻辑都抽为一个模块，随后在需要提示保存功能的地方引入相关的方法和数据即可，这样无论是从维护角度还是使用角度来说，都是比较方便的。</p>
 <p>以上就是本篇文章的全部内容，希望对你有所帮助。</p>
@@ -310,32 +346,15 @@ export default {
                         </script>
                 </div>
             </div>
-            <div class="right">
-                    <div class="side-card b-s-1 mg-b-10">
-                        <div class="wrapper">
-                            <h2 class="item title">相关文章</h2>
-                            <div class="item content">
-                                    <div class="item1">
-                                        <a href="../articles/15.html">兼容部署在Github Pages与其他服务器的应用引入资源的解决方案</a>
-                                    </div>
-                                    <div class="item1">
-                                        <a href="../articles/22.html">为静态站点添加搜索功能</a>
-                                    </div>
-                                    <div class="item1">
-                                        <a href="../articles/55.html">解耦在js中的应用</a>
-                                    </div>
-                            </div>
-                        </div>
-                    </div>
-            </div>
         </div>
     </div>
     <div class="back">返回</div>
 </div>
-    <script src="../js/dataList.js"></script>
+    <script src="../js/data.js"></script>
     <script src="../js/lazy.js"></script>
     <script src="../js/search.js"></script>
     <script src="../js/menu.js"></script>
+<script src="../js/toc.js"></script>
 <script>
     let back = document.querySelector(".back");
     back.addEventListener("click", function () {

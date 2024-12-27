@@ -84,19 +84,18 @@
                     return result;
                 }
             }
-
             headerEleVisibleHandler = throttleWrapper(headerEleVisibleHandler, { timeout: 200 });
-
             window.addEventListener("scroll", headerEleVisibleHandler);
         });
     </script>
         <meta name="keywords" content="静态站点,静态站点搜索,搜索功能,静态页面,html,js,css">
+        <meta name="description" content="为静态站点添加搜索功能；静态网页，指的是全部由html、css、js等文件组成的页面，一经发布出来，就已经不会再发生变化了（除非有人手动修改），静态网页是完全运行在客户端的。
+与之相对应的便是动态网页，这种网页即使在没有人修改过网页内容的情况下，也会随着用户、时间、地点等因素而返回不同的内容...">
     <link rel="stylesheet" href="../css/article.css">
     <link rel="stylesheet" href="../css/markdown/github-markdown.css">
     <link rel="stylesheet" href="../css/markdown/github-markdown-light.css">
     <link rel="stylesheet" href="../css/gittalk-cover.css">
-    <link rel="stylesheet"
-          href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
     <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
     <script>hljs.highlightAll();</script>
 </head>
@@ -104,7 +103,7 @@
 <div id="app">
     <div id="header">
     <div id="bar">
-        <div class="container mg-0-auto d-f">
+        <div class="container mg-0-auto d-f pos-r">
             <div class="logo">
                 <a href="../" class="nav-link" style="margin-right: 10px;">
                     <img src="../image/portal/logo.jpg" alt="小埃的个人博客">
@@ -150,17 +149,60 @@
                     </svg>
                 </div>
             </div>
+            <div id="sd-box">
+                <div class="wrapper">
+                        <div class="side-card b-s-1 mg-b-10">
+                            <div class="wrapper">
+                                <h2 class="item title">
+                                    <span>相关文章</span>
+                                </h2>
+                                <div class="item content">
+                                        <div class="item1 ">
+                                            <a href="../articles/70.html">
+                                                    为静态站点添加目录功能
+                                            </a>
+                                        </div>
+                                        <div class="item1 ">
+                                            <a href="../articles/71.html">
+                                                    记录一次打包静态站点资源的优化
+                                            </a>
+                                        </div>
+                                        <div class="item1 ">
+                                            <a href="../articles/66.html">
+                                                    关于nodejs使用相对路径读取文件的问题
+                                            </a>
+                                        </div>
+                                        <div class="item1 ">
+                                            <a href="../articles/55.html">
+                                                    解耦在js中的应用
+                                            </a>
+                                        </div>
+                                        <div class="item1 ">
+                                            <a href="../articles/19.html">
+                                                    为vue单页面应用添加提示保存功能
+                                            </a>
+                                        </div>
+                                        <div class="item1 ">
+                                            <a href="../articles/15.html">
+                                                    兼容部署在Github Pages与其他服务器的应用引入资源的解决方案
+                                            </a>
+                                        </div>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+            </div>
         </div>
     </div>
     </div>
     <div id="main">
         <div class="container mg-0-auto pd-t-10">
-            <div class="left">
+            <div class="wrapper">
                 <article class="mg-b-20">
                     <div class="markdown-body">
                         <div class="title">为静态站点添加搜索功能</div>
                         <div class="item meta mg-b-10">
-                            <span class="author">由<a href="javascript:void(0);">errol</a>发表于<a href="#">2023-04-21 09:22:10</a></span>
+                            <span class="author">由<a href="javascript:void(0);">errol</a>发表于<a href="#">2023-04-21</a></span>
                             <span>|</span>
                             <span class="time">
                             分类为
@@ -184,37 +226,37 @@
 <blockquote>
 <p><a href="https://iswbm.com/">WordPress</a></p>
 </blockquote>
-<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202304/0f22a70fbdeb4e72aa697eb95abfda81-507CAAE60640FDF345B99B205D6FA031.jpg" /></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202304/0f22a70fbdeb4e72aa697eb95abfda81-507CAAE60640FDF345B99B205D6FA031.jpg?project=easyblog" /></p>
 <blockquote>
 <p><a href="https://zkqiang.cn/">Hexo</a></p>
 </blockquote>
-<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202304/576002f2beec43159414b910c98eab24-13A25478D7716E39086E12C475A8EF96.jpg" /></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202304/576002f2beec43159414b910c98eab24-13A25478D7716E39086E12C475A8EF96.jpg?project=easyblog" /></p>
 <p>以上的搜索功能没有经过服务器数据库。</p>
 <p><del>虽然很想这么说，但是有多少人会信？</del></p>
 <p>举一个更直观的例子，如果使用Vue框架开发过项目的话，应该都接触过ElementUI这个经典的UI库，其中就包含了一些具有搜索功能的组件，如Select、Cascader、Input，虽然我们一般都是将这些组件配合API来异步获取&amp;渲染数据的，但实际上，即使没有API的支持，它也能够完成搜索功能，下面以Select组件为例。</p>
 <blockquote>
 <p>提供给组件的数据</p>
 </blockquote>
-<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202304/06e4221aae4048b4a7d9c69ec637117f-90F5C299D4BF61B229CFED9590B44BF2.jpg" /></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202304/06e4221aae4048b4a7d9c69ec637117f-90F5C299D4BF61B229CFED9590B44BF2.jpg?project=easyblog" /></p>
 <blockquote>
 <p>搜索数据</p>
 </blockquote>
-<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202304/9e579d2103be414ebc99c284ddedee1b-FBFB9D88BA6C9400C1EB9AB3FAD7DD53.jpg" /></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202304/9e579d2103be414ebc99c284ddedee1b-FBFB9D88BA6C9400C1EB9AB3FAD7DD53.jpg?project=easyblog" /></p>
 <p>这个组件的搜索功能，其实跟前面提到的WordPress、Hexo系统的文章搜索功能是类似的，都是通过匹配固定的数据来返回搜索结果，需要注意的是，这一过程中，并没有数据库的参与，所以，它们都属于“<strong>静态搜索</strong>”。</p>
 <p>现在我们应该了解到，静态搜索，<strong>就是把数据和搜索逻辑都放在前端，由前端来完成从输入关键字到返回数据的全搜索过程，这就是它的原理</strong>。</p>
 <p>其实无论静态搜索，还是动态搜索，都是通过某些算法来匹配数据返回搜索结果的，只不过是两者搜索逻辑的执行位置和数据存放位置不同而已。</p>
 <p>所以，要完成这个静态搜索功能，有两个地方需要我们去准备，它们分别是负责检索数据的逻辑和用于检索的数据。</p>
-<h2>实现搜索逻辑</h2>
+<h2 id="hidp-heading-0">实现搜索逻辑</h2>
 <p>根据上面所举的Select组件例子，我们很容易想到，这个功能应该要满足这样的需求：</p>
 <blockquote>
 <p>从搜索input表单中获取出文本，并将其和数据的某些字段匹配，如果匹配成功就把该条数据返回，最后将返回的数据渲染在搜索结果面板上。</p>
 </blockquote>
-<h3>首先准备需要的HTML结构</h3>
+<h3 id="hidp-heading-1">首先准备需要的HTML结构</h3>
 <p><del>样式就不贴了，可能每个人做出来的效果都不一样，能用就行。</del></p>
-<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202304/642396c9717b4dae8ff69c0e2019a483-1D377AE907ECEE228A07C4C6E0B6FFFA.jpg" /></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202304/642396c9717b4dae8ff69c0e2019a483-1D377AE907ECEE228A07C4C6E0B6FFFA.jpg?project=easyblog" /></p>
 <p>以下是渲染出来的效果。</p>
-<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202304/a2acbb0fe40748109ba90a5e2ed1c59a-6D57EA7C57CA50A358FC6E1764569959.jpg" /></p>
-<h3>定义搜索方法</h3>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202304/a2acbb0fe40748109ba90a5e2ed1c59a-6D57EA7C57CA50A358FC6E1764569959.jpg?project=easyblog" /></p>
+<h3 id="hidp-heading-2">定义搜索方法</h3>
 <p>此处的代码实现了一个简单的逻辑，即如果数据的title字段包含有输入的文本value的话，就将其返回。</p>
 <pre><code class="language-JavaScript">// 跟日常开发一样，我们可以先忽略后端的数据，随便编一些就好了。
 let dataList = [
@@ -248,7 +290,7 @@ function search(value) {
     return r;
 }
 </code></pre>
-<h3>定义渲染数据方法</h3>
+<h3 id="hidp-heading-3">定义渲染数据方法</h3>
 <p>在该方法中执行搜索方法，如果有数据返回，则将数据用字符串拼接为一个ul列表，并将其设置为dom节点ele的html内容，否则返回找不到数据的提示信息。</p>
 <pre><code class="language-js">let render = function(val, ele, ) {
     let list = search(val);
@@ -269,7 +311,7 @@ function search(value) {
     ele.innerHTML = html;
 }
 </code></pre>
-<h3>为input搜索框添加事件侦听器</h3>
+<h3 id="hidp-heading-4">为input搜索框添加事件侦听器</h3>
 <p>监听input输入事件和失去焦点事件，同时，为了尽可能地优化性能，我们还可以用防抖函数对主要函数进行包装，来处理频繁执行的问题。</p>
 <p>该侦听器主要的功能为，监听输入事件，并获取其中的文本，如果不为空，则执行渲染方法，并显示搜索结果面板，否则隐藏搜索结果面板。</p>
 <pre><code class="language-js">let searchInput = document.querySelector(&quot;#search-input&quot;);
@@ -304,7 +346,7 @@ searchInput.addEventListener('focus', wrap);
 </code></pre>
 <p>完成以上的代码后，基本的搜索功能已经实现了。</p>
 <p><del>上述的代码是连贯的，都在同一个文件内，按顺序摆放就行，分开只是为了让它们看起来更方便</del></p>
-<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202304/a77b19a42c004cc5b6561caefeaa38c6-4BE7AE00CFF5B426DCE6293351CFD1D2.jpg" /></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202304/a77b19a42c004cc5b6561caefeaa38c6-4BE7AE00CFF5B426DCE6293351CFD1D2.jpg?project=easyblog" /></p>
 <p><strong>此外我们还可以为匹配命中的字符添加高亮效果</strong>，将搜索逻辑部分代码修改如下。</p>
 <pre><code class="language-js">function search(value) {
     let r = [];
@@ -327,12 +369,12 @@ searchInput.addEventListener('focus', wrap);
 }
 </code></pre>
 <p>查看运行效果。</p>
-<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202304/ed9e011f869348f08d2c05417bdf6d43-9F3F4B1CE5F06C1A595A01CC23F71CFA.jpg" /></p>
-<h2>只差最后一步</h2>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202304/ed9e011f869348f08d2c05417bdf6d43-9F3F4B1CE5F06C1A595A01CC23F71CFA.jpg?project=easyblog" /></p>
+<h2 id="hidp-heading-5">只差最后一步</h2>
 <p>完成以上的代码编写后，只差准备数据这一步了。</p>
 <p>这一步是异常简单的，你甚至可以不用写逻辑代码，自己手动输入一份格式正确的数据（即包含标题等信息，上述的例子中只用到了title这一字段），或者也可以像我一样，把从数据库查询出来的记录按照正确的格式直接写进一个js文件里，然后再通过script标签加载，相当的简单粗暴。</p>
 <p>数据库查询的记录如下。</p>
-<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202304/55ae8e2c7202426eac1cab606febc431-730FDC93-BD0A-434F-AD1B-197105D81AB4.png" /></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202304/55ae8e2c7202426eac1cab606febc431-730FDC93-BD0A-434F-AD1B-197105D81AB4.png?project=easyblog" /></p>
 <p><del>这里使用的是java语言，其他语言也是类似的，其他语言请自行实现</del></p>
 <pre><code class="language-java">private void writeDataListToJsFile(List&lt;Article&gt; articleList) {
         List&lt;Map&lt;String, Object&gt;&gt; dataList = new ArrayList&lt;&gt;();
@@ -359,9 +401,9 @@ searchInput.addEventListener('focus', wrap);
 }
 </code></pre>
 <p><strong>然后在html文件中，使用script标签加载该js文件（注意要在搜索逻辑之前加载）。</strong></p>
-<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202304/f3a389c0e5f541128b434f1a740b818c-7DA31A33F50B2FAADFD5582BC1A2706B.jpg" /></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202304/f3a389c0e5f541128b434f1a740b818c-7DA31A33F50B2FAADFD5582BC1A2706B.jpg?project=easyblog" /></p>
 <p>最终的效果如下。</p>
-<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202304/7a59d72e99a24673aa175ec03b27585e-3B283EE1742E8A303AAC811AC99AE7F6.jpg" /></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202304/7a59d72e99a24673aa175ec03b27585e-3B283EE1742E8A303AAC811AC99AE7F6.jpg?project=easyblog" /></p>
 <hr />
 <p>至此，这个简单版的静态搜索功能就算完成了，如果需要更复杂的搜索逻辑和更多的匹配字段，比方说，同时根据标题、标签、分类进行匹配，可以在此基础上自行拓展。</p>
 <p>当然，该功能缺点也是有的，比如说，当数据量很大的时候，查询速度会变得很慢，以及加载网页的速度也会变慢，会严重影响用户的网站体验，这也是为什么常用异步请求搜索数据的原因之一，但对于个人博客项目那点体量的数据而言，无需担心这个问题。</p>
@@ -388,32 +430,15 @@ searchInput.addEventListener('focus', wrap);
                         </script>
                 </div>
             </div>
-            <div class="right">
-                    <div class="side-card b-s-1 mg-b-10">
-                        <div class="wrapper">
-                            <h2 class="item title">相关文章</h2>
-                            <div class="item content">
-                                    <div class="item1">
-                                        <a href="../articles/15.html">兼容部署在Github Pages与其他服务器的应用引入资源的解决方案</a>
-                                    </div>
-                                    <div class="item1">
-                                        <a href="../articles/19.html">为vue单页面应用添加提示保存功能</a>
-                                    </div>
-                                    <div class="item1">
-                                        <a href="../articles/55.html">解耦在js中的应用</a>
-                                    </div>
-                            </div>
-                        </div>
-                    </div>
-            </div>
         </div>
     </div>
     <div class="back">返回</div>
 </div>
-    <script src="../js/dataList.js"></script>
+    <script src="../js/data.js"></script>
     <script src="../js/lazy.js"></script>
     <script src="../js/search.js"></script>
     <script src="../js/menu.js"></script>
+<script src="../js/toc.js"></script>
 <script>
     let back = document.querySelector(".back");
     back.addEventListener("click", function () {

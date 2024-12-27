@@ -84,19 +84,17 @@
                     return result;
                 }
             }
-
             headerEleVisibleHandler = throttleWrapper(headerEleVisibleHandler, { timeout: 200 });
-
             window.addEventListener("scroll", headerEleVisibleHandler);
         });
     </script>
         <meta name="keywords" content="js,解耦">
+        <meta name="description" content="解耦在js中的应用；代码解耦一直以来都是编程中的重要课题，许多编程概念、思想、技术，本质上就是为了划分职责，降低模块（系统、类、方法等）之间的关联度的，模块之间的关联度越低，项目系统的可维护性与拓展性就越高，反之则越低。我们...">
     <link rel="stylesheet" href="../css/article.css">
     <link rel="stylesheet" href="../css/markdown/github-markdown.css">
     <link rel="stylesheet" href="../css/markdown/github-markdown-light.css">
     <link rel="stylesheet" href="../css/gittalk-cover.css">
-    <link rel="stylesheet"
-          href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
     <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
     <script>hljs.highlightAll();</script>
 </head>
@@ -104,7 +102,7 @@
 <div id="app">
     <div id="header">
     <div id="bar">
-        <div class="container mg-0-auto d-f">
+        <div class="container mg-0-auto d-f pos-r">
             <div class="logo">
                 <a href="../" class="nav-link" style="margin-right: 10px;">
                     <img src="../image/portal/logo.jpg" alt="小埃的个人博客">
@@ -150,17 +148,55 @@
                     </svg>
                 </div>
             </div>
+            <div id="sd-box">
+                <div class="wrapper">
+                        <div class="side-card b-s-1 mg-b-10">
+                            <div class="wrapper">
+                                <h2 class="item title">
+                                    <span>相关文章</span>
+                                </h2>
+                                <div class="item content">
+                                        <div class="item1 ">
+                                            <a href="../articles/70.html">
+                                                    为静态站点添加目录功能
+                                            </a>
+                                        </div>
+                                        <div class="item1 ">
+                                            <a href="../articles/66.html">
+                                                    关于nodejs使用相对路径读取文件的问题
+                                            </a>
+                                        </div>
+                                        <div class="item1 ">
+                                            <a href="../articles/22.html">
+                                                    为静态站点添加搜索功能
+                                            </a>
+                                        </div>
+                                        <div class="item1 ">
+                                            <a href="../articles/19.html">
+                                                    为vue单页面应用添加提示保存功能
+                                            </a>
+                                        </div>
+                                        <div class="item1 ">
+                                            <a href="../articles/15.html">
+                                                    兼容部署在Github Pages与其他服务器的应用引入资源的解决方案
+                                            </a>
+                                        </div>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+            </div>
         </div>
     </div>
     </div>
     <div id="main">
         <div class="container mg-0-auto pd-t-10">
-            <div class="left">
+            <div class="wrapper">
                 <article class="mg-b-20">
                     <div class="markdown-body">
                         <div class="title">解耦在js中的应用</div>
                         <div class="item meta mg-b-10">
-                            <span class="author">由<a href="javascript:void(0);">errol</a>发表于<a href="#">2023-11-18 12:39:24</a></span>
+                            <span class="author">由<a href="javascript:void(0);">errol</a>发表于<a href="#">2023-11-18</a></span>
                             <span>|</span>
                             <span class="time">
                             分类为
@@ -188,11 +224,11 @@
 <blockquote>
 <p>ps：文中的示例代码将会用到<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/bind">Function.prototype.bind()</a>、<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/apply">Function.prototype.apply()</a>接口，此外，还用到了<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise">promise</a>和<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/async_function">async function</a>，用于处理异步流程。</p>
 </blockquote>
-<h3>一、思路预热</h3>
+<h3 id="hidp-heading-0">一、思路预热</h3>
 <p>我们在日常生活中都看到、接触过洋葱，知道它由多个层级构成，每两层之间互相连接，而这种结构与调用栈十分相近，从外层到内层就像是一次函数/方法的调用：调用最外层的函数，紧接着调用次外层的函数（嵌套），... ，直到调用最内层的函数，此时调用开始返回。</p>
 <p>本文章的灵感正是来源于此。</p>
 <p><strong>在这种结构中，将非核心业务代码分发交给各层处理，把最内层作为核心业务层，这样也就达成了解藕的效果。</strong></p>
-<h3>二、解耦核心代码</h3>
+<h3 id="hidp-heading-1">二、解耦核心代码</h3>
 <p>以下声明了一个名为applyingInterceptors的函数，它接收两个参数，fn为核心业务方法，而interceptors是一组被称为“拦截器”的对象，拦截器对象内含有在fn执行前后运行的方法，可以拦截某一次执行fn的动作。</p>
 <pre><code class="language-js">// 拦截器对象
 export const exampleInterceptor = {
@@ -289,7 +325,7 @@ const _run3 = (interceptors, args, _this) =&gt; {
     }
 }
 </code></pre>
-<h3>三、代码解耦</h3>
+<h3 id="hidp-heading-2">三、代码解耦</h3>
 <p>在这一小节中，我们将会模拟一个简单的场景：账号注册。</p>
 <p>提交数据前，需要对参数进行校验，并且期间禁止用户频繁发送验证码。</p>
 <p>在这个过程中，发送验证码和注册账号就是核心业务，其他的都属于非核心业务。</p>
@@ -421,7 +457,7 @@ created() {
     }
 }
 </code></pre>
-<h3>四、前端界面及运行效果</h3>
+<h3 id="hidp-heading-3">四、前端界面及运行效果</h3>
 <p>本文章所用到的<a href="https://github.com/xxzhiwei/demo/tree/main/decoupling-4-js-demo">demo</a>存放在这里，需要的读者可以自行下载测试。</p>
 <p>1、获取验证码运行效果</p>
 <p><video controls autoplay height='100%' width='100%' src='http://xxzhiwei.oss-cn-beijing.aliyuncs.com/v2%20-%20Compressed%20with%20FlexClip.mp4'></video></p>
@@ -434,7 +470,7 @@ created() {
 <p>然而，这并不是最重要的，我真正想说的是，js这门语言，如果能有效利用其动态性（将函数作为参数传递，动态绑定&amp;动态调用等特性），就可以完成一些比较复杂的功能。</p>
 <p>当然，文中的示例只是一个比较简单的功能，所以还得读者根据自己的实际情况挖掘开发。</p>
 <p>以上就是本篇文章的全部内容了，希望对读者有所帮助，如若存在不足之处或有好的建议想法，还请不吝赐教。</p>
-<h3>20240114更新</h3>
+<h3 id="hidp-heading-4">20240114更新</h3>
 <p>目前作者已经在几个项目中应用了该解耦小工具，感觉还不错，不过在使用的时候，也发现了一个体验很不好的问题。</p>
 <blockquote>
 <p>当禁用类的拦截器触发效果后，再出现其他错误时，会停留在当前状态（如账号密码输入不正确时停留在登陆界面），由于没有恢复状态的逻辑，目标元素仍处于被禁用状态，无法再次操作，需要重新加载。</p>
@@ -474,7 +510,7 @@ export const timeoutRollback = ({ args, _this, interceptor, errors }) =&gt; {
 <p>2、在当前禁用拦截器添加恢复逻辑</p>
 <p>这种方式需要对工具源码做一些改动，此外还需要在被拦截的方法中返回数据，作为判断本次执行是否通过的依据，如：</p>
 <p><em><del>以下代码是本次更新新增的测试方法</del></em></p>
-<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202401/004ad58c57014e93b75933cdb0bf4978-1E9DD7EBE2F7FFC2958EC64C382DFE65.png" /></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202401/004ad58c57014e93b75933cdb0bf4978-1E9DD7EBE2F7FFC2958EC64C382DFE65.png?project=easyblog" /></p>
 <p><em>图1 login方法</em></p>
 <p>在login方法中返回了resp。</p>
 <pre><code class="language-js">const interceptors4 = [
@@ -538,10 +574,10 @@ export const applyingInterceptors = (fn, interceptors = [], options) =&gt; {
 </code></pre>
 <p>两种方式任选其一即可，下面将使用第一种方式进行测试。</p>
 <p>1、触发禁用效果</p>
-<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202401/93d6d4b3a2ca429abb5220c502617038-3E6A2C64791C76C62696E22634C9B9B7.png" /></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202401/93d6d4b3a2ca429abb5220c502617038-3E6A2C64791C76C62696E22634C9B9B7.png?project=easyblog" /></p>
 <p><em>图2 禁用按钮</em></p>
 <p>2、延迟过后，解除禁用</p>
-<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202401/714455ffb12a4166af52a1ef77893d25-07599A85F79D9C4C380E3D7753297F15.png" /></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202401/714455ffb12a4166af52a1ef77893d25-07599A85F79D9C4C380E3D7753297F15.png?project=easyblog" /></p>
 <p><em>图3 解除按钮禁用</em></p>
 <p>以上就是本次更新的说明，示例代码也已经更新至仓库中。</p>
 
@@ -566,32 +602,15 @@ export const applyingInterceptors = (fn, interceptors = [], options) =&gt; {
                         </script>
                 </div>
             </div>
-            <div class="right">
-                    <div class="side-card b-s-1 mg-b-10">
-                        <div class="wrapper">
-                            <h2 class="item title">相关文章</h2>
-                            <div class="item content">
-                                    <div class="item1">
-                                        <a href="../articles/15.html">兼容部署在Github Pages与其他服务器的应用引入资源的解决方案</a>
-                                    </div>
-                                    <div class="item1">
-                                        <a href="../articles/19.html">为vue单页面应用添加提示保存功能</a>
-                                    </div>
-                                    <div class="item1">
-                                        <a href="../articles/22.html">为静态站点添加搜索功能</a>
-                                    </div>
-                            </div>
-                        </div>
-                    </div>
-            </div>
         </div>
     </div>
     <div class="back">返回</div>
 </div>
-    <script src="../js/dataList.js"></script>
+    <script src="../js/data.js"></script>
     <script src="../js/lazy.js"></script>
     <script src="../js/search.js"></script>
     <script src="../js/menu.js"></script>
+<script src="../js/toc.js"></script>
 <script>
     let back = document.querySelector(".back");
     back.addEventListener("click", function () {

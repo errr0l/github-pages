@@ -84,19 +84,17 @@
                     return result;
                 }
             }
-
             headerEleVisibleHandler = throttleWrapper(headerEleVisibleHandler, { timeout: 200 });
-
             window.addEventListener("scroll", headerEleVisibleHandler);
         });
     </script>
         <meta name="keywords" content="翻译,剧情翻译">
+        <meta name="description" content="首次做翻译的感想；最近在做了pqt游戏活动剧情的翻译之后（英译中），让我切身地感觉到翻译这工作其实还挺难的，尤其是对于我这种人来说...">
     <link rel="stylesheet" href="../css/article.css">
     <link rel="stylesheet" href="../css/markdown/github-markdown.css">
     <link rel="stylesheet" href="../css/markdown/github-markdown-light.css">
     <link rel="stylesheet" href="../css/gittalk-cover.css">
-    <link rel="stylesheet"
-          href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
     <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
     <script>hljs.highlightAll();</script>
 </head>
@@ -104,7 +102,7 @@
 <div id="app">
     <div id="header">
     <div id="bar">
-        <div class="container mg-0-auto d-f">
+        <div class="container mg-0-auto d-f pos-r">
             <div class="logo">
                 <a href="../" class="nav-link" style="margin-right: 10px;">
                     <img src="../image/portal/logo.jpg" alt="小埃的个人博客">
@@ -150,17 +148,21 @@
                     </svg>
                 </div>
             </div>
+            <div id="sd-box">
+                <div class="wrapper">
+                </div>
+            </div>
         </div>
     </div>
     </div>
     <div id="main">
         <div class="container mg-0-auto pd-t-10">
-            <div class="left">
+            <div class="wrapper">
                 <article class="mg-b-20">
                     <div class="markdown-body">
                         <div class="title">首次做翻译的感想</div>
                         <div class="item meta mg-b-10">
-                            <span class="author">由<a href="javascript:void(0);">errol</a>发表于<a href="#">2023-05-18 01:42:30</a></span>
+                            <span class="author">由<a href="javascript:void(0);">errol</a>发表于<a href="#">2023-05-18</a></span>
                             <span>|</span>
                             <span class="time">
                             分类为
@@ -178,7 +180,7 @@
 <p>不过我还会坚持做下去，自己也挺喜欢这份工作的。</p>
 </blockquote>
 <p>到目前为止，已经完成了五个活动剧情的翻译，虽然每个活动剧情的文本量不算大，都在30k左右徘徊，但还是给我带来了那么一点点的成就感。</p>
-<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202305/82d2cb371bf444429e7a0373abf9bf79-F4BF313DA10A204A50CEED084FEE6BA5.jpg" /></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202305/82d2cb371bf444429e7a0373abf9bf79-F4BF313DA10A204A50CEED084FEE6BA5.jpg?project=easyblog" /></p>
 <p>这件事的起因还挺简单的...</p>
 <p>现在，pqt的活动剧情是为数不多吸引我的地方（另外的只有画风、涩图了）。大多数情况下，这种剧情就是对某个角色性格刻画的补充说明，由于游戏角色基本都属于空降系，在主线故事里几乎没有出现过（而且，对于一般的玩家，如果不开挂，估计连主线都打不通... 主线的难度就是这么个情况，此外，更新还特别缓慢，所以这几乎同等于新角色不会在主线上出现），所以，这种活动是玩家唯一一种深入了解人物角色的途径，因此，每次开活动的时候，我都会认真地看上一遍。</p>
 <p>但活动复刻的时候，就没这个心思了，只想着跳过，赶紧结束。然而，还有另一种想法占据在我的心里：由于活动开始和复刻时间间隔较长的原因，有些剧情中的细节早已经忘记，就又想回头看看...</p>
@@ -246,16 +248,15 @@
                         </script>
                 </div>
             </div>
-            <div class="right">
-            </div>
         </div>
     </div>
     <div class="back">返回</div>
 </div>
-    <script src="../js/dataList.js"></script>
+    <script src="../js/data.js"></script>
     <script src="../js/lazy.js"></script>
     <script src="../js/search.js"></script>
     <script src="../js/menu.js"></script>
+<script src="../js/toc.js"></script>
 <script>
     let back = document.querySelector(".back");
     back.addEventListener("click", function () {

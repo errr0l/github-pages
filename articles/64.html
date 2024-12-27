@@ -84,19 +84,17 @@
                     return result;
                 }
             }
-
             headerEleVisibleHandler = throttleWrapper(headerEleVisibleHandler, { timeout: 200 });
-
             window.addEventListener("scroll", headerEleVisibleHandler);
         });
     </script>
         <meta name="keywords" content="nextcloud,缩略图">
+        <meta name="description" content="为NC的图片和视频添加缩略图功能；使用nextcloud的时候，有个很蛋疼的问题，在默认的情况下，上传的图片&视频不会生成缩略图，导致了很不好的体验...">
     <link rel="stylesheet" href="../css/article.css">
     <link rel="stylesheet" href="../css/markdown/github-markdown.css">
     <link rel="stylesheet" href="../css/markdown/github-markdown-light.css">
     <link rel="stylesheet" href="../css/gittalk-cover.css">
-    <link rel="stylesheet"
-          href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
     <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
     <script>hljs.highlightAll();</script>
 </head>
@@ -104,7 +102,7 @@
 <div id="app">
     <div id="header">
     <div id="bar">
-        <div class="container mg-0-auto d-f">
+        <div class="container mg-0-auto d-f pos-r">
             <div class="logo">
                 <a href="../" class="nav-link" style="margin-right: 10px;">
                     <img src="../image/portal/logo.jpg" alt="小埃的个人博客">
@@ -150,17 +148,45 @@
                     </svg>
                 </div>
             </div>
+            <div id="sd-box">
+                <div class="wrapper">
+                        <div class="side-card b-s-1 mg-b-10">
+                            <div class="wrapper">
+                                <h2 class="item title">
+                                    <span>相关文章</span>
+                                </h2>
+                                <div class="item content">
+                                        <div class="item1 ">
+                                            <a href="../articles/58.html">
+                                                    nextcloud安卓的折腾
+                                            </a>
+                                        </div>
+                                        <div class="item1 ">
+                                            <a href="../articles/57.html">
+                                                    nextcloud插件的折腾
+                                            </a>
+                                        </div>
+                                        <div class="item1 ">
+                                            <a href="../articles/56.html">
+                                                    nextcloud的折腾&体验
+                                            </a>
+                                        </div>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+            </div>
         </div>
     </div>
     </div>
     <div id="main">
         <div class="container mg-0-auto pd-t-10">
-            <div class="left">
+            <div class="wrapper">
                 <article class="mg-b-20">
                     <div class="markdown-body">
                         <div class="title">为NC的图片和视频添加缩略图功能</div>
                         <div class="item meta mg-b-10">
-                            <span class="author">由<a href="javascript:void(0);">errol</a>发表于<a href="#">2024-03-29 12:58:19</a></span>
+                            <span class="author">由<a href="javascript:void(0);">errol</a>发表于<a href="#">2024-03-29</a></span>
                             <span>|</span>
                             <span class="time">
                             分类为
@@ -172,13 +198,13 @@
                         </div>
                         <div class="content">
                             <p>使用nextcloud的时候，有个很蛋疼的问题，在默认的情况下，上传的图片&amp;视频不会生成缩略图，导致了很不好的体验：图片每次都需要下载，有些大图会花上不少时间；视频则需要播放之后，才能知道里面的内容，而视频资源加载也是一个很耗时的过程。</p>
-<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202403/6aa20448b0354b66b76f1cb499b7570b-DAB9FFC4AE53EC5281F59D86DC4B7650.jpg" /></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202403/6aa20448b0354b66b76f1cb499b7570b-DAB9FFC4AE53EC5281F59D86DC4B7650.jpg?project=easyblog" /></p>
 <p><em>图1 nc视频 (无缩略图)</em></p>
 <p><strong>也就是说，NC没有快速预览的功能。</strong></p>
 <p>在这种条件下，如果还没有文字等信息的辅助时，想要在一堆视频中查找某一个就必须要进行对其“遍历”：将视频逐个打开，待加载完成后，查看里面的内容...</p>
 <p><strong>当然，也不是说这种方式没法用，就是效率有点低</strong>，而且在文件体量较大或网络不佳的情况下，这个问题会被放大。</p>
 <p>反观，隔壁百度云在这方面做得比较完善。</p>
-<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202403/e497e9ae3dfe43d68bdf70d4a75117dc-D066AE41C1F7F785A610F41DE7545F25.png" /></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202403/e497e9ae3dfe43d68bdf70d4a75117dc-D066AE41C1F7F785A610F41DE7545F25.png?project=easyblog" /></p>
 <p><em>图2 百度云</em></p>
 <p>上传到百度云的视频，可以通过缩略图提前得知视频的内容。</p>
 <p><strong>缩略图对于人力筛选和识别有很重要的意义。</strong></p>
@@ -188,7 +214,7 @@
 <p>其中ffmpeg是一个处理影音视频的工具；Memories和Preview Generator为NC的插件，前者用于为照片、视频生成元数据（metadata），如时间、地点、标签等，可以更好地管理文件，后者的功能如同其名，用于生成预览图（缩略图）。</p>
 <p>下面开始安装和配置。</p>
 <p><em>需要注意的是，之前作者安装的nc配置出过一点问题，为此折腾了很久，重装的方法也尝试过，但最终还是没能再启动，只能选用其他的安装方式，并在snap和docker之间选择了前者，所以以下是在snap的环境下进行的操作，可以保证的是，大体上的步骤都是类似的。</em></p>
-<h4>一、ffmpeg模块</h4>
+<h4 id="hidp-heading-0">一、ffmpeg模块</h4>
 <p>1、下载</p>
 <p>在<a href="https://johnvansickle.com/ffmpeg/">这里</a>下载对应系统架构的文件，并解压至指定的目录。</p>
 <pre><code class="language-bash">wget https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-arm64-static.tar.xz
@@ -215,19 +241,19 @@ $CONFIG = array (
     'memories.vod.ffmpeg' =&gt; '/var/snap/nextcloud/bin/ffmpeg',
 );
 </code></pre>
-<h4>二、Memories模块</h4>
+<h4 id="hidp-heading-1">二、Memories模块</h4>
 <p>打开nc的应用管理界面，搜索memories插件并启用。</p>
-<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202403/06fd57ab48b24d81993ae9ff796d288f-9A623969B031704A63F36BF9171D3694.png" /></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202403/06fd57ab48b24d81993ae9ff796d288f-9A623969B031704A63F36BF9171D3694.png?project=easyblog" /></p>
 <p><em>图3 应用管理 - memories</em></p>
 <p>随后在命令行执行以下命令：</p>
 <blockquote>
 <p>sudo /snap/bin/nextcloud.occ memories:index</p>
 </blockquote>
 <p>该命令会为存在的照片、视频生成元数据（metadata）。</p>
-<h4>三、Preview Generator模块</h4>
+<h4 id="hidp-heading-2">三、Preview Generator模块</h4>
 <p>1、安装插件</p>
 <p>与上一步类似，在应用管理界面搜索Preview Generator插件并启用。</p>
-<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202403/e2b6b0a36ca947b0b2c0b06c1449a90c-18838DB33A9073BCBBA99560F40E2D95.png" /></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202403/e2b6b0a36ca947b0b2c0b06c1449a90c-18838DB33A9073BCBBA99560F40E2D95.png?project=easyblog" /></p>
 <p><em>图4 应用管理 - Preview Generator</em></p>
 <p>2、修改配置文件</p>
 <p>随后再次编辑config.php文件，新增如下配置。</p>
@@ -251,10 +277,10 @@ $CONFIG = array (
 <p>sudo /snap/bin/nextcloud.occ preview:generate-all -vvv</p>
 </blockquote>
 <p>该命令会为已经存储与nc的图片、视频创建缩略图，此后上传的图片、视频会自动生成。</p>
-<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202403/a49713c30e354d19ab65e34fcfb5cd14-1213750353.png" /></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202403/a49713c30e354d19ab65e34fcfb5cd14-1213750353.png?project=easyblog" /></p>
 <p><em>图5 preview:generate-all命令输出</em></p>
 <p>待命令执行完毕后，再次打开nc时，可以看到已经成功生成缩略图了。</p>
-<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202403/9550810e9cf2444aac8c97cff98b994a-7DC66C6F91D576BC9FCC7951C05E9E83.jpg" /></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202403/9550810e9cf2444aac8c97cff98b994a-7DC66C6F91D576BC9FCC7951C05E9E83.jpg?project=easyblog" /></p>
 <p><em>图6 nc视频 (有缩略图)</em></p>
 <hr />
 <p>总的来说，由于nc官方没有将缩略图功能集成在系统中，导致需要额外的安装和配置，这确实有点麻烦，但现在以结果论来说，目的已经达到了。</p>
@@ -281,32 +307,15 @@ $CONFIG = array (
                         </script>
                 </div>
             </div>
-            <div class="right">
-                    <div class="side-card b-s-1 mg-b-10">
-                        <div class="wrapper">
-                            <h2 class="item title">相关文章</h2>
-                            <div class="item content">
-                                    <div class="item1">
-                                        <a href="../articles/56.html">nextcloud的折腾&体验</a>
-                                    </div>
-                                    <div class="item1">
-                                        <a href="../articles/57.html">nextcloud插件的折腾</a>
-                                    </div>
-                                    <div class="item1">
-                                        <a href="../articles/58.html">nextcloud安卓的折腾</a>
-                                    </div>
-                            </div>
-                        </div>
-                    </div>
-            </div>
         </div>
     </div>
     <div class="back">返回</div>
 </div>
-    <script src="../js/dataList.js"></script>
+    <script src="../js/data.js"></script>
     <script src="../js/lazy.js"></script>
     <script src="../js/search.js"></script>
     <script src="../js/menu.js"></script>
+<script src="../js/toc.js"></script>
 <script>
     let back = document.querySelector(".back");
     back.addEventListener("click", function () {

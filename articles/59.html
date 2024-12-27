@@ -84,19 +84,17 @@
                     return result;
                 }
             }
-
             headerEleVisibleHandler = throttleWrapper(headerEleVisibleHandler, { timeout: 200 });
-
             window.addEventListener("scroll", headerEleVisibleHandler);
         });
     </script>
         <meta name="keywords" content="自动签到,nutaku,计划">
+        <meta name="description" content="nutaku自动签到程序计划；最近n站出了个金币签到活动，经过粗略计算，最多可获取到一百八十+的金币，看着很馋... 但就是每天得打开网站点击签到有点烦人...">
     <link rel="stylesheet" href="../css/article.css">
     <link rel="stylesheet" href="../css/markdown/github-markdown.css">
     <link rel="stylesheet" href="../css/markdown/github-markdown-light.css">
     <link rel="stylesheet" href="../css/gittalk-cover.css">
-    <link rel="stylesheet"
-          href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
     <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
     <script>hljs.highlightAll();</script>
 </head>
@@ -104,7 +102,7 @@
 <div id="app">
     <div id="header">
     <div id="bar">
-        <div class="container mg-0-auto d-f">
+        <div class="container mg-0-auto d-f pos-r">
             <div class="logo">
                 <a href="../" class="nav-link" style="margin-right: 10px;">
                     <img src="../image/portal/logo.jpg" alt="小埃的个人博客">
@@ -150,17 +148,45 @@
                     </svg>
                 </div>
             </div>
+            <div id="sd-box">
+                <div class="wrapper">
+                        <div class="side-card b-s-1 mg-b-10">
+                            <div class="wrapper">
+                                <h2 class="item title">
+                                    <span>相关文章</span>
+                                </h2>
+                                <div class="item content">
+                                        <div class="item1 ">
+                                            <a href="../articles/62.html">
+                                                    新一年的计划
+                                            </a>
+                                        </div>
+                                        <div class="item1 ">
+                                            <a href="../articles/60.html">
+                                                    nutaku自动签到程序实现
+                                            </a>
+                                        </div>
+                                        <div class="item1 ">
+                                            <a href="../articles/45.html">
+                                                    pqt活动文本提取小结
+                                            </a>
+                                        </div>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+            </div>
         </div>
     </div>
     </div>
     <div id="main">
         <div class="container mg-0-auto pd-t-10">
-            <div class="left">
+            <div class="wrapper">
                 <article class="mg-b-20">
                     <div class="markdown-body">
                         <div class="title">nutaku自动签到程序计划</div>
                         <div class="item meta mg-b-10">
-                            <span class="author">由<a href="javascript:void(0);">errol</a>发表于<a href="#">2024-01-02 02:16:19</a></span>
+                            <span class="author">由<a href="javascript:void(0);">errol</a>发表于<a href="#">2024-01-02</a></span>
                             <span>|</span>
                             <span class="time">
                             分类为
@@ -172,7 +198,7 @@
                         </div>
                         <div class="content">
                             <p>最近n站出了个金币签到活动，经过粗略计算，最多可获取到一百八十+的金币，看着很馋...</p>
-<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202401/3eb34b63d2cd467ca6176787d71a6785-51483C43961E97552B8FCA93978DC681.png" /></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202401/3eb34b63d2cd467ca6176787d71a6785-51483C43961E97552B8FCA93978DC681.png?project=easyblog" /></p>
 <p><em>图1 金币签到活动</em></p>
 <p>但就是每天得打开网站点击签到有点烦人，几乎要月全勤才能拿完所有的奖励，因此就想着写一个脚本程序来代替完成这项工作。</p>
 <p>薅羊毛这种事情，我等白嫖党义不容辞！</p>
@@ -205,32 +231,15 @@
                         </script>
                 </div>
             </div>
-            <div class="right">
-                    <div class="side-card b-s-1 mg-b-10">
-                        <div class="wrapper">
-                            <h2 class="item title">相关文章</h2>
-                            <div class="item content">
-                                    <div class="item1">
-                                        <a href="../articles/45.html">pqt活动文本提取小结</a>
-                                    </div>
-                                    <div class="item1">
-                                        <a href="../articles/60.html">nutaku自动签到程序实现</a>
-                                    </div>
-                                    <div class="item1">
-                                        <a href="../articles/62.html">新一年的计划</a>
-                                    </div>
-                            </div>
-                        </div>
-                    </div>
-            </div>
         </div>
     </div>
     <div class="back">返回</div>
 </div>
-    <script src="../js/dataList.js"></script>
+    <script src="../js/data.js"></script>
     <script src="../js/lazy.js"></script>
     <script src="../js/search.js"></script>
     <script src="../js/menu.js"></script>
+<script src="../js/toc.js"></script>
 <script>
     let back = document.querySelector(".back");
     back.addEventListener("click", function () {

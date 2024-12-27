@@ -84,19 +84,17 @@
                     return result;
                 }
             }
-
             headerEleVisibleHandler = throttleWrapper(headerEleVisibleHandler, { timeout: 200 });
-
             window.addEventListener("scroll", headerEleVisibleHandler);
         });
     </script>
         <meta name="keywords" content="nextcloud,安卓,android">
+        <meta name="description" content="nextcloud安卓的折腾；继上一回完成nextcloud插件后，这两天又花时间研究nextlcoud安卓端，虽然多少有点磕碰，但总算是把功能做出来了...">
     <link rel="stylesheet" href="../css/article.css">
     <link rel="stylesheet" href="../css/markdown/github-markdown.css">
     <link rel="stylesheet" href="../css/markdown/github-markdown-light.css">
     <link rel="stylesheet" href="../css/gittalk-cover.css">
-    <link rel="stylesheet"
-          href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
     <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
     <script>hljs.highlightAll();</script>
 </head>
@@ -104,7 +102,7 @@
 <div id="app">
     <div id="header">
     <div id="bar">
-        <div class="container mg-0-auto d-f">
+        <div class="container mg-0-auto d-f pos-r">
             <div class="logo">
                 <a href="../" class="nav-link" style="margin-right: 10px;">
                     <img src="../image/portal/logo.jpg" alt="小埃的个人博客">
@@ -150,17 +148,45 @@
                     </svg>
                 </div>
             </div>
+            <div id="sd-box">
+                <div class="wrapper">
+                        <div class="side-card b-s-1 mg-b-10">
+                            <div class="wrapper">
+                                <h2 class="item title">
+                                    <span>相关文章</span>
+                                </h2>
+                                <div class="item content">
+                                        <div class="item1 ">
+                                            <a href="../articles/64.html">
+                                                    为NC的图片和视频添加缩略图功能
+                                            </a>
+                                        </div>
+                                        <div class="item1 ">
+                                            <a href="../articles/57.html">
+                                                    nextcloud插件的折腾
+                                            </a>
+                                        </div>
+                                        <div class="item1 ">
+                                            <a href="../articles/56.html">
+                                                    nextcloud的折腾&体验
+                                            </a>
+                                        </div>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+            </div>
         </div>
     </div>
     </div>
     <div id="main">
         <div class="container mg-0-auto pd-t-10">
-            <div class="left">
+            <div class="wrapper">
                 <article class="mg-b-20">
                     <div class="markdown-body">
                         <div class="title">nextcloud安卓的折腾</div>
                         <div class="item meta mg-b-10">
-                            <span class="author">由<a href="javascript:void(0);">errol</a>发表于<a href="#">2024-01-01 03:31:20</a></span>
+                            <span class="author">由<a href="javascript:void(0);">errol</a>发表于<a href="#">2024-01-01</a></span>
                             <span>|</span>
                             <span class="time">
                             分类为
@@ -172,10 +198,10 @@
                         </div>
                         <div class="content">
                             <p>继上一回完成nextcloud插件后，这两天又花时间研究nextlcoud安卓端，虽然多少有点磕碰，但总算是把功能做出来了，这下终于可以愉快地进行分享了...</p>
-<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202401/aae6365dafb04bef81ead4f655141408-91886833A7F5C550528FB5628AA6B1D6.jpg" /></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202401/aae6365dafb04bef81ead4f655141408-91886833A7F5C550528FB5628AA6B1D6.jpg?project=easyblog" /></p>
 <p><em>图1 新增的选项 - “复制我的自定义链接”</em></p>
 <p>跟nextcloud插件一样，在文件详情的分享下拉菜单新增了按钮选项，创建分享链接后可见。</p>
-<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202401/25a346c064354f1da48e95c76df05331-0DE28487DAABF61D07D51E4F67B11628.jpg" /></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202401/25a346c064354f1da48e95c76df05331-0DE28487DAABF61D07D51E4F67B11628.jpg?project=easyblog" /></p>
 <p><em>图2 操作结果</em></p>
 <p>还是跟nextcloud插件一样，点击选项后，将链接复制到粘贴板里。</p>
 <p>不过值得注意的是，这个功能在nextcloud安卓中的开发方式有别于插件，由于nextcloud安卓没有提供插件化的开发方式，所以<strong>本次的功能是对<a href="https://github.com/nextcloud/android">源码</a>进行改动后重新编译的</strong>，也就是所谓的“魔改版”。</p>
@@ -218,29 +244,15 @@
                         </script>
                 </div>
             </div>
-            <div class="right">
-                    <div class="side-card b-s-1 mg-b-10">
-                        <div class="wrapper">
-                            <h2 class="item title">相关文章</h2>
-                            <div class="item content">
-                                    <div class="item1">
-                                        <a href="../articles/56.html">nextcloud的折腾&体验</a>
-                                    </div>
-                                    <div class="item1">
-                                        <a href="../articles/57.html">nextcloud插件的折腾</a>
-                                    </div>
-                            </div>
-                        </div>
-                    </div>
-            </div>
         </div>
     </div>
     <div class="back">返回</div>
 </div>
-    <script src="../js/dataList.js"></script>
+    <script src="../js/data.js"></script>
     <script src="../js/lazy.js"></script>
     <script src="../js/search.js"></script>
     <script src="../js/menu.js"></script>
+<script src="../js/toc.js"></script>
 <script>
     let back = document.querySelector(".back");
     back.addEventListener("click", function () {

@@ -84,19 +84,17 @@
                     return result;
                 }
             }
-
             headerEleVisibleHandler = throttleWrapper(headerEleVisibleHandler, { timeout: 200 });
-
             window.addEventListener("scroll", headerEleVisibleHandler);
         });
     </script>
         <meta name="keywords" content="Project QT,激射萌娘,队伍搭配,伤害机制">
+        <meta name="description" content="PQT伤害机制与配队攻略；最近pqt出了很多“配件”，如字面意思，是纯纯的c位工具人角色，这类人物都有清一色的技能模板，可简单概括为“x回合提升x伤害”、“x回合增加x攻击”，主动&被动&天赋技能都有涉及到，有甚者更是直接三和一，完全就是为了辅助打伤害而生的，而在这样的背景下，整个游戏的伤害呈指数增长，只需要数回合就可以结束战斗...">
     <link rel="stylesheet" href="../css/article.css">
     <link rel="stylesheet" href="../css/markdown/github-markdown.css">
     <link rel="stylesheet" href="../css/markdown/github-markdown-light.css">
     <link rel="stylesheet" href="../css/gittalk-cover.css">
-    <link rel="stylesheet"
-          href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
     <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
     <script>hljs.highlightAll();</script>
 </head>
@@ -104,7 +102,7 @@
 <div id="app">
     <div id="header">
     <div id="bar">
-        <div class="container mg-0-auto d-f">
+        <div class="container mg-0-auto d-f pos-r">
             <div class="logo">
                 <a href="../" class="nav-link" style="margin-right: 10px;">
                     <img src="../image/portal/logo.jpg" alt="小埃的个人博客">
@@ -150,17 +148,21 @@
                     </svg>
                 </div>
             </div>
+            <div id="sd-box">
+                <div class="wrapper">
+                </div>
+            </div>
         </div>
     </div>
     </div>
     <div id="main">
         <div class="container mg-0-auto pd-t-10">
-            <div class="left">
+            <div class="wrapper">
                 <article class="mg-b-20">
                     <div class="markdown-body">
                         <div class="title">PQT伤害机制与配队攻略</div>
                         <div class="item meta mg-b-10">
-                            <span class="author">由<a href="javascript:void(0);">errol</a>发表于<a href="#">2023-04-09 05:17:41</a></span>
+                            <span class="author">由<a href="javascript:void(0);">errol</a>发表于<a href="#">2023-04-09</a></span>
                             <span>|</span>
                             <span class="time">
                             分类为
@@ -171,7 +173,7 @@
                             </span>
                         </div>
                             <div class="cover mg-b-10">
-                                <img src="../image/portal/202304/cover/ad858a6f55fe4d5db823defc3d38d7e5-42E66AB067DE85D473629754B5C89484.jpg" alt="">
+                                <img src="../image/portal/202304/cover/ad858a6f55fe4d5db823defc3d38d7e5-42E66AB067DE85D473629754B5C89484.jpg?project=easyblog" alt="">
                             </div>
                         <div class="content">
                             <p>最近pqt出了很多“配件”，如字面意思，是纯纯的c位工具人角色，这类人物都有清一色的技能模板，可简单概括为“x回合提升x伤害”、“x回合增加x攻击”，主动&amp;被动&amp;天赋技能都有涉及到，有甚者更是直接三合一，完全就是为了辅助打伤害而生的，而在这样的背景下，整个游戏的伤害呈指数增长，只需要数回合就可以结束战斗，导致一些脆皮队伍连技能回都熬不到，被普通攻击活活a死（尤其是你奶队）。</p>
@@ -199,7 +201,7 @@
 <p><em>先打一剂预防针，pqt的伤害机制并不复杂。</em></p>
 <p>游戏的伤害通是由一条固定公式通过给定的数值计算出来的，pqt也是类似，但更简单。pqt的伤害公式目前一共有5个乘区，而且其中3个变量由于是固定值，算下来只需要考虑2个乘区，再通过简单的四则运算即可得出最终的伤害，无伤害浮动、暴击等问题。</p>
 <p>因此，只要看完本篇文章，一定是可以增进对阵容配队的理解的，接下来就开始吧。</p>
-<h2>伤害公式</h2>
+<h2 id="hidp-heading-0">伤害公式</h2>
 <p>公式是用于根据角色面板和其身上的各种状态，来计算角色攻击所造成的伤害的，格式都大同小异，但pqt的公式极其简单。</p>
 <blockquote>
 <p>初始攻击 x (1+增攻量-减攻量) x (1+增伤量-减伤量) x 技能系数 x 克制系数</p>
@@ -215,9 +217,9 @@
 </blockquote>
 <p>分别为逆克制（如火打水），白字（如火打雷），克制（如火打风）。</p>
 <p>技能系数和初始攻击在角色信息处就可以获取，但是其中由于有其他地方的攻击力加成（如天赋、手册等），角色面板处的显示的攻击力并不是最终的初始攻击，最终初始攻击可以在gjjc角色信息出查看。此外要注意的是，普通攻击的技能系数为1。</p>
-<h2>伤害计算</h2>
+<h2 id="hidp-heading-1">伤害计算</h2>
 <p>假设某个角色的初始攻击为100，其属性为火元素，身上有一个10%的攻击力buff。</p>
-<h3>平a攻击伤害计算</h3>
+<h3 id="hidp-heading-2">平a攻击伤害计算</h3>
 <p>当她用平a攻击风属性角色时，套用上述给出的公式，其所造成的伤害为：</p>
 <blockquote>
 <p>100 * (1+0.1) * 1 * 1 * 1.25 ≈ 138</p>
@@ -231,7 +233,7 @@
 <p>100 * (1+0.1) * (1+0.1) * 1 * 0.75 ≈ 91</p>
 </blockquote>
 <p>攻击火、雷也是类似的，只要把克制系统换为1即可。</p>
-<h3>技能伤害计算</h3>
+<h3 id="hidp-heading-3">技能伤害计算</h3>
 <p>（此处引用平a攻击伤害计算出的角色数据），假设某个角色的主动技能系数为1.8，单体伤害，则她用技能攻击风元素的伤害为：</p>
 <blockquote>
 <p>100 * (1+0.1) * (1+0.1) * 1.8 * 1.25 ≈ 272</p>
@@ -240,7 +242,7 @@
 <p><strong>到这里其实已经把pqt的伤害机制讲完了，不要怀疑自己的眼睛，就是那么简单。</strong></p>
 <p>公式确实很简单，但在实际的战斗中，由于有各种错综复杂的buff的存在，要计算出准确的伤害，还必须得了解双方阵容的信息，了解角色都能提供哪些buff，这需要玩家一定的背板能力。</p>
 <p>不过这也不是个问题，因为已经有大佬把pqt的角色信息都整理、翻译出来了，非常的简单易懂，只要去核对一下对应资料即可。</p>
-<h2>边际效应</h2>
+<h2 id="hidp-heading-4">边际效应</h2>
 <p>通常听到的“攻击力被稀释”、“xx被稀释”指代的就是这个问题。</p>
 <p>边际效应的意思是，<strong>单边资源的投入对整体收益的增加是不断递减的。</strong></p>
 <p>听起来可能会有一点迷糊，下面举一个简单的例子就能明白这一原理。还是引用上面的角色数据。</p>
@@ -262,7 +264,7 @@
 <p>100 * (1+0.45) * (1+0.45) * 1 * 1.25 ≈ 263</p>
 </blockquote>
 <p><strong>因此这里可以简单做个小结，当已经把某个区间的buff数值叠到比较高的情况下，就应该考虑提升另一个区间的buff数值，最好是让不同区间的分配达到平衡状态，这样可以打出最高的伤害。</strong></p>
-<h2>实战，“云”计算</h2>
+<h2 id="hidp-heading-5">实战，“云”计算</h2>
 <p>根据上面的理论知识，结合pqt现有的队伍，来计算、比较一下不同配置下角色所能造成的伤害。</p>
 <p>待测试队伍为：</p>
 <pre><code class="language-text">小号、una、九尾、露娜vs小号、九尾、精灵、露娜
@@ -280,7 +282,7 @@
 <p>17542 * (1+0.8) * (1+0.52) * 3.05 * 1.25 ≈ 182981</p>
 </blockquote>
 <p><del>不知道为什么有时候会有一点点误差。</del></p>
-<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202304/26839e80ff9f46aea15da1bcd7233f38-17A725A9B00B5373AAB09DD4333AA4E8.jpg" /></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202304/26839e80ff9f46aea15da1bcd7233f38-17A725A9B00B5373AAB09DD4333AA4E8.jpg?project=easyblog" /></p>
 <p>第二套，乘积为2.73，伤害为：</p>
 <pre><code>伤害buff：32%(小号) + 20%(露娜) + 30%(精灵)
 攻击力buff：50%(九尾)
@@ -289,7 +291,7 @@
 <blockquote>
 <p>17542 * (1+0.5) * (1+0.52+0.3) * 3.05 * 1.25 ≈ 182579</p>
 </blockquote>
-<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202304/94b30535962646eb90b4ddc11b6ceda2-F25982CD4D8A67B2C7C1CDC45CD89582.jpg" /></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202304/94b30535962646eb90b4ddc11b6ceda2-F25982CD4D8A67B2C7C1CDC45CD89582.jpg?project=easyblog" /></p>
 <p>由于分配比例几乎持平，乘积也非常相近，伤害差距并不大。</p>
 <p>因为目前手头上没有8星的小号（可以给露娜挂60%的伤害buff），无法在游戏内测试，但还是可以计算出，第一套阵容比第二套伤害更高。（1.8 * 1.8 &gt; 1.5 * 2.1）</p>
 <p>阵容不变，在八星露娜的条件下，第一套攻击力和伤害buff都为80%，攻击区间和伤害区间的乘积为3.24，则其伤害为：</p>
@@ -351,16 +353,15 @@
                         </script>
                 </div>
             </div>
-            <div class="right">
-            </div>
         </div>
     </div>
     <div class="back">返回</div>
 </div>
-    <script src="../js/dataList.js"></script>
+    <script src="../js/data.js"></script>
     <script src="../js/lazy.js"></script>
     <script src="../js/search.js"></script>
     <script src="../js/menu.js"></script>
+<script src="../js/toc.js"></script>
 <script>
     let back = document.querySelector(".back");
     back.addEventListener("click", function () {

@@ -84,19 +84,17 @@
                     return result;
                 }
             }
-
             headerEleVisibleHandler = throttleWrapper(headerEleVisibleHandler, { timeout: 200 });
-
             window.addEventListener("scroll", headerEleVisibleHandler);
         });
     </script>
         <meta name="keywords" content="nextcloud,插件">
+        <meta name="description" content="nextcloud插件的折腾；在上一篇文章中提到过，在内网中使用nextcloud进行文件分享时，存在生成的链接以内网主机地址开头的问题，导致将链接给其他人使用之前，还得手动修改地址...">
     <link rel="stylesheet" href="../css/article.css">
     <link rel="stylesheet" href="../css/markdown/github-markdown.css">
     <link rel="stylesheet" href="../css/markdown/github-markdown-light.css">
     <link rel="stylesheet" href="../css/gittalk-cover.css">
-    <link rel="stylesheet"
-          href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
     <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
     <script>hljs.highlightAll();</script>
 </head>
@@ -104,7 +102,7 @@
 <div id="app">
     <div id="header">
     <div id="bar">
-        <div class="container mg-0-auto d-f">
+        <div class="container mg-0-auto d-f pos-r">
             <div class="logo">
                 <a href="../" class="nav-link" style="margin-right: 10px;">
                     <img src="../image/portal/logo.jpg" alt="小埃的个人博客">
@@ -150,17 +148,45 @@
                     </svg>
                 </div>
             </div>
+            <div id="sd-box">
+                <div class="wrapper">
+                        <div class="side-card b-s-1 mg-b-10">
+                            <div class="wrapper">
+                                <h2 class="item title">
+                                    <span>相关文章</span>
+                                </h2>
+                                <div class="item content">
+                                        <div class="item1 ">
+                                            <a href="../articles/64.html">
+                                                    为NC的图片和视频添加缩略图功能
+                                            </a>
+                                        </div>
+                                        <div class="item1 ">
+                                            <a href="../articles/58.html">
+                                                    nextcloud安卓的折腾
+                                            </a>
+                                        </div>
+                                        <div class="item1 ">
+                                            <a href="../articles/56.html">
+                                                    nextcloud的折腾&体验
+                                            </a>
+                                        </div>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+            </div>
         </div>
     </div>
     </div>
     <div id="main">
         <div class="container mg-0-auto pd-t-10">
-            <div class="left">
+            <div class="wrapper">
                 <article class="mg-b-20">
                     <div class="markdown-body">
                         <div class="title">nextcloud插件的折腾</div>
                         <div class="item meta mg-b-10">
-                            <span class="author">由<a href="javascript:void(0);">errol</a>发表于<a href="#">2023-12-27 08:42:04</a></span>
+                            <span class="author">由<a href="javascript:void(0);">errol</a>发表于<a href="#">2023-12-27</a></span>
                             <span>|</span>
                             <span class="time">
                             分类为
@@ -174,12 +200,12 @@
                             <p><a href="https://xxzhiwei.github.io/github-pages/articles/56.html">上一篇文章</a>中提到过，在内网中使用nextcloud进行文件分享时，存在<em>生成的链接以内网主机地址开头的问题</em>，导致将链接给其他人使用之前，还得手动修改链接，这显得很麻烦。</p>
 <p>针对这一情况，本文为nextcloud开发了一个新的功能，它可以让nextcloud生成“正确的分享链接”，从而免去手动修改的麻烦。</p>
 <p>这个新功能，依赖于nextcloud的插件机制：插件机制是nextcloud中的一种重要概念，它提供了插件的运行环境，即安装、运行、卸载，极大地提升了系统的灵活性与可拓展性。</p>
-<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202312/e939d1fdc1d948c595f5d7c214f810c2-D6A2A93EF4E6BE7D363F4C0D50ED4E74.jpg" /></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202312/e939d1fdc1d948c595f5d7c214f810c2-D6A2A93EF4E6BE7D363F4C0D50ED4E74.jpg?project=easyblog" /></p>
 <p><em>图1 nextcloud插件列表</em></p>
 <p>默认情况下，nextcloud已经启用了一些插件，它们具体的表现为系统中的某个模块或部件，如下图中，“文件（files）”是一个插件，仪表盘也是一个插件。</p>
-<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202312/5fd1405112254f48bf5565ebbf72b9e2-52EF4CE86C8A7E1DD39E48ED48E56A4D.jpg" /></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202312/5fd1405112254f48bf5565ebbf72b9e2-52EF4CE86C8A7E1DD39E48ED48E56A4D.jpg?project=easyblog" /></p>
 <p><em>图2 文件</em></p>
-<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202312/724263aa186346a4b3bcf5eb02d40490-A842C00B95D2B7222AD6B251FCC13106.jpg" /></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202312/724263aa186346a4b3bcf5eb02d40490-A842C00B95D2B7222AD6B251FCC13106.jpg?project=easyblog" /></p>
 <p><em>图3 仪表盘</em></p>
 <p>通常情况下，可以把插件当做平时所接触的模块页面，不过也存在一些不同，比如本次开发的插件。</p>
 <p>它的重点并不在于页面展示，而是对现存的插件（files）进行拓展，因此，更准确的来说，它是“插件的插件”。</p>
@@ -240,15 +266,15 @@ if (!customUrl) {
 <blockquote>
 <p>http://域名/nextcloud/index.php/apps/customizing_download_urls/</p>
 </blockquote>
-<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202312/bbac37f2dfd44a37b783483a0e940858-2231EE9C113A4D75E3A40BA35B64FFA0.jpg" /></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202312/bbac37f2dfd44a37b783483a0e940858-2231EE9C113A4D75E3A40BA35B64FFA0.jpg?project=easyblog" /></p>
 <p><em>图4 Customizing Download Urls管理面板</em></p>
 <p>输入后点击保存即可，随后将会通过ajax请求获取该地址。</p>
 <p><strong>2、插件运行效果</strong></p>
 <p>1）创建分享链接后，可看到下拉菜单中新增的选项</p>
-<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202312/457080c1d64244f39c4e6a678e77368a-7A1DF5F98326D557E1B354937E379B7F.jpg" /></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202312/457080c1d64244f39c4e6a678e77368a-7A1DF5F98326D557E1B354937E379B7F.jpg?project=easyblog" /></p>
 <p><em>图5 新增的选项</em></p>
 <p>2）点击将链接复制到粘贴板</p>
-<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202312/e2d15b5e5b9b46df8fe4521f0573b1c5-AA48C7DCA0102CB6C9FF60AA5F0C1775.jpg" /></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202312/e2d15b5e5b9b46df8fe4521f0573b1c5-AA48C7DCA0102CB6C9FF60AA5F0C1775.jpg?project=easyblog" /></p>
 <p><em>图6 复制链接成功</em></p>
 <blockquote>
 <p>http://g0wg60y8.shenzhuo.vip:60332/nextcloud/index.php/s/xFZ23P9YXBCqnSZ/download/163C595C581D72F9E5BA0D977AC4E144.jpg</p>
@@ -283,29 +309,15 @@ if (!customUrl) {
                         </script>
                 </div>
             </div>
-            <div class="right">
-                    <div class="side-card b-s-1 mg-b-10">
-                        <div class="wrapper">
-                            <h2 class="item title">相关文章</h2>
-                            <div class="item content">
-                                    <div class="item1">
-                                        <a href="../articles/56.html">nextcloud的折腾&体验</a>
-                                    </div>
-                                    <div class="item1">
-                                        <a href="../articles/58.html">nextcloud安卓的折腾</a>
-                                    </div>
-                            </div>
-                        </div>
-                    </div>
-            </div>
         </div>
     </div>
     <div class="back">返回</div>
 </div>
-    <script src="../js/dataList.js"></script>
+    <script src="../js/data.js"></script>
     <script src="../js/lazy.js"></script>
     <script src="../js/search.js"></script>
     <script src="../js/menu.js"></script>
+<script src="../js/toc.js"></script>
 <script>
     let back = document.querySelector(".back");
     back.addEventListener("click", function () {
