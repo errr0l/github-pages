@@ -88,7 +88,7 @@ for (let child of children) {
 const tree = generateTree(hChildren);
 if (tree.length) {
     const sd = makeToc(tree, "toc");
-    const sdb = document.querySelector('#header #sd-box');
+    const sdb = document.querySelector('#header #sc-box');
     const sdbStyl = getComputedStyle(sdb);
     const right = sdbStyl.right;
     const node = sdb.querySelector('.wrapper');
