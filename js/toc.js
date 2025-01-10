@@ -5,7 +5,7 @@
 function generateTree(nodes) {
     const tree = [];
     while (nodes.length > 0) {
-        const current = nodes.shift();
+        const current = nodes.pop();
         current.level = 1;
         tree.push({
             text: current._node.textContent,
@@ -19,29 +19,27 @@ function generateTree(nodes) {
 function makeChildren(current, nodes) {
     const children = [];
     while (nodes.length > 0) {
-        const node = nodes[0];
+        const node = nodes[nodes.length - 1];
         // 遇到大于当前节点的节点时，结束循环
         if (node.num <= current.num) {
             return children;
         }
         // 移除节点
-        nodes.shift();
+        nodes.pop();
         node.level = current.level + 1;
         children.push({
             text: node._node.textContent,
             children: makeChildren(node, nodes),
             ...node
-
         });
     }
     return children;
 }
 
 function makeToc(tree) {
-    const sd = document.createElement('div');
-    sd.className = "side-card b-s-1 mg-b-10";
-    sd.id = "toc";
-    sd.style = "display: block;";
+    const sc = document.createElement('div');
+    sc.className = "side-card b-s-1 mg-b-10";
+    sc.id = "toc";
     let html = "<div class='wrapper'><h2 class='item title'><span>目录</span></h2>";
     html += "<div class='item content'>";
     for (const node of tree) {
@@ -52,8 +50,8 @@ function makeToc(tree) {
     }
     html += "</div>";
     html += "</div>";
-    sd.innerHTML = html;
-    return sd;
+    sc.innerHTML = html;
+    return sc;
 }
 
 function makeToc2(node) {
@@ -70,7 +68,6 @@ function makeToc2(node) {
     return html;
 }
 
-
 const mbc = document.querySelector('.markdown-body > .content');
 const children = mbc.children;
 const hChildren = [];
@@ -84,45 +81,37 @@ for (let child of children) {
         });
     }
 }
-
+hChildren.reverse();
 const tree = generateTree(hChildren);
 if (tree.length) {
-    const sd = makeToc(tree, "toc");
-    const sdb = document.querySelector('#header #sc-box');
-    const sdbStyl = getComputedStyle(sdb);
-    const right = sdbStyl.right;
-    const node = sdb.querySelector('.wrapper');
-    //sdBox.appendChild(sd);
-    node.insertBefore(sd, node.firstChild);
+    const sc = makeToc(tree, "toc");
+    const scb = document.querySelector('#header #sc-box');
+    const scbStyl = getComputedStyle(scb);
+    const right = scbStyl.right;
+    const node = scb.querySelector('.wrapper');
+    node.insertBefore(sc, node.firstChild);
 
-
-    // sdb是隐藏的
+    // scb是隐藏的
     if (right && right.startsWith('-')) {
-        // const sdStyl = getComputedStyle(sd);
-        // console.log(sdStyl);
-        // console.log(sdStyl.height);
-        // 包括padding
-        // const offsetHeight = "";
-        let title = sd.querySelector('.title');
-        let content = sd.querySelector('.content');
+        let title = sc.querySelector('.title');
+        let content = sc.querySelector('.content');
         const contentStyl = getComputedStyle(content);
         const cHeight = contentStyl.height.slice(0, -2);
-        sd.style.opacity = 1;
+        sc.style.opacity = 1;
         content.style.height = "0px";
         content.style.opacity = 0;
         title.addEventListener('click', (ev) => {
             const target = ev.target;
-            console.log(target);
             if (target.tagName.startsWith("H") || target.tagName === "SPAN") {
                 if (content.style.height !== "0px") {
                     content.style.opacity = 0;
                     content.style.height = "0";
-                    sdb.style.right = right;
+                    scb.style.right = right;
                 }
                 else {
                     content.style.opacity = 1;
                     content.style.height = cHeight + "px";
-                    sdb.style.right = "0px";
+                    scb.style.right = "0px";
                 }
             }
         }, true);

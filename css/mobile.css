@@ -131,15 +131,15 @@
         font-size: 15px;
     }
     /*手机端只显示目录*/
-    #sd-box .side-card:not(#toc) {
+    #sc-box .side-card:not(#toc) {
         height: 0;
         opacity: 0;
     }
-    #sd-box .side-card .content {
+    #sc-box .side-card .content {
         transition: all 200ms;
         opacity: 0;
     }
-    #sd-box {
+    #sc-box {
         top: 69px;
         right: -62px;
         transition: all 200ms;
