@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>【某易云逆向】账号登录篇 - 小埃的个人博客</title>
+    <link rel="stylesheet" href="../css/reset.css">
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/index.css">
+    <link rel="stylesheet" href="../css/header.css">
+    <link rel="stylesheet" href="../css/mobile.css">
+    <link rel="stylesheet" href="../css/theme-light.css">
+    <link rel="shortcut icon" href="../favicon.ico" type="image/x-icon">
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?d1fc0144cbb354a3f8442b7ba568bc2f";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+
+        window.addEventListener('DOMContentLoaded', () => {
+            let headerEle = document.getElementById('header');
+            let eleHeight = headerEle.offsetHeight;
+            let lastScrollTop = 0;
+            let topAnchor = 0; // 某个方向的锚点
+            let downAnchor = 0;
+            let stylTop = "-" + eleHeight + "px";
+            let stylTop2 = "0";
+            let threshold = 180;
+            function headerEleVisibleHandler() {
+                let scrollTop = document.documentElement.scrollTop;
+                // 向下滚动
+                if (scrollTop > lastScrollTop) {
+                    if (downAnchor !== 0) {
+                        downAnchor = 0;
+                    }
+                    if (topAnchor === 0) {
+                        topAnchor = scrollTop;
+                    }
+                    if ((scrollTop > threshold || scrollTop - topAnchor > threshold) && headerEle.style.top !== stylTop) {
+                        headerEle.style.top =  stylTop;
+                    }
+                }
+                // 向上
+                else {
+                    if (topAnchor !== 0) {
+                        topAnchor = 0;
+                    }
+                    if (downAnchor === 0) {
+                        downAnchor = scrollTop;
+                    }
+                    if ((scrollTop + threshold > downAnchor) && headerEle.style.top === stylTop) {
+                        headerEle.style.top = stylTop2;
+                    }
+                }
+                lastScrollTop = scrollTop;
+            }
+
+            function throttleWrapper(fn, options) {
+                if (!options) {
+                    options = {};
+                }
+                let timer = null;
+                const { timeout } = options;
+
+                const _setTimeout = () => {
+                    timer = window.setTimeout(() => {
+                        window.clearTimeout(timer);
+                        timer = null;
+                    }, timeout);
+                    return timer;
+                }
+
+                return function (...args) {
+                    if (timer) {
+                        return;
+                    }
+                    timer = -1;
+                    let result = fn.apply(this, args);
+                    _setTimeout();
+                    return result;
+                }
+            }
+            headerEleVisibleHandler = throttleWrapper(headerEleVisibleHandler, { timeout: 200 });
+            window.addEventListener("scroll", headerEleVisibleHandler);
+        });
+    </script>
+        <meta name="keywords" content="验证码,登录,某云,某易云,逆向">
+        <meta name="description" content="【某易云逆向】账号登录篇；本来程序已经算是写完了，没想到还是差了一步，并且在经过多方面的考量后，作者最终认定这种方式不可行...">
+    <link rel="stylesheet" href="../css/article.css">
+    <link rel="stylesheet" href="../css/markdown/github-markdown.css">
+    <link rel="stylesheet" href="../css/markdown/github-markdown-light.css">
+    <link rel="stylesheet" href="../css/gittalk-cover.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/viewerjs/1.11.7/viewer.min.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</head>
+<body>
+<div id="app">
+    <div id="header">
+    <div id="bar">
+        <div class="container mg-0-auto d-f pos-r">
+            <div class="logo">
+                <a href="../" class="nav-link" style="margin-right: 10px;">
+                    <img src="../image/portal/logo.jpg" alt="小埃的个人博客">
+                </a>
+            </div>
+            <div class="right">
+                <ul class="nav f-l">
+                        <li class="nav-item">
+                            <a href="../index.html" class="nav-link active">
+                                <span>首页</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="../category.html" class="nav-link ">
+                                <span>分类</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="../about.html" class="nav-link ">
+                                <span>关于</span>
+                            </a>
+                        </li>
+                </ul>
+                <div class="eb-title">
+                    小埃的个人博客
+                </div>
+                    <div id="search">
+                        <input type="text" id="search-input" data-prefix="../" placeholder="搜索" autocomplete="off" />
+                        <span class="search-icon t-a">
+                            <img class="el-icon-search" src="../image/portal/search.png" width="16" height="16">
+                        </span>
+                        <div id="search-result">
+                            <input type="text" class="input-1" id="search-input-2" data-prefix="../" placeholder="请输入" autocomplete="off" />
+                            <div class="content">
+                            </div>
+                            <div class="arrow"></div>
+                        </div>
+                    </div>
+
+                <div class="eb-menu">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-list-ul" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M5 11.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm-3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm0 4a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm0 4a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
+                    </svg>
+                </div>
+            </div>
+            <div id="sc-box">
+                <div class="wrapper">
+                        <div class="side-card b-s-1 mg-b-10">
+                            <div class="wrapper">
+                                <h2 class="item title">
+                                    <span>相关文章</span>
+                                </h2>
+                                <div class="item content">
+                                        <div class="item1 ">
+                                            <a href="../articles/69.html">
+                                                    【某易云逆向】滑动验证码校验篇
+                                            </a>
+                                        </div>
+                                        <div class="item1 ">
+                                            <a href="../articles/65.html">
+                                                    【某易云逆向】滑动验证码识别篇
+                                            </a>
+                                        </div>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    <div id="main">
+        <div class="container mg-0-auto pd-t-10">
+            <div class="wrapper">
+                <article class="mg-b-20">
+                    <div class="markdown-body">
+                        <div class="title">【某易云逆向】账号登录篇</div>
+                        <div class="item meta mg-b-10">
+                            <span class="author">由<a href="javascript:void(0);">errol</a>发表于<a href="#">2025-01-14</a></span>
+                            <span>|</span>
+                            <span class="time">
+                            分类为
+                            <a href="../categories/1.html">编程</a></span>
+                            <span>|</span>
+                            <span class="tags">
+                                标签为<a href="javascript:void(0);">验证码</a>、<a href="javascript:void(0);">登录</a>、<a href="javascript:void(0);">某云</a>、<a href="javascript:void(0);">某易云</a>、<a href="javascript:void(0);">逆向</a>
+                            </span>
+                        </div>
+                        <div class="content">
+                            <p><strong>本来程序已经算是写完了，没想到还是差了一步，并且在经过多方面的考量后，作者最终认定这种方式不可行。</strong></p>
+<p>码完，开心地输入账号密码并运行，结果被服务器告知...</p>
+<blockquote>
+<p>&quot;需要进入二阶段验证&quot;</p>
+</blockquote>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202501/e0e10c12162a4f1a999db796a66134b5-0DEE7E541F5C440122DCB2DA78FF0D64.png?project=easyblog" /></p>
+<p><em>图1 登录接口响应信息</em></p>
+<p>在网站中测试时，也是一样的情况。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202501/5886492072de4e51951c5c137741cfe7-4F9F501EEED4679E160CBE60DC8EC7F6.jpg?project=easyblog" /></p>
+<p><em>图2 安全验证</em></p>
+<p><strong>究其原因，主要是网易云账号&amp;密码的登录方式，始终逃不过二重认证</strong>。</p>
+<p>二重认证，简单地来说，是一种保护账号安全的手段之一，按照相关的资料可知，在新设备或新环境操作时，须使用受信任的终端进行授权认证。</p>
+<p>虽然app上确实是有相应的开关，但跟账号密码一样，是个形同虚设的东西，关了等于开了，开了就需要二次认证，且验证也并非一次性，而是每次登录操作都需要。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202501/c1b5c7cfa56c4d31a21c448d164229ac-23CCBA96AA4E322D305982165B044AA2.jpg?project=easyblog" /></p>
+<p><em>图3 “登录保护开关”</em></p>
+<p>不过，也有例外，比如在桌面端进行操作时，就无需二次认证，挺迷的。</p>
+<p>之前看到登录接口返回“账号或密码”提示信息的时候，以为已经成功了，现在看来还是太天真。</p>
+<p>总而言之，言而总之，目前看起来账号&amp;密码方式行不通，只能通过手机短信或扫码方式进行登录，拿捏得很死。</p>
+<p>现在国内不少应用都有这种趋势，知道账号&amp;密码毫无用处，只有终端设备才是唯一的凭证，更有甚者，需要进入已经处于登录状态的应用中获取凭证，你说是吧，某信。</p>
+<p>so，虽然没完成，但本系列不得不宣布暂时告一段落。</p>
+<p>如果以后能找到方案的话，再重启吧。<del>（希望渺茫..）</del></p>
+<p>以上。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202501/aee0af43dc234e2ab3c5839fa9f4f931-63C018DDD9AB5478918F9BBE0CD8E868.jpg?project=easyblog" /></p>
+
+                        </div>
+                    </div>
+                </article>
+                <div class="comment-wrap">
+                        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+                        <script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+                        <div id="gitalk-container"></div>
+                        <script>
+                            const gitalk = new Gitalk({
+                                clientID: 'ae1422e500a8b19fb1fc',
+                                clientSecret: '9f387db6a84a4945cdf5dc743c16ce25fdef6b76',
+                                repo: 'github-pages',      // The repository of store comments,
+                                owner: 'xxzhiwei',
+                                admin: ['xxzhiwei'],
+                                id: location.pathname,      // Ensure uniqueness and length less than 50
+                                distractionFreeMode: false  // Facebook-like distraction free mode
+                            });
+                            gitalk.render('gitalk-container');
+                        </script>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="back">返回</div>
+</div>
+    <script src="../js/data.js"></script>
+    <script src="../js/lazy.js"></script>
+    <script src="../js/search.js"></script>
+    <script src="../js/menu.js"></script>
+<script src="../js/toc.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/viewerjs/1.11.7/viewer.min.js"></script>
+<script>
+    let back = document.querySelector(".back");
+    back.addEventListener("click", function () {
+        window.history.go(-1);
+    });
+    const viewer = new Viewer(document.querySelector('.markdown-body .content'), {
+        toolbar: {
+            zoomIn: 4,
+            zoomOut: 4,
+            oneToOne: 4,
+            reset: 0,
+            prev: 4,
+            play: 0,
+            next: 4,
+            rotateLeft: 0,
+            rotateRight: 0,
+            flipHorizontal: 0,
+            flipVertical: 0,
+        },
+    });
+</script>
+</body>
+</html>

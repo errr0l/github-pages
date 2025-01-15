@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>某云滑动认证码逆向 - 小埃的个人博客</title>
+    <title>【某易云逆向】滑动验证码校验篇 - 小埃的个人博客</title>
     <link rel="stylesheet" href="../css/reset.css">
     <link rel="stylesheet" href="../css/base.css">
     <link rel="stylesheet" href="../css/index.css">
@@ -88,12 +88,13 @@
             window.addEventListener("scroll", headerEleVisibleHandler);
         });
     </script>
-        <meta name="keywords" content="滑动验证码,逆向,某云,认证码,爬虫">
-        <meta name="description" content="某云滑动认证码逆向；继上次给出了滑动认证码的处理方案后，本次带来的是一次滑动验证码逆向的实战，其目的是使用程序来代替人手来完成认证流程。实战仍需用到上一篇文章中实现的代码，但本文不再对此做过多的讲解，如有疑惑，请前往阅读文章...">
+        <meta name="keywords" content="滑动验证码,逆向,某云,认证码,爬虫,验证码">
+        <meta name="description" content="【某易云逆向】滑动验证码校验篇；继上次给出了滑动验证码的处理方案后，本次带来的是一次滑动验证码认证逆向的实战，其目的是使用程序来代替人手来完成认证流程。实战仍需用到上一篇文章中实现的代码，但本文不再对此做过多的讲解，如有疑惑，请前往阅读文章...">
     <link rel="stylesheet" href="../css/article.css">
     <link rel="stylesheet" href="../css/markdown/github-markdown.css">
     <link rel="stylesheet" href="../css/markdown/github-markdown-light.css">
     <link rel="stylesheet" href="../css/gittalk-cover.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/viewerjs/1.11.7/viewer.min.css">
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
     <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
     <script>hljs.highlightAll();</script>
@@ -158,7 +159,12 @@
                                 <div class="item content">
                                         <div class="item1 ">
                                             <a href="../articles/65.html">
-                                                    一种可能可行的滑动认证码处理方案
+                                                    【某易云逆向】滑动验证码识别篇
+                                            </a>
+                                        </div>
+                                        <div class="item1 ">
+                                            <a href="../articles/72.html">
+                                                    【某易云逆向】账号登录篇
                                             </a>
                                         </div>
                                         <div class="item1 ">
@@ -184,7 +190,7 @@
             <div class="wrapper">
                 <article class="mg-b-20">
                     <div class="markdown-body">
-                        <div class="title">某云滑动认证码逆向</div>
+                        <div class="title">【某易云逆向】滑动验证码校验篇</div>
                         <div class="item meta mg-b-10">
                             <span class="author">由<a href="javascript:void(0);">errol</a>发表于<a href="#">2024-12-02</a></span>
                             <span>|</span>
@@ -193,11 +199,11 @@
                             <a href="../categories/1.html">编程</a></span>
                             <span>|</span>
                             <span class="tags">
-                                标签为<a href="javascript:void(0);">滑动验证码</a>、<a href="javascript:void(0);">逆向</a>、<a href="javascript:void(0);">某云</a>、<a href="javascript:void(0);">认证码</a>、<a href="javascript:void(0);">爬虫</a>
+                                标签为<a href="javascript:void(0);">滑动验证码</a>、<a href="javascript:void(0);">逆向</a>、<a href="javascript:void(0);">某云</a>、<a href="javascript:void(0);">认证码</a>、<a href="javascript:void(0);">爬虫</a>、<a href="javascript:void(0);">验证码</a>
                             </span>
                         </div>
                         <div class="content">
-                            <p>继上次给出了滑动认证码的处理方案后，本次带来的是一次滑动验证码逆向的实战，<strong>其目的是使用程序来代替人手来完成认证流程</strong>。</p>
+                            <p>继上次给出了滑动验证码的处理方案后，本次带来的是一次滑动验证码认证逆向的实战，<strong>其目的是使用程序来代替人手来完成认证流程</strong>。</p>
 <p>实战仍需用到上一篇文章中实现的代码，但本文不再对此做过多的讲解，如有疑惑，请前往阅读文章<a href="./65.html">《一种可能可行的滑动认证码处理方案》</a>。</p>
 <p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202412/ddaaeb06245a40ccba7af517622d4075-C46885D7FC3B7FAD69AA16921DB29811.png?project=easyblog" /></p>
 <p><em>图1 某云滑动验证码</em></p>
@@ -500,10 +506,26 @@ function _generateParameters(token, offset, deviceToken, captchaId, _atomTraceDa
     <script src="../js/search.js"></script>
     <script src="../js/menu.js"></script>
 <script src="../js/toc.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/viewerjs/1.11.7/viewer.min.js"></script>
 <script>
     let back = document.querySelector(".back");
     back.addEventListener("click", function () {
         window.history.go(-1);
+    });
+    const viewer = new Viewer(document.querySelector('.markdown-body .content'), {
+        toolbar: {
+            zoomIn: 4,
+            zoomOut: 4,
+            oneToOne: 4,
+            reset: 0,
+            prev: 4,
+            play: 0,
+            next: 4,
+            rotateLeft: 0,
+            rotateRight: 0,
+            flipHorizontal: 0,
+            flipVertical: 0,
+        },
     });
 </script>
 </body>

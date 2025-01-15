@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>分类-编程 - 小埃的个人博客</title>
+    <link rel="stylesheet" href="../css/reset.css">
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/index.css">
+    <link rel="stylesheet" href="../css/header.css">
+    <link rel="stylesheet" href="../css/mobile.css">
+    <link rel="stylesheet" href="../css/theme-light.css">
+    <link rel="shortcut icon" href="../favicon.ico" type="image/x-icon">
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?d1fc0144cbb354a3f8442b7ba568bc2f";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+
+        window.addEventListener('DOMContentLoaded', () => {
+            let headerEle = document.getElementById('header');
+            let eleHeight = headerEle.offsetHeight;
+            let lastScrollTop = 0;
+            let topAnchor = 0; // 某个方向的锚点
+            let downAnchor = 0;
+            let stylTop = "-" + eleHeight + "px";
+            let stylTop2 = "0";
+            let threshold = 180;
+            function headerEleVisibleHandler() {
+                let scrollTop = document.documentElement.scrollTop;
+                // 向下滚动
+                if (scrollTop > lastScrollTop) {
+                    if (downAnchor !== 0) {
+                        downAnchor = 0;
+                    }
+                    if (topAnchor === 0) {
+                        topAnchor = scrollTop;
+                    }
+                    if ((scrollTop > threshold || scrollTop - topAnchor > threshold) && headerEle.style.top !== stylTop) {
+                        headerEle.style.top =  stylTop;
+                    }
+                }
+                // 向上
+                else {
+                    if (topAnchor !== 0) {
+                        topAnchor = 0;
+                    }
+                    if (downAnchor === 0) {
+                        downAnchor = scrollTop;
+                    }
+                    if ((scrollTop + threshold > downAnchor) && headerEle.style.top === stylTop) {
+                        headerEle.style.top = stylTop2;
+                    }
+                }
+                lastScrollTop = scrollTop;
+            }
+
+            function throttleWrapper(fn, options) {
+                if (!options) {
+                    options = {};
+                }
+                let timer = null;
+                const { timeout } = options;
+
+                const _setTimeout = () => {
+                    timer = window.setTimeout(() => {
+                        window.clearTimeout(timer);
+                        timer = null;
+                    }, timeout);
+                    return timer;
+                }
+
+                return function (...args) {
+                    if (timer) {
+                        return;
+                    }
+                    timer = -1;
+                    let result = fn.apply(this, args);
+                    _setTimeout();
+                    return result;
+                }
+            }
+            headerEleVisibleHandler = throttleWrapper(headerEleVisibleHandler, { timeout: 200 });
+            window.addEventListener("scroll", headerEleVisibleHandler);
+        });
+    </script>
+    <style>
+        .container .side-card .content .item1:not(:last-child) {
+            margin-bottom: 10px;
+        }
+        .container .side-card .title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .container .side-card .title .more {
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+<div id="app">
+    <div id="header">
+    <div id="bar">
+        <div class="container mg-0-auto d-f pos-r">
+            <div class="logo">
+                <a href="../" class="nav-link" style="margin-right: 10px;">
+                    <img src="../image/portal/logo.jpg" alt="小埃的个人博客">
+                </a>
+            </div>
+            <div class="right">
+                <ul class="nav f-l">
+                        <li class="nav-item">
+                            <a href="../index.html" class="nav-link ">
+                                <span>首页</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="../category.html" class="nav-link active">
+                                <span>分类</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="../about.html" class="nav-link ">
+                                <span>关于</span>
+                            </a>
+                        </li>
+                </ul>
+                <div class="eb-title">
+                    小埃的个人博客
+                </div>
+                    <div id="search">
+                        <input type="text" id="search-input" data-prefix="../" placeholder="搜索" autocomplete="off" />
+                        <span class="search-icon t-a">
+                            <img class="el-icon-search" src="../image/portal/search.png" width="16" height="16">
+                        </span>
+                        <div id="search-result">
+                            <input type="text" class="input-1" id="search-input-2" data-prefix="../" placeholder="请输入" autocomplete="off" />
+                            <div class="content">
+                            </div>
+                            <div class="arrow"></div>
+                        </div>
+                    </div>
+
+                <div class="eb-menu">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-list-ul" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M5 11.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm-3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm0 4a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm0 4a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
+                    </svg>
+                </div>
+            </div>
+            <div id="sc-box">
+                <div class="wrapper">
+                        <div class="side-card b-s-1 mg-b-10">
+                            <div class="wrapper">
+                                <h2 class="item title">
+                                    <span>其他分类</span>
+                                </h2>
+                                <div class="item content">
+                                        <div class="item1 img-item">
+                                                <img src="../image/portal/loading.gif" data-src="..//image/portal/202304/cover/7343a87cf8934418bf3ac578bc919ac5-ff99cd229909f4f47c1d1deeb62a17c1.png" alt="">
+                                            <a href="../categories/3.html">
+                                                    游戏
+                                            </a>
+                                        </div>
+                                        <div class="item1 img-item">
+                                                <img src="../image/portal/loading.gif" data-src="..//image/portal/202304/cover/632a56a267494b458e4e29612873bc4d-541BE1327BA0E914B1E358681524E2B0.jpg" alt="">
+                                            <a href="../categories/6.html">
+                                                    随说
+                                            </a>
+                                        </div>
+                                        <div class="item1 img-item">
+                                                <img src="../image/portal/loading.gif" data-src="..//image/portal/202305/cover/8c281ab614bb4c3bb65a1637efd7ead4-88b360fef3dd2bce9043d51019ecb148.png" alt="">
+                                            <a href="../categories/9.html">
+                                                    小知识
+                                            </a>
+                                        </div>
+                                        <div class="item1 img-item">
+                                                <img src="../image/portal/loading.gif" data-src="..//image/portal/202306/b2905f5f5df142a8a40e313c5ca33fdb-28a8385d9eef0f666e476828b0c5764e.png" alt="">
+                                            <a href="../categories/10.html">
+                                                    学习笔记
+                                            </a>
+                                        </div>
+                                        <div class="item1 img-item">
+                                                <img src="../image/portal/loading.gif" data-src="..//image/portal/202307/572f1ccdb1974361a4f9d0f2b53acd28-system.png" alt="">
+                                            <a href="../categories/11.html">
+                                                    系统/软件
+                                            </a>
+                                        </div>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    <div id="main">
+        <div class="container category-2 mg-0-auto pd-t-10">
+            <div class="category-card-wrapper">
+    <div class="category-card b-s-1">
+        <div class="wrapper">
+            <div class="item content">
+                    <div class="cover">
+                        <img src="..//image/portal/202304/cover/3d5c033001d64eb2beccef8b5cb27005-7ad549a4678c166e7375f126a52b77a2.png" alt="">
+                    </div>
+                <div class="inf">
+                    <div class="name">
+                        <a style="display: inline-block; width: 100%; height: 100%;" href="../categories/1.html">编程</a>
+                    </div>
+                    <div class="desc text">先写点bug，之后再修</div>
+                    <div class="count">
+                        文章数：21
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+            </div>
+            <div class="wrapper">
+    <div class="card">
+        <div class="wrapper">
+            <div class="item title mg-b-5">
+                <a href="../articles/15.html">兼容部署在Github Pages与其他服务器的应用引入资源的解决方案</a>
+            </div>
+            <div class="item content">
+                <div class="cover f-r">
+                    <img style="object-fit: cover;" src="../image/portal/loading.gif" data-src="../image/portal/202304/cover/3d1e234ec548474aa029e07874aa6ed3-d6a08501caac287b7d89c5cc5206ffce.jpg?project=easyblog" alt="">
+                </div>
+                <span class="brief">在开发环境与部署在其他服务器下都运行良好，但是，当将该项目上传至Github Pages之后，则出现了静态资源404的问题...<a href="../articles/15.html" class="reading-more">继续阅读<i class="el-icon-thumb f-w-b"></i></a></span>
+            </div>
+            <div class="item meta mg-b-10 footer pd-t-10">
+                <span class="author">由<a href="javascript:void(0);">errol</a>发表于<a href="#">2023-04-07</a></span>
+                <span>|</span>
+                <span class="time">
+                    分类为
+                    <a href="../categories/1.html">编程</a>
+                </span>
+                    <span>|</span>
+                    <span class="tags">
+                        标签为<a href="javascript:void(0);">相对路径</a>、<a href="javascript:void(0);">绝对路径</a>、<a href="javascript:void(0);">网络路径</a>、<a href="javascript:void(0);">静态资源404</a>、<a href="javascript:void(0);">Github Pages</a>、<a href="javascript:void(0);">js</a>
+                    </span>
+            </div>
+        </div>
+    </div>
+            </div>
+        <div class="pagination-wrapper" style="text-align: center; margin-top: 20px;">
+            <ul class="pagination">
+                <li class="pre ">
+                        <a href="../index_2.html">上一页</a>
+                </li>
+                        <li class="pn ">
+                            <a href="../index.html">1</a>
+                        </li>
+                        <li class="pn ">
+                            <a href="../index_2.html">2</a>
+                        </li>
+                        <li class="pn current">
+                            <a href="../index_3.html">3</a>
+                        </li>
+                <li class="next disabled">
+                        <a href="javascript:void(0);">下一页</a>
+                </li>
+            </ul>
+        </div>
+        </div>
+    </div>
+
+    <div id="footer">
+        <div class="container mg-0-auto">
+    <div class="wrapper">
+        <span class="item">
+            © 2023-Present xxzhiwei.github.io. All rights reserved.
+        </span>
+    </div>
+        </div>
+    </div>
+</div>
+    <script src="../js/data.js"></script>
+    <script src="../js/lazy.js"></script>
+    <script src="../js/search.js"></script>
+    <script src="../js/menu.js"></script>
+</body>
+</html>

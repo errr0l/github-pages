@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>一种可能可行的滑动认证码处理方案 - 小埃的个人博客</title>
+    <title>【某易云逆向】滑动验证码识别篇 - 小埃的个人博客</title>
     <link rel="stylesheet" href="../css/reset.css">
     <link rel="stylesheet" href="../css/base.css">
     <link rel="stylesheet" href="../css/index.css">
@@ -88,12 +88,13 @@
             window.addEventListener("scroll", headerEleVisibleHandler);
         });
     </script>
-        <meta name="keywords" content="爬虫,认证码,python,滑动认证码">
-        <meta name="description" content="一种可能可行的滑动认证码处理方案；现如今，认证码（CAPTCHA）已经成为自动化网络爬虫无法绕过的坎，所谓认证码，就是一种用于区分用户是机器或人的全自动程序，是一种反爬的手段&措施，由此可见，“自动化”与“认证码”是互相对立的存在，爬虫想要达成自动化，就必须攻克验证码...">
+        <meta name="keywords" content="爬虫,认证码,python,滑动认证码,验证码,逆向">
+        <meta name="description" content="【某易云逆向】滑动验证码识别篇；现如今，验证码（CAPTCHA）已经成为自动化网络爬虫无法绕过的坎，所谓验证码，就是一种用于区分用户是机器或人的全自动程序，是一种反爬的手段&措施，由此可见，“自动化”与“验证码”是互相对立的存在，爬虫想要达成自动化，就必须攻克验证码...">
     <link rel="stylesheet" href="../css/article.css">
     <link rel="stylesheet" href="../css/markdown/github-markdown.css">
     <link rel="stylesheet" href="../css/markdown/github-markdown-light.css">
     <link rel="stylesheet" href="../css/gittalk-cover.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/viewerjs/1.11.7/viewer.min.css">
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
     <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
     <script>hljs.highlightAll();</script>
@@ -158,7 +159,12 @@
                                 <div class="item content">
                                         <div class="item1 ">
                                             <a href="../articles/69.html">
-                                                    某云滑动认证码逆向
+                                                    【某易云逆向】滑动验证码校验篇
+                                            </a>
+                                        </div>
+                                        <div class="item1 ">
+                                            <a href="../articles/72.html">
+                                                    【某易云逆向】账号登录篇
                                             </a>
                                         </div>
                                         <div class="item1 ">
@@ -184,7 +190,7 @@
             <div class="wrapper">
                 <article class="mg-b-20">
                     <div class="markdown-body">
-                        <div class="title">一种可能可行的滑动认证码处理方案</div>
+                        <div class="title">【某易云逆向】滑动验证码识别篇</div>
                         <div class="item meta mg-b-10">
                             <span class="author">由<a href="javascript:void(0);">errol</a>发表于<a href="#">2024-09-02</a></span>
                             <span>|</span>
@@ -193,12 +199,12 @@
                             <a href="../categories/1.html">编程</a></span>
                             <span>|</span>
                             <span class="tags">
-                                标签为<a href="javascript:void(0);">爬虫</a>、<a href="javascript:void(0);">认证码</a>、<a href="javascript:void(0);">python</a>、<a href="javascript:void(0);">滑动认证码</a>
+                                标签为<a href="javascript:void(0);">爬虫</a>、<a href="javascript:void(0);">认证码</a>、<a href="javascript:void(0);">python</a>、<a href="javascript:void(0);">滑动认证码</a>、<a href="javascript:void(0);">验证码</a>、<a href="javascript:void(0);">逆向</a>
                             </span>
                         </div>
                         <div class="content">
-                            <p>现如今，认证码（CAPTCHA）已经成为自动化网络爬虫无法绕过的坎，<strong>所谓认证码，就是一种用于区分用户是机器或人的全自动程序，是一种反爬的手段&amp;措施</strong>，由此可见，“自动化”与“认证码”是互相对立的存在，爬虫想要达成自动化，就必须攻克验证码。</p>
-<p>而<strong>滑动认证码</strong>就是验证码家族中的一员。</p>
+                            <p>现如今，验证码（CAPTCHA）已经成为自动化网络爬虫无法绕过的坎，<strong>所谓验证码，就是一种用于区分用户是机器或人的全自动程序，是一种反爬的手段&amp;措施</strong>，由此可见，“自动化”与“验证码”是互相对立的存在，爬虫想要达成自动化，就必须攻克验证码。</p>
+<p>而<strong>滑动验证码</strong>就是验证码家族中的一员。</p>
 <p>虽说经过几代的发展后，使用率大不如前，但也还占有一定的比率，因此，学习如何处理该种验证码仍具有意义，同时，它也是为数不多的比较容易处理的验证码类型之一。（较好欺负）</p>
 <p>主要分为两种思路：</p>
 <p>1）模板匹配；使用滑块来匹配背景图片中的缺口，将滑块的像素与背景图片一一对照</p>
@@ -221,7 +227,7 @@
 </li>
 </ul>
 <p>此外，还有一个隐藏条件，滑块与缺口要处于水平对齐状态。</p>
-<p>一般情况下，展示给用户的滑动认证码的滑块与缺口是水平对齐的，但并不意味着它的原图也处于相同的状态，如果遇到这种情况，就需要找到该验证码对齐的规律并应用。</p>
+<p>一般情况下，展示给用户的滑动验证码的滑块与缺口是水平对齐的，但并不意味着它的原图也处于相同的状态，如果遇到这种情况，就需要找到该验证码对齐的规律并应用。</p>
 <p>以下的实现需要依赖Pillow、opencv-python。</p>
 <h5 id="hidp-heading-3">2、滑块边沿像素坐标采集</h5>
 <p>先后对读取的图片进行了灰度、二值化处理，随后进行采集像素点。</p>
@@ -378,15 +384,15 @@ def match(path, pos_list, start_x=0, offset_x=0):
 <p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202409/cdd0d1f221814a7281890244a08c861d-710779a640119323ba5bf4b322d4f067.png?project=easyblog" /></p>
 <p><em>图11 无法识别缺口示例图（处理后）</em></p>
 <p>2）无法正确读取滑块边沿像素点</p>
-<p>有些网站中，滑块图并不单独存在，此时需要找到网站认证码的排布规律，采集滑块像素点并使之与缺口水平对齐。</p>
+<p>有些网站中，滑块图并不单独存在，此时需要找到网站验证码的排布规律，采集滑块像素点并使之与缺口水平对齐。</p>
 <p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202409/2c449505ac9042db8d6806db4bea41ea-ab0a3837a9132119d15b66670a785163.png?project=easyblog" /></p>
 <p><em>图12 无法正确读取滑块边沿像素点示例图</em></p>
 <hr />
 <h4 id="hidp-heading-11">四、后记</h4>
 <p>本文的<a href="https://github.com/xxzhiwei/demo/tree/master/sliding-captcha-demo">源代码</a>已经上传至github，可根据需要自行获取。</p>
 <p>该方案取巧的地方在于，它假设背景图片中缺口所在的水平线上，有且仅有一个“缺口”的形状，假设满足条件，一般都能够匹配成功，这好比在只有一个字符“a”的数组里查找“a”，只要从头遍历到尾，是必定可以查找到的；相反，如果水平线上存在多个“缺口”形状，那将会导致失败。</p>
-<p>总的来说，如文章开头所言，滑动认证码是一种较容易处理的验证码类型，使用通常的点子与思路足以应付，但也需要一些库的支持，如Pillow、opencv-python，同时也不能保证百分百识别成功。</p>
-<p>不过，随着越来越多的网站使用的是与用户交互更加密切相关的认证码，如点选（文字&amp;图像&amp;方向等）、图像识别等，滑动认证码的生存空间正在进一步受到“排挤”，以后会被完全取代也说不定。</p>
+<p>总的来说，如文章开头所言，滑动验证码是一种较容易处理的验证码类型，使用通常的点子与思路足以应付，但也需要一些库的支持，如Pillow、opencv-python，同时也不能保证百分百识别成功。</p>
+<p>不过，随着越来越多的网站使用的是与用户交互更加密切相关的验证码，如点选（文字&amp;图像&amp;方向等）、图像识别等，滑动验证码的生存空间正在进一步受到“排挤”，以后会被完全取代也说不定。</p>
 <p>而这些新型的验证码，一般来说，人类很容易辨别，但机器却很难，甚至无从下手，此时，就必须要接入专门的机器学习算法了，或者也可以选择接入打码平台。</p>
 <p>以上。</p>
 
@@ -420,10 +426,26 @@ def match(path, pos_list, start_x=0, offset_x=0):
     <script src="../js/search.js"></script>
     <script src="../js/menu.js"></script>
 <script src="../js/toc.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/viewerjs/1.11.7/viewer.min.js"></script>
 <script>
     let back = document.querySelector(".back");
     back.addEventListener("click", function () {
         window.history.go(-1);
+    });
+    const viewer = new Viewer(document.querySelector('.markdown-body .content'), {
+        toolbar: {
+            zoomIn: 4,
+            zoomOut: 4,
+            oneToOne: 4,
+            reset: 0,
+            prev: 4,
+            play: 0,
+            next: 4,
+            rotateLeft: 0,
+            rotateRight: 0,
+            flipHorizontal: 0,
+            flipVertical: 0,
+        },
     });
 </script>
 </body>
