@@ -94,6 +94,7 @@
     <link rel="stylesheet" href="../css/markdown/github-markdown.css">
     <link rel="stylesheet" href="../css/markdown/github-markdown-light.css">
     <link rel="stylesheet" href="../css/gittalk-cover.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/viewerjs/1.11.7/viewer.min.css">
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
     <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
     <script>hljs.highlightAll();</script>
@@ -345,6 +346,7 @@ class LastModifiedFileFilter implements IOFileFilter {
 <h4 id="hidp-heading-8">2、创建文章分页html</h4>
 <pre><code class="language-java">private void createIndexHtml() {
     // 略...
+    int iSize = (int) PaginationUtil.SIZE;
     for (long i=1; i&lt;=articlePages; i++) {
         // 生成每页的html文件名，并对应页的配置
         String htmlName = i &gt; 1 ? String.format(&quot;index_%d.html&quot;, i) : &quot;index.html&quot;;
@@ -364,15 +366,16 @@ class LastModifiedFileFilter implements IOFileFilter {
             Article item = pending.get(index);
             articleList.add(item);
             String id = item.getId() + &quot;:&quot; + item.getLastUpdatedAt().getTime();
-            // 当配置不存在时，以当前数据新建
-            if (0 == size) {
+            int _index = index % iSize;
+            // 当_index大于size时，说明有新数据；
+            // 注意，如果ArrayList调用set()超过当前的元素个数时，比如当前size为5，调用方法时，将下标设置为10，那么，中间的元素会被默认置为空；
+            if (0 == size || _index &gt;= size) {
                 _count++;
                 indexConfig.add(id);
             }
-            // 当配置发生变化时，更新数据
-            else if (!indexConfig.get(index % (int) PaginationUtil.SIZE).equals(id)) {
+            else if (!indexConfig.get(_index).equals(id)) {
                 _count++;
-                indexConfig.set(index, id);
+                indexConfig.set(_index, id);
             }
         }
         dataMap.put(FreemarkerUtil.TEMPLATE_PATH, appConfig.getTemplatePath());
@@ -457,10 +460,26 @@ class LastModifiedFileFilter implements IOFileFilter {
     <script src="../js/search.js"></script>
     <script src="../js/menu.js"></script>
 <script src="../js/toc.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/viewerjs/1.11.7/viewer.min.js"></script>
 <script>
     let back = document.querySelector(".back");
     back.addEventListener("click", function () {
         window.history.go(-1);
+    });
+    const viewer = new Viewer(document.querySelector('.markdown-body .content'), {
+        toolbar: {
+            zoomIn: 4,
+            zoomOut: 4,
+            oneToOne: 4,
+            reset: 0,
+            prev: 4,
+            play: 0,
+            next: 4,
+            rotateLeft: 0,
+            rotateRight: 0,
+            flipHorizontal: 0,
+            flipVertical: 0,
+        },
     });
 </script>
 </body>

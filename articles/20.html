@@ -94,6 +94,7 @@
     <link rel="stylesheet" href="../css/markdown/github-markdown.css">
     <link rel="stylesheet" href="../css/markdown/github-markdown-light.css">
     <link rel="stylesheet" href="../css/gittalk-cover.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/viewerjs/1.11.7/viewer.min.css">
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
     <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
     <script>hljs.highlightAll();</script>
@@ -339,10 +340,26 @@ order by tagMatched desc limit 5;
     <script src="../js/search.js"></script>
     <script src="../js/menu.js"></script>
 <script src="../js/toc.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/viewerjs/1.11.7/viewer.min.js"></script>
 <script>
     let back = document.querySelector(".back");
     back.addEventListener("click", function () {
         window.history.go(-1);
+    });
+    const viewer = new Viewer(document.querySelector('.markdown-body .content'), {
+        toolbar: {
+            zoomIn: 4,
+            zoomOut: 4,
+            oneToOne: 4,
+            reset: 0,
+            prev: 4,
+            play: 0,
+            next: 4,
+            rotateLeft: 0,
+            rotateRight: 0,
+            flipHorizontal: 0,
+            flipVertical: 0,
+        },
     });
 </script>
 </body>
