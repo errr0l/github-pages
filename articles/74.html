@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>【某易云逆向】模拟登录篇 - 小埃的个人博客</title>
+    <title>看来以后不需要特意绕开了 - 小埃的个人博客</title>
     <link rel="stylesheet" href="../css/reset.css">
     <link rel="stylesheet" href="../css/base.css">
     <link rel="stylesheet" href="../css/index.css">
@@ -88,8 +88,8 @@
             window.addEventListener("scroll", headerEleVisibleHandler);
         });
     </script>
-        <meta name="keywords" content="验证码,登录,某云,某易云,逆向">
-        <meta name="description" content="【某易云逆向】模拟登录篇；本来程序已经写完，已经到要开香槟庆祝的程度，没想到最后的最后还是差了一步，而也正是这一步，使得前后相差“万里”...">
+        <meta name="keywords" content="qt,游戏">
+        <meta name="description" content="看来以后不需要特意绕开了；平时在ga爬楼途中，咱遇到同区的或ID是中文昵称的玩家时，都会有意地绕开，其实也没啥，无非就是心中那股泛滥的归属感，认为他们是自己人，应该要互相照应并一致对外...">
     <link rel="stylesheet" href="../css/article.css">
     <link rel="stylesheet" href="../css/markdown/github-markdown.css">
     <link rel="stylesheet" href="../css/markdown/github-markdown-light.css">
@@ -158,13 +158,33 @@
                                 </h2>
                                 <div class="item content">
                                         <div class="item1 ">
-                                            <a href="../articles/69.html">
-                                                    【某易云逆向】滑动验证码校验篇
+                                            <a href="../articles/75.html">
+                                                    研究追放中的“距离”机制
                                             </a>
                                         </div>
                                         <div class="item1 ">
-                                            <a href="../articles/65.html">
-                                                    【某易云逆向】滑动验证码识别篇
+                                            <a href="../articles/49.html">
+                                                    pqt退出（切换）游戏账号的解决方案
+                                            </a>
+                                        </div>
+                                        <div class="item1 ">
+                                            <a href="../articles/44.html">
+                                                    效果看起来还不错
+                                            </a>
+                                        </div>
+                                        <div class="item1 ">
+                                            <a href="../articles/30.html">
+                                                    “游戏账号已被拉入黑名单”
+                                            </a>
+                                        </div>
+                                        <div class="item1 ">
+                                            <a href="../articles/24.html">
+                                                    普通玩家如何获取更多的PvP奖励
+                                            </a>
+                                        </div>
+                                        <div class="item1 ">
+                                            <a href="../articles/18.html">
+                                                    玩游戏时血压是这么上来的
                                             </a>
                                         </div>
                                 </div>
@@ -180,45 +200,38 @@
             <div class="wrapper">
                 <article class="mg-b-20">
                     <div class="markdown-body">
-                        <div class="title">【某易云逆向】模拟登录篇</div>
+                        <div class="title">看来以后不需要特意绕开了</div>
                         <div class="item meta mg-b-10">
-                            <span class="author">由<a href="javascript:void(0);">errol</a>发表于<a href="#">2025-01-14</a></span>
+                            <span class="author">由<a href="javascript:void(0);">errol</a>发表于<a href="#">2025-02-20</a></span>
                             <span>|</span>
                             <span class="time">
                             分类为
-                            <a href="../categories/1.html">编程</a></span>
+                            <a href="../categories/3.html">游戏</a></span>
                             <span>|</span>
                             <span class="tags">
-                                标签为<a href="javascript:void(0);">验证码</a>、<a href="javascript:void(0);">登录</a>、<a href="javascript:void(0);">某云</a>、<a href="javascript:void(0);">某易云</a>、<a href="javascript:void(0);">逆向</a>
+                                标签为<a href="javascript:void(0);">qt</a>、<a href="javascript:void(0);">游戏</a>
                             </span>
                         </div>
+                            <div class="cover mg-b-10">
+                                <img src="../image/portal/202502/e2ca88bba49641909801749062236319-9C900D0907847DBA5AA15775AF6DA6BB.jpg?project=easyblog" alt="">
+                            </div>
                         <div class="content">
-                            <p><strong>本来程序已经写完，已经到要开香槟庆祝的程度，没想到最后的最后还是差了一步，而也正是这一步，使得前后相差“万里”。</strong></p>
-<p>码完，一些准备就绪，开心地输入账号密码并运行，结果被服务器告知...</p>
-<blockquote>
-<p>&quot;需要进入二阶段验证&quot;</p>
-</blockquote>
-<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202501/e0e10c12162a4f1a999db796a66134b5-0DEE7E541F5C440122DCB2DA78FF0D64.png?project=easyblog" /></p>
-<p><em>图1 登录接口响应信息</em></p>
-<p>转而在网站中测试时，也是一样的情况。</p>
-<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202501/5886492072de4e51951c5c137741cfe7-4F9F501EEED4679E160CBE60DC8EC7F6.jpg?project=easyblog" /></p>
-<p><em>图2 安全验证</em></p>
-<p>在结合其他方面的考量过后，作者最终认定这种方式不可行。</p>
-<p><strong>究其原因，主要是网易云账号&amp;密码的登录方式，始终逃不过二重认证</strong>。</p>
-<p>二重认证，简单地来说，是一种保护账号安全的手段之一，按照相关的资料可知，在新设备或新环境操作时，须使用受信任的终端进行授权认证。</p>
-<p>虽然app上确实是有相应的开关，起初看到以为手动授权过一次后，当前设备会被列入白名单内，从而免去再验证，这样的话，倒是还可以玩一玩。</p>
-<p><strong>但这是不可能的。</strong></p>
-<p>跟账号密码一样，是个形同虚设的东西，关了等于开了，开了就需要二次认证，并不可以由用户主动控制。</p>
-<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202501/c1b5c7cfa56c4d31a21c448d164229ac-23CCBA96AA4E322D305982165B044AA2.jpg?project=easyblog" /></p>
-<p><em>图3 “登录保护开关”</em></p>
-<p>不过，也有例外，比如在桌面端进行操作时，就无需二次认证，挺迷的。究竟基于什么样的因素形成了这两种不同的状况，目前无从得知。</p>
-<p>之前看到登录接口返回“账号或密码”提示信息的时候，以为已经成功了，现在看来还是太天真。</p>
-<p>总而言之，言而总之，目前看起来账号&amp;密码方式行不通，只能通过手机短信或扫码方式进行登录，无法达成程序自动化，拿捏得很死。</p>
-<p>现在国内不少应用都有这种趋势，知道账号&amp;密码毫无用处，只有终端设备才是唯一的凭证，更有甚者，需要从已经处于登录状态的应用中获取验证码，不满足这一条件时，连自己的手机号都没用，而<strong>必须邀请好友帮助证明你是你</strong>，以至于成为我每次更换设备时一件不得不吐槽的事情，急起来时，还把发明了这个的人的祖宗十八代骂了个遍。</p>
-<p>so，虽然没完成，但本系列不得不宣布暂时告一段落。</p>
-<p>如果以后能找到方案的话，再重启吧。但说实话，希望很渺茫。</p>
-<p>以上。</p>
-<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202501/aee0af43dc234e2ab3c5839fa9f4f931-63C018DDD9AB5478918F9BBE0CD8E868.jpg?project=easyblog" /></p>
+                            <p>平时在ga爬楼途中，咱遇到同区的或ID是中文昵称的玩家时，都会有意地绕开，其实也没啥，无非就是心中那股泛滥的归属感，认为他们是自己人，应该要互相照应并一致对外。</p>
+<p>虽然更多的是自己自作多情就是了...</p>
+<p>印象中，我不止一次让“自己人”背刺，如果不是自己平时的排名比较靠前，他们碰不到的话，这种情况可能会更多，你永远不会知道别人是怎么想的。</p>
+<p>不过，也只会到今天为止，因为咱总是吃亏，所以咱不干了。</p>
+<p>跟往常一样，前方刷了一个中文昵称玩家，我是计划等着他上去之后再动身，这样就能最大限度地利用免费的爬楼次数，结果做完其他日常回来时，发现自己被打了，从33掉到53名，玛德。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202502/45f74b25f9fb40808f34c917d6001300-CBF652521363394D162926D026A662CA.jpg?project=easyblog" /></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202502/2e391072ceee4075af79bf3eb7677480-4C15482D362EA85F29471FDE0D56AF69.jpg?project=easyblog" /></p>
+<p>第一次被干掉那么多名次，有种强烈的挫败感。虽然这么说可能会有点自视过高，我认为对于咱这种级别的玩家，要打也应该是在前十，而不是在33处被狙击掉了一个大排名。虽然自己平时也没少干这种事，但这会儿发生在自己身上感觉还是很难受的... （就是那么双标）</p>
+<p>于是乎，脑子一热，想追上去干回来，但由于我终究还是选择绕开前面的中文名，导致自己并没有刷到他：怀着复仇的心态连续点了几下，再看排行榜时，发现为时已晚，自己已经在前面了。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202502/f0727073dbc14f2bb5deeec083ec8a52-2D2C5172B2241AF7FC7E12F06A4B049F.jpg?project=easyblog" /></p>
+<p>如果不绕路的话，是一定可刷到的，一看就知道他是按照最佳路线上去的，33 -&gt; 23 -&gt; 20，但我也只能咬牙切齿，血亏。</p>
+<p>现在想起来就觉得好气，平白无故被踩了一脚，被打了还还不了手，而且我本来就不用吃这个闷亏，如果当时不犹豫的话，一路刷上去就完事了，不可能遇到，也就不可能会被打。</p>
+<p>同时，还有点失落，毕竟今天自己刚刚完成了“究极进化”，指的是满配水龙&amp;诺娃，怎么连第一次进攻就没防下来... 一连串的反应下来之后，我承认有点破防了，我就不应该那么圣母。</p>
+<p>不过，后面意识到对方的id后，也释怀了，老熟人、老对手，战力也比咱高，妥妥的氪金母猪，也没什么好说的。</p>
+<p>深刻反思，做了那么久“好事”，什么好处没捞到不说，反而尽是自己吃亏，到底图啥？为什么要玩得那么憋屈？</p>
+<p>所以，今日在此立誓，以后绝不绕路，“神挡杀神佛挡杀佛”，这才是我的快乐源泉，反正也不是自己人。</p>
 
                         </div>
                     </div>

@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>研究追放中的“距离”机制 - 小埃的个人博客</title>
+    <link rel="stylesheet" href="../css/reset.css">
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/index.css">
+    <link rel="stylesheet" href="../css/header.css">
+    <link rel="stylesheet" href="../css/mobile.css">
+    <link rel="stylesheet" href="../css/theme-light.css">
+    <link rel="shortcut icon" href="../favicon.ico" type="image/x-icon">
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?d1fc0144cbb354a3f8442b7ba568bc2f";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+
+        window.addEventListener('DOMContentLoaded', () => {
+            let headerEle = document.getElementById('header');
+            let eleHeight = headerEle.offsetHeight;
+            let lastScrollTop = 0;
+            let topAnchor = 0; // 某个方向的锚点
+            let downAnchor = 0;
+            let stylTop = "-" + eleHeight + "px";
+            let stylTop2 = "0";
+            let threshold = 180;
+            function headerEleVisibleHandler() {
+                let scrollTop = document.documentElement.scrollTop;
+                // 向下滚动
+                if (scrollTop > lastScrollTop) {
+                    if (downAnchor !== 0) {
+                        downAnchor = 0;
+                    }
+                    if (topAnchor === 0) {
+                        topAnchor = scrollTop;
+                    }
+                    if ((scrollTop > threshold || scrollTop - topAnchor > threshold) && headerEle.style.top !== stylTop) {
+                        headerEle.style.top =  stylTop;
+                    }
+                }
+                // 向上
+                else {
+                    if (topAnchor !== 0) {
+                        topAnchor = 0;
+                    }
+                    if (downAnchor === 0) {
+                        downAnchor = scrollTop;
+                    }
+                    if ((scrollTop + threshold > downAnchor) && headerEle.style.top === stylTop) {
+                        headerEle.style.top = stylTop2;
+                    }
+                }
+                lastScrollTop = scrollTop;
+            }
+
+            function throttleWrapper(fn, options) {
+                if (!options) {
+                    options = {};
+                }
+                let timer = null;
+                const { timeout } = options;
+
+                const _setTimeout = () => {
+                    timer = window.setTimeout(() => {
+                        window.clearTimeout(timer);
+                        timer = null;
+                    }, timeout);
+                    return timer;
+                }
+
+                return function (...args) {
+                    if (timer) {
+                        return;
+                    }
+                    timer = -1;
+                    let result = fn.apply(this, args);
+                    _setTimeout();
+                    return result;
+                }
+            }
+            headerEleVisibleHandler = throttleWrapper(headerEleVisibleHandler, { timeout: 200 });
+            window.addEventListener("scroll", headerEleVisibleHandler);
+        });
+    </script>
+        <meta name="keywords" content="游戏,追放">
+        <meta name="description" content="研究追放中的“距离”机制；说来惭愧，虽然玩少前2追放这款游戏已经有一段时间，但我至今还是不太懂游戏内的某些机制，只是胡乱地在棋盘上操作一通。起初我也很惊讶自己...">
+    <link rel="stylesheet" href="../css/article.css">
+    <link rel="stylesheet" href="../css/markdown/github-markdown.css">
+    <link rel="stylesheet" href="../css/markdown/github-markdown-light.css">
+    <link rel="stylesheet" href="../css/gittalk-cover.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/viewerjs/1.11.7/viewer.min.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</head>
+<body>
+<div id="app">
+    <div id="header">
+    <div id="bar">
+        <div class="container mg-0-auto d-f pos-r">
+            <div class="logo">
+                <a href="../" class="nav-link" style="margin-right: 10px;">
+                    <img src="../image/portal/logo.jpg" alt="小埃的个人博客">
+                </a>
+            </div>
+            <div class="right">
+                <ul class="nav f-l">
+                        <li class="nav-item">
+                            <a href="../index.html" class="nav-link active">
+                                <span>首页</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="../category.html" class="nav-link ">
+                                <span>分类</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="../about.html" class="nav-link ">
+                                <span>关于</span>
+                            </a>
+                        </li>
+                </ul>
+                <div class="eb-title">
+                    小埃的个人博客
+                </div>
+                    <div id="search">
+                        <input type="text" id="search-input" data-prefix="../" placeholder="搜索" autocomplete="off" />
+                        <span class="search-icon t-a">
+                            <img class="el-icon-search" src="../image/portal/search.png" width="16" height="16">
+                        </span>
+                        <div id="search-result">
+                            <input type="text" class="input-1" id="search-input-2" data-prefix="../" placeholder="请输入" autocomplete="off" />
+                            <div class="content">
+                            </div>
+                            <div class="arrow"></div>
+                        </div>
+                    </div>
+
+                <div class="eb-menu">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-list-ul" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M5 11.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm-3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm0 4a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm0 4a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
+                    </svg>
+                </div>
+            </div>
+            <div id="sc-box">
+                <div class="wrapper">
+                        <div class="side-card b-s-1 mg-b-10">
+                            <div class="wrapper">
+                                <h2 class="item title">
+                                    <span>相关文章</span>
+                                </h2>
+                                <div class="item content">
+                                        <div class="item1 ">
+                                            <a href="../articles/74.html">
+                                                    看来以后不需要特意绕开了
+                                            </a>
+                                        </div>
+                                        <div class="item1 ">
+                                            <a href="../articles/49.html">
+                                                    pqt退出（切换）游戏账号的解决方案
+                                            </a>
+                                        </div>
+                                        <div class="item1 ">
+                                            <a href="../articles/30.html">
+                                                    “游戏账号已被拉入黑名单”
+                                            </a>
+                                        </div>
+                                        <div class="item1 ">
+                                            <a href="../articles/24.html">
+                                                    普通玩家如何获取更多的PvP奖励
+                                            </a>
+                                        </div>
+                                        <div class="item1 ">
+                                            <a href="../articles/18.html">
+                                                    玩游戏时血压是这么上来的
+                                            </a>
+                                        </div>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    <div id="main">
+        <div class="container mg-0-auto pd-t-10">
+            <div class="wrapper">
+                <article class="mg-b-20">
+                    <div class="markdown-body">
+                        <div class="title">研究追放中的“距离”机制</div>
+                        <div class="item meta mg-b-10">
+                            <span class="author">由<a href="javascript:void(0);">errol</a>发表于<a href="#">2025-02-24</a></span>
+                            <span>|</span>
+                            <span class="time">
+                            分类为
+                            <a href="../categories/3.html">游戏</a></span>
+                            <span>|</span>
+                            <span class="tags">
+                                标签为<a href="javascript:void(0);">游戏</a>、<a href="javascript:void(0);">追放</a>
+                            </span>
+                        </div>
+                        <div class="content">
+                            <p>说来惭愧，虽然玩少前2追放这款游戏已经有一段时间，但我至今还是不太懂游戏内的某些机制，只是胡乱地在棋盘上操作一通。</p>
+<p>起初我也很惊讶自己是怎么在这种情况下把追放这款“战棋”游戏玩到现在的，还几乎没什么压力。</p>
+<p>而原本对于战棋类游戏，如果不把游戏机制搞明白的话，根本没法玩，类似于规则怪谈，“如果怎么样，才能怎么样，否则就怎么样”，即使退一步说，也会玩得很艰难。</p>
+<p>这主要是因为，追放并非传统意义上的战棋游戏。</p>
+<p>往好听点说，它是一款轻量化的战棋游戏；往难听点说，它是一个披着战棋标签的割草游戏，尤其是我们的416实装之后，进图就开始飙车，直冲敌方大本营、堵泉水是日常操作，根本没有感受到其策略性。</p>
+<p>事实上，这也是受大环境的影响，玩家没有太多的时间和精力，游戏厂商，尤其是手游厂商，只能将游戏趋向于轻量化、快餐化，也就是所谓的“弱保软”。</p>
+<blockquote>
+<p>指为迎合理解能力较弱或不愿投入太多精力的用户(尤其是新手)而做出的妥协，通常表现为傻瓜式引导和极低的关卡与活动难度，使得玩家更容易上手和享受游戏乐趣。</p>
+</blockquote>
+<p>当然，并不是说“弱保软”不好，至少我是玩得挺轻松的。</p>
+<p>因此，即使不了解该游戏的机制，也可以畅玩追放，而这也是大多数玩家的现状，我相信，应该没有太多人冲着战棋元素来玩这游戏。</p>
+<p>通常来说是这样，<strong>但是，由于追放在具备了“弱保软”特性的同时，又保留了一点“原来的味道”，使得该游戏会存在一定的争议</strong>。</p>
+<p>日常的活动、关卡副本设计得过于简单，以至于玩家根本不需要了解游戏机制，导致一旦碰到“原来的味道”时（体现在高难、工会战等地方），根本无从应对，加上游戏官方对于这部分的描述，很多整得跟天书一样密密麻麻的一片，不少人连看一眼的欲望都没有，更别说看懂。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202502/94a90dda38ea485aa8ec73839989ce0f-9C4885D8302F96E1AE873FB79A9ED27F.png?project=easyblog" /></p>
+<p><em>图1 某角色的技能</em></p>
+<p><del>每个蓝色链接还有一段额外的文字说明</del></p>
+<p>一般情况下，此类关卡都设置了几乎每个玩家都想要争取的丰厚奖励，亦或是与荣誉排名相关。</p>
+<p>这个时候，有一部分机智的，也不想坐牢学习游戏机制的玩家会选择去抄别人的作业，可轻松获取通关奖励；而有一小部分自尊心强，又不明白，也不想了解机制的玩家则开始喷设计不合理、逼氪没法玩云云，换做平时，他们还可能抱怨游戏没有挑战性，没法体现他们的真正实力... 我丝毫不掩饰自己对这种人的厌恶。</p>
+<p>似乎扯远了... 总而言之，如果了解游戏机制的话，就可以不用面对上述的情况。动动自己的脑子，根据敌我双方的特性，思考得出方法对策，享受一下追放为数不多的游戏性，不然没啥意思，我是这么认为的。</p>
+<p>不过，虽然追放关于游戏机制的描述很多、很长，到令人厌烦的程度，但也有这样的一些，游戏里连影子都没有，只能在社区中找到零星的玩家总结，还没有一个统一的标准，每个人都各抒己见，不好理解。</p>
+<p>本文的主题<strong>距离</strong>就是其中的一个。</p>
+<h4 id="hidp-heading-0">1、距离机制分析</h4>
+<p>由距离机制，衍生出了敌我双方<strong>距离计算</strong>的问题，如何站位与敌方距离最近、最远；其中还包含了一个隐藏的<strong>攻击优先级</strong>问题，在距离相同的情况下，敌方会攻击谁。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202502/061f3f4d72d540d3bd107fd00412af19-D31BAFEB7E0BAD7DDB05222B2332C24C.jpg?project=easyblog" /></p>
+<p><em>图2 某头目按距离点名技能</em></p>
+<p>虽说此类技能比较普遍，几乎是每个精英、头目的必备技，但在游戏内硬是找不到一点关于“距离”的描述，自然而然，也就不明白其判定方式，不知道是不是游戏官方把它定性为常识了还是怎么滴。</p>
+<p>对“距离”的一知半解，让我在很长的一段时间内都没法控制住局面，即不能精准控制谁应该吃技能，只会一味地进攻，在压力较小的情况下确实可以，但成就感不大，且这种不能按照预期发展的方式不讨喜；压力大时，基本不可行，错一步就已经很可能会导致崩盘。</p>
+<p>因此，为了能有更好的游玩体验，今天有必要来重新学习一下追放的“距离”机制。</p>
+<p><strong>简单的来说，就是数格子：从人物所在的前一格开始，按照就近原则，数到敌方中心的格子数，即是双方的距离</strong>。</p>
+<p>以下图中的站位为例。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202502/221e30651c8d464e9c8ef27b69f8c092-85E7AEF19BB8A2D226FE92B9D110D6A0-6.jpg?project=easyblog" /></p>
+<p><em>图3 距离分析1</em></p>
+<p>将191作为为分析对象，按照前面的计算方式，从角色所在地，一路数到敌方中心，格子的数量，即距离为3，如下所示。（从角色由侧计算时，结果也是一样）</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202502/334809817b2f4fc98af20c674630ec4f-85E7AEF19BB8A2D226FE92B9D110D6A0-2.jpg?project=easyblog" /></p>
+<p><em>图4 距离分析2</em></p>
+<p>将97霰作为为分析对象，其与敌方的距离同样为3。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202502/bc460eeb1eb449e394b9c8fcdc27cd6f-85E7AEF19BB8A2D226FE92B9D110D6A0-3.jpg?project=easyblog" /></p>
+<p><em>图5 距离分析3</em></p>
+<p>同理，使用相同的测算方法计算416、g36与敌方之间的距离，则为：</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202502/f688797536a547ee8ae0390c2ab1eeaa-85E7AEF19BB8A2D226FE92B9D110D6A0-4.jpg?project=easyblog" /></p>
+<p><em>图6 距离分析4</em></p>
+<p>如果是在移动到红色预定位置之前，则距离为3。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202502/1e3be45f8ecf4eb8a0129caaf89029c2-85E7AEF19BB8A2D226FE92B9D110D6A0.jpg?project=easyblog" /></p>
+<p><em>图7 距离分析5</em></p>
+<p>所以，如果该头目有近远距离点名的技能时，毫无疑问，距离最远会选择g36为目标（距离5）；按距离最近时，会选择191和97霰中的其中一个，但至于是谁，那就涉及到接下来的另一个问题了，也就是关于攻击优先级的问题。</p>
+<h4 id="hidp-heading-1">2、攻击优先级机制分析</h4>
+<p>“攻击优先级”，也称“仇恨值”，听起来挺复杂，但经测试下来，发现其实也是个非常简单的问题。</p>
+<p>先说结论，<strong>它主要与编排序号有关</strong>。</p>
+<p>容我使用下面的图片进行说明（后面的截图均基于该图）。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202502/9de0c8c8fa9b412088e40d387e413a55-Screenshot_20250219_190747_2.jpg?project=easyblog" /></p>
+<p><em>图8 攻击优先级分析1</em></p>
+<p>如图8所示，从左到右为每个坑位编排了序号，<strong>攻击优先级与该序号正相关：1号位 &gt; 2号位 &gt; 3号位 &gt; 4号位，但5号位是个例外，它是个助战位，优先级最高，而且它不是1-4号位那样的固定优先级，它是与角色绑定的，无论调整到几号位置，都会成为优先攻击的对象，最终的优先级顺序为：助战角色 &gt; 1号位 &gt; 2号位 &gt; 3号位 &gt; 4号位</strong>。</p>
+<p>需要再次提醒一下，除了助战位之外，其他的优先级只与坑位序号有关。</p>
+<p>首先是按照默认位置开局。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202502/9608fd02783d418a910d621349577aa4-380EDC24362C68EA7410ACC09F58CA0E.jpg?project=easyblog" /></p>
+<p><em>图9 攻击优先级分析2</em></p>
+<blockquote>
+<p>虽然可能会让人疑惑，但人物头顶的数字表示的只是自动模式下的行动顺序，未经任何调整，跟图8保持一致，1号索米，2号春田，3号416，4号托洛洛，5号191。</p>
+</blockquote>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202502/1828ecd176474048b919b1cc34eb3f6c-72266154741E653DD88C2811B168FBD8.jpg?project=easyblog" /></p>
+<p><em>图10 攻击优先级分析3</em></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202502/66e3674b3b2e4b2c8f99a62e74625a10-4FE79BA028AB151A11CF5F7FEA99FAD6.jpg?project=easyblog" /></p>
+<p><em>图11 攻击优先级分析4</em></p>
+<p>图10使索米、春田、416置于与敌方5格距离，图11使托洛洛、191置于与敌方4格距离，接下来，敌方会使用点名技能（图2）进行攻击。</p>
+<p>结果显示，分别是191成为距离最近规则的目标、索米成为距离最远规则的目标。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202502/9fa96d85039349088cd68708bd5b477a-32936D8032C71206F134BD87C90E6EF1.jpg?project=easyblog" /></p>
+<p><em>图12 攻击优先级分析5</em></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202502/52fed745c2c34517a0b318b9d4d5d9de-FC36AA126CB9174999380625C549BCFD.jpg?project=easyblog" /></p>
+<p><em>图13 攻击优先级分析6</em></p>
+<p>此时可猜测，攻击优先级为：5号位 &gt; 4号位；1号位 &gt; 2号位 &gt; 3号位。</p>
+<p>将5号位的191与2号位的春田调换位置，并使索米、191、416置于与敌方5格距离，托洛洛、春田置于与敌方4格距离，结果显示，4号位的托洛洛成为了距离最近规则的目标（图15），但出乎预料的是，距离最远规则的目标并非索米，而是191（图16），这证明了助战角色的攻击优先级最高，且与编排序号无关，或者也可以这样认为：不存在5号位，只有助战角色。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202502/0745f7967a084f838d29ba2bb8a1d55f-68D851A2D1E19D17D3431310B48A10C5.jpg?project=easyblog" /></p>
+<p><em>图14 攻击优先级分析7</em></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202502/ef85eba4fa8941ff969540731e138c96-5C9861C17E3003946BFCC1C74693A8F6.jpg?project=easyblog" /></p>
+<p><em>图15 攻击优先级分析8</em></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202502/415929e1faf347978fec8ec6d3aecd9c-BE6075AE48C2E9CCFFE1EF0CCC44EECA.jpg?project=easyblog" /></p>
+<p><em>图16 攻击优先级分析9</em></p>
+<p>所以，结论不变：助战角色 &gt; 1号位 &gt; 2号位 &gt; 3号位 &gt; 4号位，而且可以推断，如果有5号位，它的优先级一定比4号位小。</p>
+<hr />
+<p>不过需要注意的是，在追放中，并非每个关卡副本都能于进入战斗场景前选择角色；还有的虽然可选角色，但无法选择助战。</p>
+<p>因此，个人还是推荐还是以距离做为把控局面的主要手段，如当要吃最近距离攻击时，就将适合的角色移动到相对于其他角色与敌方较近的位置；当要吃最远距离攻击时，就将适合的角色移动到相对于其他角色与敌方较远的位置，这样一来，就可以规避掉攻击优先级的问题。</p>
+<p>本文完。</p>
+
+                        </div>
+                    </div>
+                </article>
+                <div class="comment-wrap">
+                        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+                        <script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+                        <div id="gitalk-container"></div>
+                        <script>
+                            const gitalk = new Gitalk({
+                                clientID: 'ae1422e500a8b19fb1fc',
+                                clientSecret: '9f387db6a84a4945cdf5dc743c16ce25fdef6b76',
+                                repo: 'github-pages',      // The repository of store comments,
+                                owner: 'errr0l',
+                                admin: ['errr0l'],
+                                id: location.pathname,      // Ensure uniqueness and length less than 50
+                                distractionFreeMode: false  // Facebook-like distraction free mode
+                            });
+                            gitalk.render('gitalk-container');
+                        </script>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="back">返回</div>
+</div>
+    <script src="../js/data.js"></script>
+    <script src="../js/lazy.js"></script>
+    <script src="../js/search.js"></script>
+    <script src="../js/menu.js"></script>
+<script src="../js/toc.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/viewerjs/1.11.7/viewer.min.js"></script>
+<script>
+    let back = document.querySelector(".back");
+    back.addEventListener("click", function () {
+        window.history.go(-1);
+    });
+    const viewer = new Viewer(document.querySelector('.markdown-body .content'), {
+        toolbar: {
+            zoomIn: 4,
+            zoomOut: 4,
+            oneToOne: 4,
+            reset: 0,
+            prev: 4,
+            play: 0,
+            next: 4,
+            rotateLeft: 0,
+            rotateRight: 0,
+            flipHorizontal: 0,
+            flipVertical: 0,
+        },
+    });
+</script>
+</body>
+</html>
