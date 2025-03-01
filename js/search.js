@@ -8,7 +8,7 @@ let prefix = searchInput.getAttribute('data-prefix');
 // 文本搜索方法，并将文本添加高亮效果
 function search(value) {
     let r = [];
-    for (let item of dataList || []) {
+    for (let item of all || []) {
         let reg = new RegExp('(' + value + ')', 'i');
         if (reg.test(item.title)) {
             let title = item.title.replace(reg, "<span style='color: var(--c-1);'>$1</span>");
