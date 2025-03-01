@@ -3,7 +3,8 @@
 // 如[h2, h3, h3, h4]中，两个h3为h2的子节点，h4为第二个h3的子节点，应该生成如下数据：
 // [{h2, children: [{h3}, {h3, chilren: [h4]}]}]
 function generateTree(nodes) {
-    const tree = [];
+    // 下标0出用于存放标题
+    const tree = [null];
     while (nodes.length > 0) {
         const current = nodes.pop();
         current.level = 1;
@@ -43,8 +44,8 @@ function makeToc(tree) {
     let html = "<div class='wrapper'><h2 class='item title'><span>目录</span></h2>";
     html += "<div class='item content'>";
     for (const node of tree) {
-        html += "<div class='item1 lv-1' style='word-break: break-all;'>";
-        html += `<a href='#${node._node.id}'>${node.text}</a>`;
+        html += '<div class="item1 lv-1" style="word-break: break-all;">';
+        html += `<a href='#${node._node.id}' style="${node.style || ''}">${node.text}</a>`;
         html += "</div>";
         html += makeToc2(node);
     }
@@ -70,20 +71,30 @@ function makeToc2(node) {
 
 const mbc = document.querySelector('.markdown-body > .content');
 const children = mbc.children;
-const hChildren = [];
+const _children = [];
 // h标签最大是6
 const reg = /^H\d$/;
 for (let child of children) {
     if (reg.test(child.tagName)) {
-        hChildren.push({
+        _children.push({
             _node: child,
             num: +child.tagName.slice(1)
         });
     }
 }
-hChildren.reverse();
-const tree = generateTree(hChildren);
-if (tree.length) {
+_children.reverse();
+const tree = generateTree(_children);
+if (tree.length > 1) {
+    const titleEle = document.querySelector('.markdown-body .title');
+    if (titleEle.id) {
+        titleEle.id = "title";
+    }
+    tree[0] = {
+        _node: titleEle,
+        level: 0,
+        text: titleEle.textContent,
+        style: "font-size: 15px;"
+    };
     const sc = makeToc(tree, "toc");
     const scb = document.querySelector('#header #sc-box');
     const scbStyl = getComputedStyle(scb);
