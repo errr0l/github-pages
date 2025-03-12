@@ -235,7 +235,7 @@
 <p>这里指history和hash模式</p>
 </blockquote>
 <pre><code class="language-typescript">// 位置：./packages/router/src/history/html5.ts
-// vue-router版本为：v4.5.0
+// vue-router版本：v4.5.0
 function push(to: HistoryLocation, data?: HistoryState) {
     // ...
     changeLocation(currentState.current, currentState, true)
@@ -262,7 +262,7 @@ function changeLocation(to: HistoryLocation, state: StateEntry, replace: boolean
     }
 }
 </code></pre>
-<p>此外，还有go()、back()、forward()三个方法，以及一个history api密切相关的PopStateEvent接口：当浏览器历史记录改变时，该接口对应<a href="https://developer.mozilla.org/en-US/docs/Web/API/Window/popstate_event">popstate事件</a>将会被触发。</p>
+<p>此外，还有go()、back()、forward()三个方法，以及一个与其密切相关的PopStateEvent接口：当浏览器历史记录改变时，该接口对应<a href="https://developer.mozilla.org/en-US/docs/Web/API/Window/popstate_event">popstate事件</a>将会被触发。</p>
 <p>在了解了以上的信息之后，应该不难联想到，我们或许可以通过监听popstate事件来得知单页面应用的url变化，当进行路由跳转时，底层调用history api，继而触发popstate事件...</p>
 <pre><code class="language-js">addEventListener(&quot;popstate&quot;, (event) =&gt; {
     // to do something
@@ -274,9 +274,10 @@ function changeLocation(to: HistoryLocation, state: StateEntry, replace: boolean
 <p>Note that just calling <code>history.pushState()</code> or <code>history.replaceState()</code> won't trigger a <code>popstate</code> event. The <code>popstate</code> event will be triggered by doing a browser action such as a click on the back or forward button (or calling <code>history.back()</code> or <code>history.forward()</code> in JavaScript).</p>
 </blockquote>
 <p>这也是前面提到js未提供任何可监听url变化接口或方法的原因。</p>
-<p>与之形成对比的是，处于同一层级的history.back()和history.forward()却不受这一限制，或者是浏览器的前进、后退按钮，都能正常触发popstate事件，从视觉效果上来看，它们的作用和路由跳转别无二致，所以感觉调用history api未触发事件有点奇怪，甚至有点怀疑是作者忘记加了...</p>
-<p>但前面也说过，办法还是有的。既然它们没有触发，那就让它们触发不就好了...</p>
-<p>上文已经提到，单页面应用的路由跳转底层会调用pushState()或replaceState()，因此，只需要对这两个方法动一动手脚：</p>
+<p>与之形成对比的是，处于同一层级的history.back()和history.forward()却不受这一限制，或者是浏览器的前进、后退按钮，都能正常触发popstate事件，从视觉效果上来看，它们的作用和路由跳转别无二致，所以感觉调用history api未触发事件有点奇怪，甚至有点怀疑是作者忘记加了，不然没什么理由，即使它不叫popstate，也应该有一个别的事件。</p>
+<p>不过，前面也说了，办法还是有的。</p>
+<p><strong>既然它们没有触发，那就让它们触发不就好了...</strong></p>
+<p>我们已经知道，单页面应用的路由跳转底层会调用pushState()或replaceState()，因此，只需要对这它们动一动手脚：</p>
 <pre><code class="language-js">const methods = ['replaceState', 'pushState'];
 for (const item of methods) {
     const fn = history[item];
@@ -290,14 +291,13 @@ for (const item of methods) {
 }
 window.addEventListener('urlchange', ev =&gt; console.log(ev));
 </code></pre>
-<p>代码对两个方法进行了重写，使得它们在被调用时触发自定义的“urlchange”事件，该事件对象携带了将要跳转的url信息，以某个单页面应用网站为例。</p>
-<p>在控制台输入以上代码。</p>
+<p>以上代码对两个方法进行了重写，使得它们在被调用时触发自定义的“urlchange”事件，该事件对象携带了将要跳转的url信息，同时还为urlchange事件添加了监听器，以某个单页面应用网站为例：</p>
 <p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202503/001d3016f5714ce9abcc2bbeaa799981-1A948834EC4426C4A79A567C77597C28.png?project=easyblog" /></p>
 <p><em>图1 监听url实现-1</em></p>
 <p>点击菜单，从当前页面/#/article跳转到目标页面/#/category。</p>
 <p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202503/987d1877f11c4db78c64b9d53d848fdf-0733BA635BBFA4F88B29B0D6BC44F012.png?project=easyblog" /></p>
 <p><em>图1 监听url实现-2</em></p>
-<p>可以看到，在切换路由的时，预期的数据回传到了事件处理器中，即目前已经成功实现了对单页面应用url变化的监听效果。（有够简单的吧。。）</p>
+<p>可以看到，在切换路由的时，预期的数据回传到事件处理器中，即是说，目前已经成功实现了对单页面应用url的监听效果。（有够简单的吧。。）</p>
 <p>事实上，油猴插件其实也已经预料到这种情况，并对之做了处理：</p>
 <p><a href="https://www.tampermonkey.net/documentation.php#api:window.onurlchange">window.onurlchange</a></p>
 <blockquote>
