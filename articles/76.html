@@ -222,15 +222,15 @@
 <blockquote>
 <p>简而言之，相当于从油猴插件手中接管了部分匹配路径的工作。</p>
 </blockquote>
-<p>不过，比较遗憾的是，<strong>js并未提供任何现成可用的监听url的接口或方法</strong>，后续会说明这个问题。</p>
+<p>不过，比较遗憾的是，<strong>js并未提供任何现成可用的监听url的接口或方法</strong>，因此，通常情况下无法对url实现监听。</p>
 <p><em>但也并非不可能实现。</em></p>
-<p>众所周知，单页面应用一般都是在html5的<a href="https://developer.mozilla.org/en-US/docs/Web/API/History">history api</a>的基础上实现的，它提供了一套操作浏览器会话历史（browser session history）的方法，使得修改浏览器会话历史而不会触发文档刷新成为可能。</p>
+<p>众所周知，单页面应用一般都是在html5的<a href="https://developer.mozilla.org/en-US/docs/Web/API/History">history api</a>的基础上实现的，它提供了一套操作浏览器会话历史（browser session history）的方法，使得修改浏览器会话历史而不触发页面刷新成为可能。</p>
 <p>主要涉及到两个方法：</p>
 <ol>
 <li>pushState()</li>
 <li>replaceState()</li>
 </ol>
-<p>以vue框架为例，查看其路由框架vue-router源码可知，无论是Router.push()还是Router.replace()，在底层都调用了以上两个方法：</p>
+<p>以vue为例，查看其路由框架源码可知，无论是Router.push()还是Router.replace()，在底层都调用了以上两个方法：</p>
 <blockquote>
 <p>这里指history和hash模式</p>
 </blockquote>
