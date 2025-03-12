@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>js实现监听单页面应用url的办法 - 小埃的个人博客</title>
+    <link rel="stylesheet" href="../css/reset.css">
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/index.css">
+    <link rel="stylesheet" href="../css/header.css">
+    <link rel="stylesheet" href="../css/mobile.css">
+    <link rel="stylesheet" href="../css/theme-light.css">
+    <link rel="shortcut icon" href="../favicon.ico" type="image/x-icon">
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?d1fc0144cbb354a3f8442b7ba568bc2f";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+
+        window.addEventListener('DOMContentLoaded', () => {
+            let headerEle = document.getElementById('header');
+            let eleHeight = headerEle.offsetHeight;
+            let lastScrollTop = 0;
+            let topAnchor = 0; // 某个方向的锚点
+            let downAnchor = 0;
+            let stylTop = "-" + eleHeight + "px";
+            let stylTop2 = "0";
+            let threshold = 180;
+            function headerEleVisibleHandler() {
+                let scrollTop = document.documentElement.scrollTop;
+                // 向下滚动
+                if (scrollTop > lastScrollTop) {
+                    if (downAnchor !== 0) {
+                        downAnchor = 0;
+                    }
+                    if (topAnchor === 0) {
+                        topAnchor = scrollTop;
+                    }
+                    if ((scrollTop > threshold || scrollTop - topAnchor > threshold) && headerEle.style.top !== stylTop) {
+                        headerEle.style.top =  stylTop;
+                    }
+                }
+                // 向上
+                else {
+                    if (topAnchor !== 0) {
+                        topAnchor = 0;
+                    }
+                    if (downAnchor === 0) {
+                        downAnchor = scrollTop;
+                    }
+                    if ((scrollTop + threshold > downAnchor) && headerEle.style.top === stylTop) {
+                        headerEle.style.top = stylTop2;
+                    }
+                }
+                lastScrollTop = scrollTop;
+            }
+
+            function throttleWrapper(fn, options) {
+                if (!options) {
+                    options = {};
+                }
+                let timer = null;
+                const { timeout } = options;
+
+                const _setTimeout = () => {
+                    timer = window.setTimeout(() => {
+                        window.clearTimeout(timer);
+                        timer = null;
+                    }, timeout);
+                    return timer;
+                }
+
+                return function (...args) {
+                    if (timer) {
+                        return;
+                    }
+                    timer = -1;
+                    let result = fn.apply(this, args);
+                    _setTimeout();
+                    return result;
+                }
+            }
+            headerEleVisibleHandler = throttleWrapper(headerEleVisibleHandler, { timeout: 200 });
+            window.addEventListener("scroll", headerEleVisibleHandler);
+        });
+    </script>
+        <meta name="keywords" content="js,单页面应用,监听url,spa,油猴">
+        <meta name="description" content="js实现监听单页面应用url的办法；最近在写油猴脚本的时候，偶尔遇到一些单页面应用模型的网站。单页面应用（Single Page Applications，SPA），顾名思义，是只有一个页面的web应用，与传统的web应用不同，它只需要首次从服务器加载资源（静态），在不刷新的情况下...">
+    <link rel="stylesheet" href="../css/article.css">
+    <link rel="stylesheet" href="../css/markdown/github-markdown.css">
+    <link rel="stylesheet" href="../css/markdown/github-markdown-light.css">
+    <link rel="stylesheet" href="../css/gittalk-cover.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/viewerjs/1.11.7/viewer.min.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</head>
+<body>
+<div id="app">
+    <div id="header">
+    <div id="bar">
+        <div class="container mg-0-auto d-f pos-r">
+            <div class="logo">
+                <a href="../" class="nav-link" style="margin-right: 10px;">
+                    <img src="../image/portal/logo.jpg" alt="小埃的个人博客">
+                </a>
+            </div>
+            <div class="right">
+                <ul class="nav f-l">
+                        <li class="nav-item">
+                            <a href="../index.html" class="nav-link active">
+                                <span>首页</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="../category.html" class="nav-link ">
+                                <span>分类</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="../about.html" class="nav-link ">
+                                <span>关于</span>
+                            </a>
+                        </li>
+                </ul>
+                <div class="eb-title">
+                    小埃的个人博客
+                </div>
+                    <div id="search">
+                        <input type="text" id="search-input" data-prefix="../" placeholder="搜索" autocomplete="off" />
+                        <span class="search-icon t-a">
+                            <img class="el-icon-search" src="../image/portal/search.png" width="16" height="16">
+                        </span>
+                        <div id="search-result">
+                            <input type="text" class="input-1" id="search-input-2" data-prefix="../" placeholder="请输入" autocomplete="off" />
+                            <div class="content">
+                            </div>
+                            <div class="arrow"></div>
+                        </div>
+                    </div>
+
+                <div class="eb-menu">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-list-ul" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M5 11.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm-3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm0 4a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm0 4a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
+                    </svg>
+                </div>
+            </div>
+            <div id="sc-box">
+                <div class="wrapper">
+                        <div class="side-card b-s-1 mg-b-10">
+                            <div class="wrapper">
+                                <h2 class="item title">
+                                    <span>相关文章</span>
+                                </h2>
+                                <div class="item content">
+                                        <div class="item1 ">
+                                            <a href="../articles/70.html">
+                                                    为静态站点添加目录功能
+                                            </a>
+                                        </div>
+                                        <div class="item1 ">
+                                            <a href="../articles/66.html">
+                                                    关于nodejs使用相对路径读取文件的问题
+                                            </a>
+                                        </div>
+                                        <div class="item1 ">
+                                            <a href="../articles/55.html">
+                                                    解耦在js中的应用
+                                            </a>
+                                        </div>
+                                        <div class="item1 ">
+                                            <a href="../articles/22.html">
+                                                    为静态站点添加搜索功能
+                                            </a>
+                                        </div>
+                                        <div class="item1 ">
+                                            <a href="../articles/19.html">
+                                                    为vue单页面应用添加提示保存功能
+                                            </a>
+                                        </div>
+                                        <div class="item1 ">
+                                            <a href="../articles/15.html">
+                                                    兼容部署在Github Pages与其他服务器的应用引入资源的解决方案
+                                            </a>
+                                        </div>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    <div id="main">
+        <div class="container mg-0-auto pd-t-10">
+            <div class="wrapper">
+                <article class="mg-b-20">
+                    <div class="markdown-body">
+                        <div class="title">js实现监听单页面应用url的办法</div>
+                        <div class="item meta mg-b-10">
+                            <span class="author">由<a href="javascript:void(0);">errol</a>发表于<a href="#">2025-03-12</a></span>
+                            <span>|</span>
+                            <span class="time">
+                            分类为
+                            <a href="../categories/1.html">编程</a></span>
+                            <span>|</span>
+                            <span class="tags">
+                                标签为<a href="javascript:void(0);">js</a>、<a href="javascript:void(0);">单页面应用</a>、<a href="javascript:void(0);">监听url</a>、<a href="javascript:void(0);">spa</a>、<a href="javascript:void(0);">油猴</a>
+                            </span>
+                        </div>
+                        <div class="content">
+                            <p>最近在写油猴脚本的时候，偶尔遇到一些<strong>单页面应用</strong>模型的网站。</p>
+<p>单页面应用（Single Page Applications，SPA），顾名思义，是只有一个页面的web应用，与传统的web应用不同，它只需要首次从服务器加载资源（静态），在不刷新的情况下，后续的任何内容更新仅发生于客户端浏览器而不会请求服务器，这种特性不仅提升了客户端性能的利用率同时，也减轻了服务器压力，还极大提升了用户体验。</p>
+<p><strong>但是，该特性也间接导致了基于url匹配规则的脚本无法正常运行。</strong></p>
+<p>默认情况下，油猴插件会根据url的匹配结果，在页面（或文档）加载前后注入脚本，即是说，脚本的执行依赖于“加载页面”这个过程，只有加载页面时，才会执行脚本。</p>
+<p>而由于SPA只会从服务器加载一次页面，后续看到的“切换页面”或“跳转页面”，实际上都只是在当前页面上动态生成并渲染出来的，url虽然发生变化但未真正加载页面，因此脚本不会执行。</p>
+<p>在得知了这一原因之后，我们就应该明白，想要脚本能在单页面应用下正常执行，就需要监听网站的url（或路由），当变为某个url时，执行某些逻辑。</p>
+<blockquote>
+<p>简而言之，相当于从油猴插件手中接管了部分匹配路径的工作。</p>
+</blockquote>
+<p>不过，比较遗憾的是，<strong>js并未提供任何现成可用的监听url的接口或方法</strong>，后续会说明这个问题。</p>
+<p><em>但也并非不可能实现。</em></p>
+<p>众所周知，单页面应用一般都是在html5的<a href="https://developer.mozilla.org/en-US/docs/Web/API/History">history api</a>的基础上实现的，它提供了一套操作浏览器会话历史（browser session history）的方法，使得修改浏览器会话历史而不会触发文档刷新成为可能。</p>
+<p>主要涉及到两个方法：</p>
+<ol>
+<li>pushState()</li>
+<li>replaceState()</li>
+</ol>
+<p>以vue框架为例，查看其路由框架vue-router源码可知，无论是Router.push()还是Router.replace()，在底层都调用了以上两个方法：</p>
+<blockquote>
+<p>这里指history和hash模式</p>
+</blockquote>
+<pre><code class="language-typescript">// 位置：./packages/router/src/history/html5.ts
+// vue-router版本为：v4.5.0
+function push(to: HistoryLocation, data?: HistoryState) {
+    // ...
+    changeLocation(currentState.current, currentState, true)
+    // ...
+    changeLocation(to, state, false)
+    currentLocation.value = to
+}
+
+function replace(to: HistoryLocation, data?: HistoryState) {
+    // ...
+    changeLocation(to, state, true)
+    currentLocation.value = to
+}
+
+function changeLocation(to: HistoryLocation, state: StateEntry, replace: boolean): void {
+    // ...
+    try {
+        // BROWSER QUIRK
+        // NOTE: Safari throws a SecurityError when calling this function 100 times in 30 seconds
+        history[replace ? 'replaceState' : 'pushState'](state, '', url)
+        historyState.value = state
+    } catch (err) {
+        // ...
+    }
+}
+</code></pre>
+<p>此外，还有go()、back()、forward()三个方法，以及一个history api密切相关的PopStateEvent接口：当浏览器历史记录改变时，该接口对应<a href="https://developer.mozilla.org/en-US/docs/Web/API/Window/popstate_event">popstate事件</a>将会被触发。</p>
+<p>在了解了以上的信息之后，应该不难联想到，我们或许可以通过监听popstate事件来得知单页面应用的url变化，当进行路由跳转时，底层调用history api，继而触发popstate事件...</p>
+<pre><code class="language-js">addEventListener(&quot;popstate&quot;, (event) =&gt; {
+    // to do something
+});
+</code></pre>
+<p><strong>然而，现实并非如想象般美好。</strong></p>
+<p>在<a href="https://developer.mozilla.org/en-US/docs/Web/API/Window/popstate_event#the_history_stack">The history stack</a>文档中已经明确表示，pushState()和replaceState()方法不会触发popstate事件。</p>
+<blockquote>
+<p>Note that just calling <code>history.pushState()</code> or <code>history.replaceState()</code> won't trigger a <code>popstate</code> event. The <code>popstate</code> event will be triggered by doing a browser action such as a click on the back or forward button (or calling <code>history.back()</code> or <code>history.forward()</code> in JavaScript).</p>
+</blockquote>
+<p>这也是前面提到js未提供任何可监听url变化接口或方法的原因。</p>
+<p>与之形成对比的是，处于同一层级的history.back()和history.forward()却不受这一限制，或者是浏览器的前进、后退按钮，都能正常触发popstate事件，从视觉效果上来看，它们的作用和路由跳转别无二致，所以感觉调用history api未触发事件有点奇怪，甚至有点怀疑是作者忘记加了...</p>
+<p>但前面也说过，办法还是有的。既然它们没有触发，那就让它们触发不就好了...</p>
+<p>上文已经提到，单页面应用的路由跳转底层会调用pushState()或replaceState()，因此，只需要对这两个方法动一动手脚：</p>
+<pre><code class="language-js">const methods = ['replaceState', 'pushState'];
+for (const item of methods) {
+    const fn = history[item];
+    history[`_${item}`] = fn;
+    history[item] = function (state, unused, url) {
+        history[`_${item}`](state, unused, url);
+        const ev = new Event('urlchange');
+        ev.args = { state, unused, url };
+        window.dispatchEvent(ev);
+    }
+}
+window.addEventListener('urlchange', ev =&gt; console.log(ev));
+</code></pre>
+<p>代码对两个方法进行了重写，使得它们在被调用时触发自定义的“urlchange”事件，该事件对象携带了将要跳转的url信息，以某个单页面应用网站为例。</p>
+<p>在控制台输入以上代码。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202503/001d3016f5714ce9abcc2bbeaa799981-1A948834EC4426C4A79A567C77597C28.png?project=easyblog" /></p>
+<p><em>图1 监听url实现-1</em></p>
+<p>点击菜单，从当前页面/#/article跳转到目标页面/#/category。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202503/987d1877f11c4db78c64b9d53d848fdf-0733BA635BBFA4F88B29B0D6BC44F012.png?project=easyblog" /></p>
+<p><em>图1 监听url实现-2</em></p>
+<p>可以看到，在切换路由的时，预期的数据回传到了事件处理器中，即目前已经成功实现了对单页面应用url变化的监听效果。（有够简单的吧。。）</p>
+<p>事实上，油猴插件其实也已经预料到这种情况，并对之做了处理：</p>
+<p><a href="https://www.tampermonkey.net/documentation.php#api:window.onurlchange">window.onurlchange</a></p>
+<blockquote>
+<p>If a script runs on a single-page application, then it can use <code>window.onurlchange</code> to listen for URL changes.</p>
+</blockquote>
+<p>只需在脚本的元信息处处启用，效果是一样的，只是说，即使不用油猴插件的接口，或在油猴脚本以外的地方，也能很简单地实现对单页面应用路由的监听功能。</p>
+<pre><code class="language-js">// ==UserScript==
+...
+// @grant window.onurlchange
+// ==/UserScript==
+
+if (window.onurlchange === null) {
+    // feature is supported
+    window.addEventListener('urlchange', (info) =&gt; ...);
+}
+</code></pre>
+<p>现在可以愉快地编写脚本了。</p>
+<p>本文完。</p>
+
+                        </div>
+                    </div>
+                </article>
+                <div class="comment-wrap">
+                        <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+  <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+                        <div id="gitalk-container"></div>
+                        <script>
+                            const gitalk = new Gitalk({
+                                clientID: 'ae1422e500a8b19fb1fc',
+                                clientSecret: '9f387db6a84a4945cdf5dc743c16ce25fdef6b76',
+                                repo: 'github-pages',      // The repository of store comments,
+                                owner: 'errr0l',
+                                admin: ['errr0l'],
+                                id: location.pathname,      // Ensure uniqueness and length less than 50
+                                distractionFreeMode: false  // Facebook-like distraction free mode
+                            });
+                            gitalk.render('gitalk-container');
+                        </script>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="back">返回</div>
+</div>
+    <script src="../js/data.js"></script>
+    <script src="../js/lazy.js"></script>
+    <script src="../js/search.js"></script>
+    <script src="../js/menu.js"></script>
+<script src="../js/toc.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/viewerjs/1.11.7/viewer.min.js"></script>
+<script>
+    let back = document.querySelector(".back");
+    back.addEventListener("click", function () {
+        window.history.go(-1);
+    });
+    const viewer = new Viewer(document.querySelector('.markdown-body .content'), {
+        toolbar: {
+            zoomIn: 4,
+            zoomOut: 4,
+            oneToOne: 4,
+            reset: 0,
+            prev: 4,
+            play: 0,
+            next: 4,
+            rotateLeft: 0,
+            rotateRight: 0,
+            flipHorizontal: 0,
+            flipVertical: 0,
+        },
+    });
+</script>
+</body>
+</html>
