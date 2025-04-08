@@ -214,28 +214,28 @@
                         </div>
                         <div class="content">
                             <p>最近在写油猴脚本的时候，偶尔遇到一些<strong>单页面应用</strong>模型的网站。</p>
-<p>单页面应用（Single Page Applications，SPA），顾名思义，是只有一个页面的web应用，与传统的web应用不同，它只需要首次从服务器加载资源（静态），在不刷新的情况下，后续的任何内容更新仅发生于客户端浏览器而不会请求服务器，这种特性不仅提升了客户端性能的利用率同时，也减轻了服务器压力，还极大提升了用户体验。</p>
+<p>单页面应用（Single Page Applications，SPA），顾名思义，是只有一个页面的web应用，与传统的web应用不同，它只需要首次从服务器加载资源（静态），在不刷新的情况下，后续的任何内容更新仅发生于客户端浏览器而不会请求服务器，这种特性在提升了客户端性能的利用率&amp;提升用户体验的同时，也减轻了服务器压力。</p>
 <p><strong>但是，该特性也间接导致了基于url匹配规则的脚本无法正常运行。</strong></p>
 <p>默认情况下，油猴插件会根据url的匹配结果，在页面（或文档）加载前后注入脚本，即是说，脚本的执行依赖于“加载页面”这个过程，只有加载页面时，才会执行脚本。</p>
 <p>而由于SPA只会从服务器加载一次页面，后续看到的“切换页面”或“跳转页面”，实际上都只是在当前页面上动态生成并渲染出来的，url虽然发生变化但未真正加载页面，因此脚本不会执行。</p>
-<p>在得知了这一原因之后，我们就应该明白，想要脚本能在单页面应用下正常执行，就需要监听网站的url（或路由），当变为某个url时，执行某些逻辑。</p>
+<p><strong>在得知了这一原因之后，我们就应该明白，想要脚本能在单页面应用下正常执行，就需要监听网站的url（或路由），当变为某个url时，执行某些逻辑。</strong></p>
 <blockquote>
 <p>简而言之，相当于从油猴插件手中接管了部分匹配路径的工作。</p>
 </blockquote>
 <p>不过，比较遗憾的是，<strong>js并未提供任何现成可用的监听url的接口或方法</strong>，因此，通常情况下无法对url实现监听。</p>
-<p><em>但也并非不可能实现。</em></p>
-<p>众所周知，单页面应用一般都是在html5的<a href="https://developer.mozilla.org/en-US/docs/Web/API/History">history api</a>的基础上实现的，它提供了一套操作浏览器会话历史（browser session history）的方法，使得修改浏览器会话历史而不触发页面刷新成为可能。</p>
+<p><em>请注意，这里说的是“通常情况”，而不是说不可实现。</em></p>
+<p>众所周知，单页面应用一般是在html5的<a href="https://developer.mozilla.org/en-US/docs/Web/API/History">history api</a>的基础上实现的，它提供了一套操作浏览器会话历史（browser session history）的方法，使得修改浏览器会话历史而不触发页面刷新成为可能。</p>
 <p>主要涉及到两个方法：</p>
 <ol>
 <li>pushState()</li>
 <li>replaceState()</li>
 </ol>
-<p>以vue为例，查看其路由框架源码可知，无论是Router.push()还是Router.replace()，在底层都调用了以上两个方法：</p>
+<p>以vue为例，查看其路由vue-router框架源码可知，无论是Router.push()还是Router.replace()，在底层都调用了以上两个方法：</p>
 <blockquote>
 <p>这里指history和hash模式</p>
 </blockquote>
 <pre><code class="language-typescript">// 位置：./packages/router/src/history/html5.ts
-// vue-router版本：v4.5.0
+// 版本：v4.5.0
 function push(to: HistoryLocation, data?: HistoryState) {
     // ...
     changeLocation(currentState.current, currentState, true)
@@ -269,15 +269,16 @@ function changeLocation(to: HistoryLocation, state: StateEntry, replace: boolean
 });
 </code></pre>
 <p><strong>然而，现实并非如想象般美好。</strong></p>
-<p>在<a href="https://developer.mozilla.org/en-US/docs/Web/API/Window/popstate_event#the_history_stack">The history stack</a>文档中已经明确表示，pushState()和replaceState()方法不会触发popstate事件。</p>
+<p>我们会发现，写完代码后，无论进行怎样的跳转，监听器都没有任何反应。</p>
+<p>原因在于pushState()和replaceState()方法不会触发popstate事件，<a href="https://developer.mozilla.org/en-US/docs/Web/API/Window/popstate_event#the_history_stack">The history stack</a>文档中已经明确表示。</p>
 <blockquote>
 <p>Note that just calling <code>history.pushState()</code> or <code>history.replaceState()</code> won't trigger a <code>popstate</code> event. The <code>popstate</code> event will be triggered by doing a browser action such as a click on the back or forward button (or calling <code>history.back()</code> or <code>history.forward()</code> in JavaScript).</p>
 </blockquote>
 <p>这也是前面提到js未提供任何可监听url变化接口或方法的原因。</p>
-<p>与之形成对比的是，处于同一层级的history.back()和history.forward()却不受这一限制，或者是浏览器的前进、后退按钮，都能正常触发popstate事件，从视觉效果上来看，它们的作用和路由跳转别无二致，所以感觉调用history api未触发事件有点奇怪，甚至有点怀疑是作者忘记加了，不然没什么理由，即使它不叫popstate，也应该有一个别的事件。</p>
+<p>与之形成对比的是，处于同一层级的history.back()和history.forward()却不受这一限制，或者是浏览器的前进、后退按钮，都能正常触发popstate事件，从视觉效果上来看，它们的作用和路由跳转别无二致，所以感觉调用history api未触发事件有点奇怪，不然没什么理由，即使它不叫popstate，也应该有一个别的事件。</p>
 <p>不过，前面也说了，办法还是有的。</p>
 <p><strong>既然它们没有触发，那就让它们触发不就好了...</strong></p>
-<p>我们已经知道，单页面应用的路由跳转底层会调用pushState()或replaceState()，因此，只需要对这它们动一动手脚：</p>
+<p>目前已经了解到，单页面应用的路由跳转底层会调用pushState()或replaceState()，因此，只需要对这它们动一动手脚：</p>
 <pre><code class="language-js">const methods = ['replaceState', 'pushState'];
 for (const item of methods) {
     const fn = history[item];
