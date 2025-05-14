@@ -167,6 +167,11 @@
                                                     【某易云逆向】滑动验证码识别篇
                                             </a>
                                         </div>
+                                        <div class="item1 ">
+                                            <a href="../articles/77.html">
+                                                    Webpack逆向
+                                            </a>
+                                        </div>
                                 </div>
                             </div>
                         </div>
@@ -214,7 +219,7 @@
 <p>不过，也有例外，比如在桌面端进行操作时，就无需二次认证，挺迷的。究竟基于什么样的因素形成了这两种不同的状况，目前无从得知。</p>
 <p>之前看到登录接口返回“账号或密码”提示信息的时候，以为已经成功了，现在看来还是太天真。</p>
 <p>总而言之，言而总之，目前看起来账号&amp;密码方式行不通，只能通过手机短信或扫码方式进行登录，无法达成程序自动化，拿捏得很死。</p>
-<p>现在国内不少应用都有这种趋势，知道账号&amp;密码毫无用处，只有终端设备才是唯一的凭证，更有甚者，需要从已经处于登录状态的应用中获取验证码，不满足这一条件时，连自己的手机号都没用，而<strong>必须邀请好友帮助证明你是你</strong>，以至于成为我每次更换设备时一件不得不吐槽的事情，急起来时，还把发明了这个的人的祖宗十八代骂了个遍。</p>
+<p>现在国内不少应用都有这种趋势，知道账号&amp;密码毫无用处，只有终端设备才是唯一的凭证，更有甚者，需要从已经处于登录状态的应用中获取验证码，不满足这一条件时，连自己的手机号都没用，而<strong>必须邀请好友帮助证明你是你</strong>，以至于成为我每次更换设备登录某应用时一件不得不吐槽的事情，急起来时（如手机因某些原因打不开），还把发明了这个的人的祖宗十八代骂了个遍。</p>
 <p>so，虽然没完成，但本系列不得不宣布暂时告一段落。</p>
 <p>如果以后能找到方案的话，再重启吧。但说实话，希望很渺茫。</p>
 <p>以上。</p>
@@ -224,8 +229,8 @@
                     </div>
                 </article>
                 <div class="comment-wrap">
-                        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
-                        <script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+                        <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+  <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
                         <div id="gitalk-container"></div>
                         <script>
                             const gitalk = new Gitalk({

@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Webpack逆向 - 小埃的个人博客</title>
+    <link rel="stylesheet" href="../css/reset.css">
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/index.css">
+    <link rel="stylesheet" href="../css/header.css">
+    <link rel="stylesheet" href="../css/mobile.css">
+    <link rel="stylesheet" href="../css/theme-light.css">
+    <link rel="shortcut icon" href="../favicon.ico" type="image/x-icon">
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?d1fc0144cbb354a3f8442b7ba568bc2f";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+
+        window.addEventListener('DOMContentLoaded', () => {
+            let headerEle = document.getElementById('header');
+            let eleHeight = headerEle.offsetHeight;
+            let lastScrollTop = 0;
+            let topAnchor = 0; // 某个方向的锚点
+            let downAnchor = 0;
+            let stylTop = "-" + eleHeight + "px";
+            let stylTop2 = "0";
+            let threshold = 180;
+            function headerEleVisibleHandler() {
+                let scrollTop = document.documentElement.scrollTop;
+                // 向下滚动
+                if (scrollTop > lastScrollTop) {
+                    if (downAnchor !== 0) {
+                        downAnchor = 0;
+                    }
+                    if (topAnchor === 0) {
+                        topAnchor = scrollTop;
+                    }
+                    if ((scrollTop > threshold || scrollTop - topAnchor > threshold) && headerEle.style.top !== stylTop) {
+                        headerEle.style.top =  stylTop;
+                    }
+                }
+                // 向上
+                else {
+                    if (topAnchor !== 0) {
+                        topAnchor = 0;
+                    }
+                    if (downAnchor === 0) {
+                        downAnchor = scrollTop;
+                    }
+                    if ((scrollTop + threshold > downAnchor) && headerEle.style.top === stylTop) {
+                        headerEle.style.top = stylTop2;
+                    }
+                }
+                lastScrollTop = scrollTop;
+            }
+
+            function throttleWrapper(fn, options) {
+                if (!options) {
+                    options = {};
+                }
+                let timer = null;
+                const { timeout } = options;
+
+                const _setTimeout = () => {
+                    timer = window.setTimeout(() => {
+                        window.clearTimeout(timer);
+                        timer = null;
+                    }, timeout);
+                    return timer;
+                }
+
+                return function (...args) {
+                    if (timer) {
+                        return;
+                    }
+                    timer = -1;
+                    let result = fn.apply(this, args);
+                    _setTimeout();
+                    return result;
+                }
+            }
+            headerEleVisibleHandler = throttleWrapper(headerEleVisibleHandler, { timeout: 200 });
+            window.addEventListener("scroll", headerEleVisibleHandler);
+        });
+    </script>
+        <meta name="keywords" content="逆向,Webpack,推特,爬虫,js">
+        <meta name="description" content="Webpack逆向；最终咱还是陷入了逆向的困境中... “逐步调试+补全环境”是我惯用的逆向方式，它很符合我个人的喜好，最终的代码既“简单”又“高效”，但不得不承认的是，这种方式实在太耗费时间和精力...">
+    <link rel="stylesheet" href="../css/article.css">
+    <link rel="stylesheet" href="../css/markdown/github-markdown.css">
+    <link rel="stylesheet" href="../css/markdown/github-markdown-light.css">
+    <link rel="stylesheet" href="../css/gittalk-cover.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/viewerjs/1.11.7/viewer.min.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</head>
+<body>
+<div id="app">
+    <div id="header">
+    <div id="bar">
+        <div class="container mg-0-auto d-f pos-r">
+            <div class="logo">
+                <a href="../" class="nav-link" style="margin-right: 10px;">
+                    <img src="../image/portal/logo.jpg" alt="小埃的个人博客">
+                </a>
+            </div>
+            <div class="right">
+                <ul class="nav f-l">
+                        <li class="nav-item">
+                            <a href="../index.html" class="nav-link active">
+                                <span>首页</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="../category.html" class="nav-link ">
+                                <span>分类</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="../about.html" class="nav-link ">
+                                <span>关于</span>
+                            </a>
+                        </li>
+                </ul>
+                <div class="eb-title">
+                    小埃的个人博客
+                </div>
+                    <div id="search">
+                        <input type="text" id="search-input" data-prefix="../" placeholder="搜索" autocomplete="off" />
+                        <span class="search-icon t-a">
+                            <img class="el-icon-search" src="../image/portal/search.png" width="16" height="16">
+                        </span>
+                        <div id="search-result">
+                            <input type="text" class="input-1" id="search-input-2" data-prefix="../" placeholder="请输入" autocomplete="off" />
+                            <div class="content">
+                            </div>
+                            <div class="arrow"></div>
+                        </div>
+                    </div>
+
+                <div class="eb-menu">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-list-ul" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M5 11.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm-3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm0 4a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm0 4a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
+                    </svg>
+                </div>
+            </div>
+            <div id="sc-box">
+                <div class="wrapper">
+                        <div class="side-card b-s-1 mg-b-10">
+                            <div class="wrapper">
+                                <h2 class="item title">
+                                    <span>相关文章</span>
+                                </h2>
+                                <div class="item content">
+                                        <div class="item1 ">
+                                            <a href="../articles/69.html">
+                                                    【某易云逆向】滑动验证码校验篇
+                                            </a>
+                                        </div>
+                                        <div class="item1 ">
+                                            <a href="../articles/65.html">
+                                                    【某易云逆向】滑动验证码识别篇
+                                            </a>
+                                        </div>
+                                        <div class="item1 ">
+                                            <a href="../articles/76.html">
+                                                    js实现监听单页面应用url的办法
+                                            </a>
+                                        </div>
+                                        <div class="item1 ">
+                                            <a href="../articles/72.html">
+                                                    【某易云逆向】模拟登录篇
+                                            </a>
+                                        </div>
+                                        <div class="item1 ">
+                                            <a href="../articles/70.html">
+                                                    为静态站点添加目录功能
+                                            </a>
+                                        </div>
+                                        <div class="item1 ">
+                                            <a href="../articles/66.html">
+                                                    关于nodejs使用相对路径读取文件的问题
+                                            </a>
+                                        </div>
+                                        <div class="item1 ">
+                                            <a href="../articles/62.html">
+                                                    新一年的计划
+                                            </a>
+                                        </div>
+                                        <div class="item1 ">
+                                            <a href="../articles/60.html">
+                                                    nutaku自动签到程序实现
+                                            </a>
+                                        </div>
+                                        <div class="item1 ">
+                                            <a href="../articles/55.html">
+                                                    解耦在js中的应用
+                                            </a>
+                                        </div>
+                                        <div class="item1 ">
+                                            <a href="../articles/22.html">
+                                                    为静态站点添加搜索功能
+                                            </a>
+                                        </div>
+                                        <div class="item1 ">
+                                            <a href="../articles/19.html">
+                                                    为vue单页面应用添加提示保存功能
+                                            </a>
+                                        </div>
+                                        <div class="item1 ">
+                                            <a href="../articles/15.html">
+                                                    兼容部署在Github Pages与其他服务器的应用引入资源的解决方案
+                                            </a>
+                                        </div>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    <div id="main">
+        <div class="container mg-0-auto pd-t-10">
+            <div class="wrapper">
+                <article class="mg-b-20">
+                    <div class="markdown-body">
+                        <div class="title">Webpack逆向</div>
+                        <div class="item meta mg-b-10">
+                            <span class="author">由<a href="javascript:void(0);">errol</a>发表于<a href="#">2025-05-11</a></span>
+                            <span>|</span>
+                            <span class="time">
+                            分类为
+                            <a href="../categories/1.html">编程</a></span>
+                            <span>|</span>
+                            <span class="tags">
+                                标签为<a href="javascript:void(0);">逆向</a>、<a href="javascript:void(0);">Webpack</a>、<a href="javascript:void(0);">推特</a>、<a href="javascript:void(0);">爬虫</a>、<a href="javascript:void(0);">js</a>
+                            </span>
+                        </div>
+                            <div class="cover mg-b-10">
+                                <img src="../image/portal/202505/8ce7c265e1f3459dbeb69734cb627be0-7573287a4ba7e1f7036e8db2e25c00bd.jpeg?project=easyblog" alt="">
+                            </div>
+                        <div class="content">
+                            <p>最终咱还是陷入了逆向的困境中...</p>
+<p>“逐步调试+补全环境”是我惯用的逆向方式，它很符合我个人的喜好，最终的代码既“简单”又“高效”，但不得不承认的是，这种方式实在太耗费时间和精力。</p>
+<p>常常会出现这样的情况：为补全一个函数、方法所需要的环境，花了大半天时间还不一定有结果，这个过程还是极其痛苦的，需要独自面对海量、阅读性极差的代码，非常考验个人耐心。</p>
+<p>小一点的网站还好，通过这种方式，可能随便捣鼓几下就能得出结果，但对于稍微复杂的网站来说就很困难，如果它还对代码做了混淆、加密、压缩、分块等处理，那简直难如登天。</p>
+<p>这个时候，总会有一股无力感和挫败感朝我袭来。</p>
+<p>已经厌倦了，这种低效的方式...</p>
+<p>为此，我迫切地想要找到解决问题的办法，以至于我不得不将目光重新转向Webpack：市面上的网站，不敢说99%，起码也有90%是这类打包工具生成的代码。</p>
+<p>早就听闻逆向Webpack，可以快速达成逆向需求，它无需注重具体的代码细节，只关注如何找到目标方法，以及如何调用。更简单地说，就是<strong>找到原本已经实现的功能为我们所用</strong>。</p>
+<p>乍一看，这种“白嫖”的方式，确实高效。</p>
+<p>但因为之前认为Webpack逆向实在过于繁琐，首先要得在海量的代码里找到名为“<strong>加载器</strong>”的东西，其次总是一大片一大片地复制代码，有的甚至直接下载一堆文件，最后还要补浏览器环境，如window、document、navigator、location对象等。</p>
+<p>那时候刚开始接触逆向，觉得这种方式高深困难，不适合新手，而且也不符合我本人的理念：最终的代码毫无章法，既不精简，也不美观，并且我一直坚信着“只要掌握好心法就能畅通无阻”，所以几乎没在这上面花过时间。</p>
+<p>关于逆向Webpack，还流传着这样的一个说法，“如果你不会Webpack逆向，你就不能说自己会js逆向”，之前我不太认同，但今天再次审视这句话时，好像确实有那么点道理。</p>
+<p>现在绝大多数前端项目都已经实现了工程化，Webpack、Vite、Gulp等就在其中扮演了重要的角色，无论是编译、构建，还是优化、测试，都少不了它们的身影。</p>
+<p>鉴于这种情况，不会Webpack逆向确实很影响逆向的效率，甚至是寸步难行，举个极端但更易理解的例子，现在不会Webpack逆向，就如同前端开发不会Vue、JavaWeb不会Spring。</p>
+<p>毕竟是关乎效率的问题，不得不学。</p>
+<p>而近期刚好有逆向推特的需求，且推特所用的打包工具也刚好是Webpack，很适合作为本次的分析目标。</p>
+<blockquote>
+<p>之前在推特下载文件时，使用的从来都是别人的工具，不是说不好用，而是说自己出于学习的目的想研究研究...</p>
+</blockquote>
+<h4 id="hidp-heading-0">一、原理</h4>
+<p>首先得提醒，<strong>这里说的是webpack打包后的代码如何在浏览器运行的原理</strong>，而非Webpack的打包原理。</p>
+<p>可以粗浅地概括：webpack将代码拆分到各个文件中，单个文件也称为“模块”，以script标签的形式从服务器加载，加载完成后将代码存储到一个容器中，如下图中的webpackChunk_twitter_responsive_web：</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202505/9ddd3e5ef0ee4852888d5f1910ce481e-DE8D33EB937A3C50F9C6E2BB7BE197EC.png?project=easyblog" /></p>
+<p><em>图1-1 Webpack模块文件示例</em></p>
+<p>模块中可包含多个以方法形式存在的子模块，由加载器统一调用。此过程会创建出系统所需要的方法或对象，并保存供后续使用（类似于IoC容器）。</p>
+<pre><code class="language-js">// 加载器的基本格式
+var e, a, d, r, n, t, o, l, c, i = {}, s = {};
+function b(e) {
+    // 参数e是子模块id，如上图的227900
+    // s为保存各模块创建的方法&amp;对象的容器
+    var a = s[e];
+    // 以下的代码可以概括为：如果容器存在指定模块的方法、对象，直接返回，否则调用方法进行创建
+    if (void 0 !== a)
+        return a.exports;
+    var d = s[e] = {
+        id: e,
+        loaded: !1,
+        exports: {}
+    };
+    process.stdout.write(e + &quot; &quot;);
+    return i[e].call(d.exports, d, d.exports, b),
+        d.loaded = !0,
+        d.exports
+}
+</code></pre>
+<h4 id="hidp-heading-1">二、目标定位</h4>
+<p>推文接口分有两种类型，一种是所有人开放的接口；另一种是需要认证的接口，除了登录凭证外，接口还需要动态校验参数“client-transaction-id”，只有两个一同向服务器请求时，才能成功返回数据。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202505/c093406db05948c08f883b9cce5868f9-7D6F4A89A8213290530F7264B36CB2FE.png?project=easyblog" /></p>
+<p><em>图2-1 client-transaction-id</em></p>
+<p>很明显，它是逆向成功与否的关键所在。</p>
+<p>也比较幸运，将其当做关键字检索时，很快就找到了目标代码。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202505/22c37efd9da74b8993f3fa092be367f7-D99D0DE7B581A7A5B77BE701ED1B4FAC.png?project=easyblog" /></p>
+<p><em>图2-2 检索client-transaction-id位置</em></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202505/0db3b85e0831400cb05c130d7e955776-A00AB80F1DE99C91E5E1F371EA35C70F.png?project=easyblog" /></p>
+<p><em>图2-3 生成client-transaction-id 1</em></p>
+<pre><code class="language-js">try {
+    d.host.includes(&quot;jf.x.com&quot;) ? o.headers[&quot;x-client-transaction-id&quot;] = await Gd(&quot;jf&quot;, &quot;PATCH&quot;) : o.headers[&quot;x-client-transaction-id&quot;] = await Gd(function(e) {
+        return (e || &quot;&quot;).split(&quot;?&quot;)[0].trim()
+    }(a), e)
+} catch (e) {
+    o.headers[&quot;x-client-transaction-id&quot;] = btoa(`e:${e}`)
+}
+</code></pre>
+<p>在该位置打上断点，进入方法体，发现其返回了o方法的调用。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202505/6828940aafc54c20b3b17c034d236f2e-E8ABDE5777A9878741F4687D082B78A8.png?project=easyblog" /></p>
+<p><em>图2-4 生成client-transaction-id 2</em></p>
+<p>继续下一步调试，此时已经跳转到另一个文件ondemand.s.xxx.js。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202505/b9fb103a01ad4fafb9e5970bdcb93b62-04814E9E6B8A5CAB9589A74D67922CC5.png?project=easyblog" /></p>
+<p><em>图2-5 生成client-transaction-id 3</em></p>
+<p>看起来，这就是目标方法。因此，要“千方百计”地将其找出来为我们所用，当成功调用该方法时，表示逆向成功。</p>
+<blockquote>
+<p>其实这正是开头图1-1里的文件，尽管形式有所不同，但确实是同一套代码。在图1-1中，227900模块把c方法作为default方法的返回值，结合图2-4，Promise返回了default方法的调用，因此，不难猜测，图2-4中的o方法，正是图1-1中的c。</p>
+</blockquote>
+<h4 id="hidp-heading-2">三、加载器</h4>
+<p>定位到目标代码后，紧接着需要找到代码加载器，等会需要使用该加载器调用模块方法。</p>
+<p><strong>加载器一般在返回的HTML文档中</strong>。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202505/9616ef1dc79041c9ac1983320c4f4d67-75B2C04EFDC424836A2E65C0CF151F13.png?project=easyblog" /></p>
+<p><em>图3-1 加载器 1</em></p>
+<p>将这一坨原封不动地复制下来，保存到本地文件中。</p>
+<blockquote>
+<p>加载器一般都会有exports、loaded、call等关键字，多看几次就熟悉</p>
+</blockquote>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202505/242ee07147114bdc8244a7e07134e518-6CDC482B67F1F99F5B7CF0C00E8CAD5A.png?project=easyblog" /></p>
+<p><em>图3-2 加载器 2</em></p>
+<p>将加载器暴露到外包以供调用<code>window.loader = b;</code>。</p>
+<h4 id="hidp-heading-3">四、模块文件</h4>
+<p>将当前HTML页面所依赖的js文件全部拷贝到本地，可以选择“存储当前页面”，这样一来，浏览器会自动把包括js在内的所有文件下载，但由于ondemand.s.xxx.js是动态加载的文件，所以不会包含在内，需要单独下载。</p>
+<p>（为了其中一个功能，把所有的代码都跑一遍，有种“火力覆盖”的感觉...）</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202505/2742653307fa4470a5c05901155f46f5-E0E116A71C0D266E6BB917CF22DB3713.png?project=easyblog" /></p>
+<p><em>图4-1 模块文件</em></p>
+<h4 id="hidp-heading-4">五、补环境</h4>
+<p>通常情况下，在本地运行时会报各种各样的错误，毕竟node虽然同为js运行环境，但也与浏览器环境存在差异，如node环境没有DOM和BOM，从而导致模块文件中读取、调用一些不存在的属性和api时，就会报错。</p>
+<p>因此，作为替代，在node环境中要显示声明一些同名的对象、属性、方法，以防止报错，业界把这一步称为“补环境”。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202505/1f650cbc639b49ad8e13db6c70a83df3-32E0625CDB13AB83A4009377710820FE.png?project=easyblog" /></p>
+<p><em>图5-1 声明window、self对象</em></p>
+<h5 id="hidp-heading-5">1、env.js</h5>
+<p>为使代码看起来整洁，将大部分补环境声明统一定义在env.js文件中，通过<code>require('./env.js')</code>加载。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202505/a84a1db71aac4c94a7c1495cb04f98c7-9CE2928824D225814527813B00E40874.png?project=easyblog" /></p>
+<p><em>图5-2 声明document、location等对象</em></p>
+<p>总之就是在运行的时候，看到缺什么补什么，直到没有影响运行的错误为止。</p>
+<h5 id="hidp-heading-6">2、loadResources</h5>
+<p>相当于浏览器通过script标签从服务器加载文件。</p>
+<pre><code class="language-js">function loadResources(basePath) {
+    console.log(loadResources.name);
+    const fileNames = fs.readdirSync(basePath).filter(item =&gt; item.endsWith(&quot;.js&quot;)).map(item =&gt; basePath + '/' + item);
+    for (const item of fileNames) {
+        console.log('加载：' + item);
+        require(item);
+    }
+}
+</code></pre>
+<h5 id="hidp-heading-7">3、run</h5>
+<pre><code>function run() {
+    require('./env'); // 补环境
+    loadResources(path.join(__dirname, './resource/t2'));
+    setup(); // 加载器
+    const m227900 = window.loader(227900); // 加载指定模块
+    console.log(&quot;\n&quot;);
+    console.log(m227900);
+}
+
+run();
+</code></pre>
+<h5 id="hidp-heading-8">4、运行run方法</h5>
+<p>使用node运行app-webpack-1.js后，可以看到模块已经被输出到控制台中。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202505/cf6df4095a9546ac86eac2de6105c5c2-937C8C393E9A14874A7835F5A3851AB2.png?project=easyblog" /></p>
+<p><em>图5-3 app-webpack-1.js执行结果</em></p>
+<h4 id="hidp-heading-9">六、再补环境</h4>
+<p>在这个步骤中，将使用前面逆向得到的<code>m227900</code>模块尝试生成<code>client-transaction-id</code>。</p>
+<pre><code>const fn = m227900.default();
+const transactionId = await fn(&quot;/i/api/graphql/xd_EMdYvB9hfZsZ6Idri0w/TweetDetail&quot;, &quot;GET&quot;);
+console.log(&quot;transactionId: %s&quot;, transactionId);
+</code></pre>
+<p>不过，运行时却得到以下结果。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202505/55b8bd45c360469493414a78ca977fcf-9F805160ED8755868BF11620E5EA48E1.png?project=easyblog" /></p>
+<p><em>图6-1 TypeError: Cannot read property 'subtle' of undefined</em></p>
+<p>这是由于方法内部使用了<code>window.crypto.subtle</code>属性（目前crypto为undefined），光看名字就知道是与加密相关的api，所以要继续补环境。</p>
+<h5 id="hidp-heading-10">1、subtle</h5>
+<p>经调试知道（调试部分请读者自己完成），最终fn内部会调用<a href="https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto/digest">window.crypto.subtle.digest</a>来生成加密数据。</p>
+<pre><code>const { encode } = require(&quot;./utils/crypto&quot;);
+const { atob, btoa } = require('./utils/transaction_id_generator');
+
+// 在window对象下新增crypto属性；
+// encode是node环境中与window.crypto.subtle.digest相当的简单实现
+window.crypto = {
+    subtle: {
+        digest: encode
+    }
+};
+
+// 同理，还有`window.atob`和·`window.atob`
+window.atob = atob;
+window.btoa = btoa;
+</code></pre>
+<h5 id="hidp-heading-11">2、tsv&amp;d</h5>
+<p>此外，fn方法中还有与HTML页面交互的部分代码，具体是：请求页面时，服务器会动态生成一些数据插入其中，随后fn方法内部通过调用document.querySelectorAll来获取数据，直接或间接作为生成client-transaction-id算法的参数。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202505/535a7a006e0d4af8b2fce8dae140689e-B7A31E5EC78A16397362E63E6B2E2499.png?project=easyblog" /></p>
+<p><em>图6-2 meta标签中的twitter-site-verification参数</em></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202505/af0e3d7dc5b0424098d199476256c589-8F8722E8D1F89ABAA7C4AAC0674F8F5A.png?project=easyblog" /></p>
+<p><em>图6-3 svg标签中的d参数</em></p>
+<p>因此，还需要将这些数据提取出来给算法使用，同时也意味着需要额外发起一次html页面请求。</p>
+<pre><code>// 在run方法顶部新增如下代码；
+// 主要是请求https://x.com/home，并解析其中的参数；
+async function run() {
+    const rootDir = process.argv[1].replace(/\/[^\/]+$/, '');;
+    const config = getConfig(rootDir);
+    config.rootDir = rootDir;
+    const proxyAgent = new HttpsProxyAgent(&quot;http://127.0.0.1:7897&quot;);
+    // 获取推特页面，以解析tsv和d参数
+    const html = await fetchFile(&quot;https://x.com/home&quot;, {
+        headers: {
+            'user-agent': config.user_agent,
+        },
+        agent: proxyAgent
+    });
+    const htmlParsed = htmlParser(html, { attributes: ['d', 'tsv'] });
+    window.tsv = htmlParsed.tsv;
+    window.d = htmlParsed.d;
+    console.log(htmlParsed);
+    // ...
+ }
+</code></pre>
+<h5 id="hidp-heading-12">3、改造document.querySelectorAll</h5>
+<p>模拟返回dom节点。</p>
+<pre><code>document = {
+    // ...
+    querySelectorAll: (selector) =&gt; {
+        // console.log(selector);
+        // 返回tsv；模拟meta对象
+        const nodes = [];
+        if (selector === '[name^=tw]') {
+            const meta = { content: window.tsv };
+            const getAttribute = key =&gt; meta[key];
+            meta['getAttribute'] = getAttribute;
+            nodes.push(meta);
+            return nodes;
+        }
+        // 不同的demand.s.xxx.js文件selector不一样，但每个文件的selector是固定不变的，使用console.log(selector)打印一次即可；
+        if (selector === '.r-3p73i0') {
+            const d = window.d;
+            for (const item of d) {
+                const svg = {
+                    tagName: 'svg',
+                    childNodes: [
+                        {
+                            childNodes: [
+                                null,
+                                { getAttribute: () =&gt; item },
+                            ]
+                        }
+                    ]
+                };
+                nodes.push(svg);
+            }
+        }
+        return nodes;
+    }
+    // ...
+ }
+</code></pre>
+<h4 id="hidp-heading-13">7、生成transaction-id</h4>
+<p>在经过漫长的补环境流程后，终于看到了点成果。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202505/a260331cd7794391ad299264e0f9899b-57D647E596C59EBCA51994809B50FD47.png?project=easyblog" /></p>
+<p><em>图6-4 <code>node app-webpack-3.js</code>的执行结果</em></p>
+<h4 id="hidp-heading-14">七、请求推文</h4>
+<p>请先在config.txt文件中配置自己cookie后再往下。</p>
+<h5 id="hidp-heading-15">1、getTweet</h5>
+<p>定义请求推文方法，看似参数非常多，但其实只要修改一个，其他都可以直接从network面板中复制下来。</p>
+<p>且要确保<strong>请求推文</strong>和<strong>生成transaction-id</strong>的参数保持一致，即请求url和请求方法。</p>
+<pre><code>async function getTweet(params) {
+    const { transactionId, config, proxyAgent, tweetId } = params;
+    // const tweetId = config.tweet_url.match(/.*?\/(\d+)/)[1];
+    const ct0 = config.cookie.match(/ct0=(\w*);?/)[1];
+    const query = {
+        &quot;variables&quot;: `{&quot;focalTweetId&quot;:&quot;${tweetId}&quot;,&quot;with_rux_injections&quot;:false,&quot;rankingMode&quot;:&quot;Relevance&quot;,&quot;includePromotedContent&quot;:true,&quot;withCommunity&quot;:true,&quot;withQuickPromoteEligibilityTweetFields&quot;:true,&quot;withBirdwatchNotes&quot;:true,&quot;withVoice&quot;:true}`,
+        &quot;features&quot;: &quot;...&quot;,
+        &quot;fieldToggles&quot;: &quot;...&quot;
+    };
+    const query1 = querystring.stringify(query);
+    return await fetchJson(`https://x.com/i/api/graphql/xd_EMdYvB9hfZsZ6Idri0w/TweetDetail?${query1}`, {
+        &quot;headers&quot;: {
+            &quot;accept&quot;: &quot;*/*&quot;,
+            &quot;accept-language&quot;: &quot;zh-CN,zh;q=0.9,en;q=0.8&quot;,
+            &quot;authorization&quot;: &quot;Bearer AAAAAAAAAAAAAAAAAAAAANRILgAAAAAAnNwIzUejRCOuH5E6I8xnZz4puTs%3D1Zv7ttfk8LF81IUq16cHjhLTvJu4FA33AGWWjCpTnA&quot;,
+            &quot;content-type&quot;: &quot;application/json&quot;,
+            &quot;x-client-transaction-id&quot;: transactionId,
+            &quot;x-csrf-token&quot;: ct0,
+            &quot;x-twitter-active-user&quot;: &quot;yes&quot;,
+            &quot;x-twitter-auth-type&quot;: &quot;OAuth2Session&quot;,
+            &quot;x-twitter-client-language&quot;: &quot;en&quot;,
+            &quot;cookie&quot;: config.cookie,
+            &quot;user-agent&quot;: config.user_agent
+        },
+        &quot;body&quot;: null,
+        &quot;method&quot;: &quot;GET&quot;,
+        &quot;agent&quot;: proxyAgent
+    });
+}
+</code></pre>
+<p>在run方法下方加入如下代码后运行<code>node app-webpack.js </code>。</p>
+<pre><code>async function run() {
+    // ...
+    const transactionId = await fn(&quot;/i/api/graphql/xd_EMdYvB9hfZsZ6Idri0w/TweetDetail&quot;, &quot;GET&quot;);
+    console.log(&quot;transactionId: %s&quot;, transactionId);
+    const tweetId = config.tweet_url.match(/.*?\/(\d+)/)[1];
+    console.log(&quot;tweetId: %s&quot;, tweetId);
+    const respData = await getTweet({ transactionId, tweetId, proxyAgent, config });
+    if (respData) {
+        console.log(&quot;获取成功&quot;);
+        const jsonStr = JSON.stringify(respData);
+        console.log(jsonStr);
+        fs.writeFileSync(path.resolve(__dirname, `./output/${tweetId}-${Date.now()}.json`), jsonStr);
+    }
+    else {
+        console.logg(&quot;获取失败&quot;);
+    }
+}
+</code></pre>
+<p>最终成功获取到推文数据：</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202505/ce88bee624464b86b0902493f09c0d14-0567DE04693BCD988FB54D9C899B47D9.png?project=easyblog" /></p>
+<p><em>图6-5 https://x.com/NumbersguyV/status/1922320974180909474推文</em></p>
+<p>响应数据已保存至本地文件（/output/{tweet_id}.json），找到需要的资源链接后，可直接在浏览器打开，但仍需要梯子，懂的都懂。</p>
+<p>如这里找到的其中一个视频链接，并于浏览器搜索栏中打开，然后就看到了<strong>米塔</strong>。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202505/1409919239794acfbfac675726db294e-C3867AD287C99CA91D3B96E0C9762797.png?project=easyblog" /></p>
+<p>不过，这其实是一条公开的推文，当然，也可以试着去找一条敏感推文（涉及黄暴），同样能成功获取数据。</p>
+<h4 id="hidp-heading-16">七、结语</h4>
+<p>真就如同传闻中的那样，Webpack逆向可以快速完成逆向需求，除了补环境以外，几乎不需要写代码，比我先前逐步调试的方式好了不至一星半点。</p>
+<p>这个过程主要在于“找”和“调”，即“找到目标方法，并调用”，这真的是太有操作了，果真就是“白嫖一时爽，一直白嫖一直爽”。</p>
+<p>而如果到现在为止，有读者还对Webpack逆向的效率将信将疑的话，那么我接下来贴出一个基于油猴脚本的版本，它简直把“白嫖”发挥到了极致。</p>
+<pre><code>// ==UserScript==
+// @name         transaction-id逆向
+// @namespace    http://tampermonkey.net/
+// @version      v0.0.1
+// @description  try to take over the world!
+// @author       err0l@qq.com
+// @match        https://x.com/*
+// @icon         https://www.google.com/s2/favicons?sz=64&amp;domain=x.com
+// @grant        none
+// @run-at       document-start
+// ==/UserScript==
+
+(function() {
+    'use strict';
+    var hacked = false;
+    const svgs = [];
+    let loader, zd;
+    function getZd() {
+        let m227900;
+        if (!loader || !(m227900 = loader.c['227900']) || svgs.length !== 4) {
+            throw new Error('环境参数错误');
+        }
+        document.body.append(...svgs);
+        const fn = m227900.exports.default();
+        return fn;
+    }
+    async function Gd(e, d) {
+        zd = zd || getZd();
+        const o = await zd;
+        return await o(e, d);
+    }
+    window.Gd = Gd;
+    const _call = Function.prototype.call;
+    // 拦截call方法，并获取到加载器
+    Function.prototype.call = function(_this, ...args) {
+        if (!hacked &amp;&amp; args.length === 3 &amp;&amp; typeof args[2] === 'function' &amp;&amp; args[2].b === document.baseURI) {
+            hacked = true;
+            Function.prototype.call = _call;
+            loader = args[2];
+        }
+        return _call.apply(this, [_this, ...args]);
+    }
+    const _rc = Node.prototype.removeChild;
+    // 因为demand.s.xxx.js模块初始化完成后，会将svg从文档中删除，所以要在这里拦截，在调用getZd()的时候会使用到，否则会出现找不到节点的问题
+    Node.prototype.removeChild = function(node) {
+        if (node.tagName === 'svg' &amp;&amp; node.id.startsWith('loading-x-anim')) {
+            svgs.push(node);
+            if (svgs.length === 4) {
+                Node.prototype.removeChild = _rc;
+            }
+        }
+        return _rc.call(this, node);
+    }
+})();
+</code></pre>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202505/81340c2b220e47b9b287d0aa7d9b34a2-A84A826CF7967CAE6F57FAD26AEBEC1E.png?project=easyblog" /></p>
+<p><em>图7-1 新增油猴脚本</em></p>
+<p>新增油猴脚本后，在浏览器控制台调用挂载在window对象的Gd方法，一样能够生成transaction-id。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202505/0e52f05eea3645a58eb01fe8f889c16c-139ECD58B6B5CE2BD2066B877B95C0E9.png?project=easyblog" /></p>
+<p><em>图7-2 Gd执行结果</em></p>
+<p>当然，也并不是说只要Webpack逆向而把逐步调试抛弃，这二者本是一体的，逆向本身就是一个调试的过程，它们的关系更像js和js框架，只有二者结合起来，才能发挥出最大功效。</p>
+<p>我承认以前是我说话大声了点，现在已经无法自拔地喜欢上Webpack逆向了，因为它实在太高效，更何况它还简单。</p>
+<p>你知道的，我早就是一名Webpack逆向的推崇者了...</p>
+<hr />
+<p>本文<a href="https://github.com/errr0l/demo/tree/master/twitter-demo">代码</a>。</p>
+
+                        </div>
+                    </div>
+                </article>
+                <div class="comment-wrap">
+                        <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+  <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+                        <div id="gitalk-container"></div>
+                        <script>
+                            const gitalk = new Gitalk({
+                                clientID: 'ae1422e500a8b19fb1fc',
+                                clientSecret: '9f387db6a84a4945cdf5dc743c16ce25fdef6b76',
+                                repo: 'github-pages',      // The repository of store comments,
+                                owner: 'errr0l',
+                                admin: ['errr0l'],
+                                id: location.pathname,      // Ensure uniqueness and length less than 50
+                                distractionFreeMode: false  // Facebook-like distraction free mode
+                            });
+                            gitalk.render('gitalk-container');
+                        </script>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="back">返回</div>
+</div>
+    <script src="../js/data.js"></script>
+    <script src="../js/lazy.js"></script>
+    <script src="../js/search.js"></script>
+    <script src="../js/menu.js"></script>
+<script src="../js/toc.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/viewerjs/1.11.7/viewer.min.js"></script>
+<script>
+    let back = document.querySelector(".back");
+    back.addEventListener("click", function () {
+        window.history.go(-1);
+    });
+    const viewer = new Viewer(document.querySelector('.markdown-body .content'), {
+        toolbar: {
+            zoomIn: 4,
+            zoomOut: 4,
+            oneToOne: 4,
+            reset: 0,
+            prev: 4,
+            play: 0,
+            next: 4,
+            rotateLeft: 0,
+            rotateRight: 0,
+            flipHorizontal: 0,
+            flipVertical: 0,
+        },
+    });
+</script>
+</body>
+</html>

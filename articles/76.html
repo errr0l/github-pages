@@ -158,6 +158,11 @@
                                 </h2>
                                 <div class="item content">
                                         <div class="item1 ">
+                                            <a href="../articles/77.html">
+                                                    Webpack逆向
+                                            </a>
+                                        </div>
+                                        <div class="item1 ">
                                             <a href="../articles/70.html">
                                                     为静态站点添加目录功能
                                             </a>
@@ -230,7 +235,7 @@
 <li>pushState()</li>
 <li>replaceState()</li>
 </ol>
-<p>以vue为例，查看其路由vue-router框架源码可知，无论是Router.push()还是Router.replace()，在底层都调用了以上两个方法：</p>
+<p>以vue为例，查看其路由框架vue-router的源码可知，无论是Router.push()还是Router.replace()，在底层都调用了以上两个方法：</p>
 <blockquote>
 <p>这里指history和hash模式</p>
 </blockquote>
@@ -269,13 +274,13 @@ function changeLocation(to: HistoryLocation, state: StateEntry, replace: boolean
 });
 </code></pre>
 <p><strong>然而，现实并非如想象般美好。</strong></p>
-<p>我们会发现，写完代码后，无论进行怎样的跳转，监听器都没有任何反应。</p>
-<p>原因在于pushState()和replaceState()方法不会触发popstate事件，<a href="https://developer.mozilla.org/en-US/docs/Web/API/Window/popstate_event#the_history_stack">The history stack</a>文档中已经明确表示。</p>
+<p>我们会发现，写完代码后，无论进行怎样的跳转，监听器都没有反应。</p>
+<p>经查证，发现原因在于pushState()和replaceState()方法不会触发popstate事件，<a href="https://developer.mozilla.org/en-US/docs/Web/API/Window/popstate_event#the_history_stack">The history stack</a>文档中已经明确表示。</p>
 <blockquote>
 <p>Note that just calling <code>history.pushState()</code> or <code>history.replaceState()</code> won't trigger a <code>popstate</code> event. The <code>popstate</code> event will be triggered by doing a browser action such as a click on the back or forward button (or calling <code>history.back()</code> or <code>history.forward()</code> in JavaScript).</p>
 </blockquote>
 <p>这也是前面提到js未提供任何可监听url变化接口或方法的原因。</p>
-<p>与之形成对比的是，处于同一层级的history.back()和history.forward()却不受这一限制，或者是浏览器的前进、后退按钮，都能正常触发popstate事件，从视觉效果上来看，它们的作用和路由跳转别无二致，所以感觉调用history api未触发事件有点奇怪，不然没什么理由，即使它不叫popstate，也应该有一个别的事件。</p>
+<p>有趣的是，处于同一层级的history.back()和history.forward()，或是浏览器的前进、后退按钮，都能正常触发popstate事件，从视觉效果上来看，它们的作用和路由跳转别无二致，所以感觉调用pushState()和replaceState()未触发事件有点奇怪，即使它不叫popstate，也应该有一个别的事件。</p>
 <p>不过，前面也说了，办法还是有的。</p>
 <p><strong>既然它们没有触发，那就让它们触发不就好了...</strong></p>
 <p>目前已经了解到，单页面应用的路由跳转底层会调用pushState()或replaceState()，因此，只需要对这它们动一动手脚：</p>
