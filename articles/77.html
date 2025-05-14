@@ -261,7 +261,7 @@
 <p>现在绝大多数前端项目都已经实现了工程化，Webpack、Vite、Gulp等就在其中扮演了重要的角色，无论是编译、构建，还是优化、测试，都少不了它们的身影。</p>
 <p>鉴于这种情况，不会Webpack逆向确实很影响逆向的效率，甚至是寸步难行，举个极端但更易理解的例子，现在不会Webpack逆向，就如同前端开发不会Vue、JavaWeb不会Spring。</p>
 <p>毕竟是关乎效率的问题，不得不学。</p>
-<p>而近期刚好有逆向推特的需求，且推特所用的打包工具也刚好是Webpack，很适合作为本次的分析目标。</p>
+<p>近期刚好有逆向推特的需求，且推特所用的打包工具也刚好是Webpack，很适合作为本次的分析目标。</p>
 <blockquote>
 <p>之前在推特下载文件时，使用的从来都是别人的工具，不是说不好用，而是说自己出于学习的目的想研究研究...</p>
 </blockquote>
@@ -292,11 +292,11 @@ function b(e) {
 }
 </code></pre>
 <h4 id="hidp-heading-1">二、目标定位</h4>
-<p>推文接口分有两种类型，一种是所有人开放的接口；另一种是需要认证的接口，除了登录凭证外，接口还需要动态校验参数“client-transaction-id”，只有两个一同向服务器请求时，才能成功返回数据。</p>
+<p>推文接口分有两种类型，一种是所有人开放的接口；另一种是需要认证的接口，除了登录凭证外，还需要动态校验参数“client-transaction-id”，只有两个一同向服务器请求时，才能成功返回数据。</p>
 <p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202505/c093406db05948c08f883b9cce5868f9-7D6F4A89A8213290530F7264B36CB2FE.png?project=easyblog" /></p>
 <p><em>图2-1 client-transaction-id</em></p>
 <p>很明显，它是逆向成功与否的关键所在。</p>
-<p>也比较幸运，将其当做关键字检索时，很快就找到了目标代码。</p>
+<p>也比较幸运，将其当做关键字检索时，很快就找到了相关代码。</p>
 <p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202505/22c37efd9da74b8993f3fa092be367f7-D99D0DE7B581A7A5B77BE701ED1B4FAC.png?project=easyblog" /></p>
 <p><em>图2-2 检索client-transaction-id位置</em></p>
 <p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202505/0db3b85e0831400cb05c130d7e955776-A00AB80F1DE99C91E5E1F371EA35C70F.png?project=easyblog" /></p>
@@ -317,11 +317,11 @@ function b(e) {
 <p><em>图2-5 生成client-transaction-id 3</em></p>
 <p>看起来，这就是目标方法。因此，要“千方百计”地将其找出来为我们所用，当成功调用该方法时，表示逆向成功。</p>
 <blockquote>
-<p>其实这正是开头图1-1里的文件，尽管形式有所不同，但确实是同一套代码。在图1-1中，227900模块把c方法作为default方法的返回值，结合图2-4，Promise返回了default方法的调用，因此，不难猜测，图2-4中的o方法，正是图1-1中的c。</p>
+<p>其实这正是开头图1-1里的文件，尽管形式有所不同，但确实是功能相同的一套代码。在图1-1中，227900模块把c方法作为default方法的返回值，结合图2-4，Promise同样返回了default方法的调用，因此，不难猜测，图2-4中的o方法，正是图1-1中的c。</p>
 </blockquote>
 <h4 id="hidp-heading-2">三、加载器</h4>
 <p>定位到目标代码后，紧接着需要找到代码加载器，等会需要使用该加载器调用模块方法。</p>
-<p><strong>加载器一般在返回的HTML文档中</strong>。</p>
+<p><strong>加载器一般在当前HTML文档中</strong>。</p>
 <p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202505/9616ef1dc79041c9ac1983320c4f4d67-75B2C04EFDC424836A2E65C0CF151F13.png?project=easyblog" /></p>
 <p><em>图3-1 加载器 1</em></p>
 <p>将这一坨原封不动地复制下来，保存到本地文件中。</p>
@@ -332,7 +332,7 @@ function b(e) {
 <p><em>图3-2 加载器 2</em></p>
 <p>将加载器暴露到外包以供调用<code>window.loader = b;</code>。</p>
 <h4 id="hidp-heading-3">四、模块文件</h4>
-<p>将当前HTML页面所依赖的js文件全部拷贝到本地，可以选择“存储当前页面”，这样一来，浏览器会自动把包括js在内的所有文件下载，但由于ondemand.s.xxx.js是动态加载的文件，所以不会包含在内，需要单独下载。</p>
+<p>将当前页面所依赖的js文件全部拷贝到本地，可以选择“存储当前页面”，这样一来，浏览器会自动把包括js在内的所有文件下载，但由于ondemand.s.xxx.js是动态加载的文件，所以不会包含在内，需要单独下载。</p>
 <p>（为了其中一个功能，把所有的代码都跑一遍，有种“火力覆盖”的感觉...）</p>
 <p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202505/2742653307fa4470a5c05901155f46f5-E0E116A71C0D266E6BB917CF22DB3713.png?project=easyblog" /></p>
 <p><em>图4-1 模块文件</em></p>
@@ -370,7 +370,7 @@ function b(e) {
 run();
 </code></pre>
 <h5 id="hidp-heading-8">4、运行run方法</h5>
-<p>使用node运行app-webpack-1.js后，可以看到模块已经被输出到控制台中。</p>
+<p>使用node运行app-webpack-1.js后，可以看到m227900模块已经被输出到控制台中。</p>
 <p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202505/cf6df4095a9546ac86eac2de6105c5c2-937C8C393E9A14874A7835F5A3851AB2.png?project=easyblog" /></p>
 <p><em>图5-3 app-webpack-1.js执行结果</em></p>
 <h4 id="hidp-heading-9">六、再补环境</h4>
@@ -384,11 +384,11 @@ console.log(&quot;transactionId: %s&quot;, transactionId);
 <p><em>图6-1 TypeError: Cannot read property 'subtle' of undefined</em></p>
 <p>这是由于方法内部使用了<code>window.crypto.subtle</code>属性（目前crypto为undefined），光看名字就知道是与加密相关的api，所以要继续补环境。</p>
 <h5 id="hidp-heading-10">1、subtle</h5>
-<p>经调试知道（调试部分请读者自己完成），最终fn内部会调用<a href="https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto/digest">window.crypto.subtle.digest</a>来生成加密数据。</p>
+<p>经调试可知（还请由读者自己完成），最终fn内部会调用<a href="https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto/digest">window.crypto.subtle.digest</a>来生成加密数据。</p>
 <pre><code>const { encode } = require(&quot;./utils/crypto&quot;);
 const { atob, btoa } = require('./utils/transaction_id_generator');
 
-// 在window对象下新增crypto属性；
+// 为env.js文件中的window对象新增crypto属性；
 // encode是node环境中与window.crypto.subtle.digest相当的简单实现
 window.crypto = {
     subtle: {
@@ -401,7 +401,7 @@ window.atob = atob;
 window.btoa = btoa;
 </code></pre>
 <h5 id="hidp-heading-11">2、tsv&amp;d</h5>
-<p>此外，fn方法中还有与HTML页面交互的部分代码，具体是：请求页面时，服务器会动态生成一些数据插入其中，随后fn方法内部通过调用document.querySelectorAll来获取数据，直接或间接作为生成client-transaction-id算法的参数。</p>
+<p>此外，算法法中还有与HTML页面交互的部分代码，具体是：请求页面时，服务器会动态生成一些数据插入其中，随后前端通过调用document.querySelectorAll来获取数据，直接或间接作为生成client-transaction-id算法的参数。</p>
 <p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202505/535a7a006e0d4af8b2fce8dae140689e-B7A31E5EC78A16397362E63E6B2E2499.png?project=easyblog" /></p>
 <p><em>图6-2 meta标签中的twitter-site-verification参数</em></p>
 <p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202505/af0e3d7dc5b0424098d199476256c589-8F8722E8D1F89ABAA7C4AAC0674F8F5A.png?project=easyblog" /></p>
@@ -505,6 +505,7 @@ async function run() {
     });
 }
 </code></pre>
+<h5 id="hidp-heading-16">2、再次执行run方法</h5>
 <p>在run方法下方加入如下代码后运行<code>node app-webpack.js </code>。</p>
 <pre><code>async function run() {
     // ...
@@ -531,10 +532,10 @@ async function run() {
 <p>如这里找到的其中一个视频链接，并于浏览器搜索栏中打开，然后就看到了<strong>米塔</strong>。</p>
 <p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202505/1409919239794acfbfac675726db294e-C3867AD287C99CA91D3B96E0C9762797.png?project=easyblog" /></p>
 <p>不过，这其实是一条公开的推文，当然，也可以试着去找一条敏感推文（涉及黄暴），同样能成功获取数据。</p>
-<h4 id="hidp-heading-16">八、结语</h4>
-<p>真就如同传闻中的那样，Webpack逆向可以快速完成逆向需求，除了补环境以外，几乎不需要写代码，比我先前逐步调试的方式好了不至一星半点。</p>
-<p>这个过程主要在于“找”和“调”，即“找到目标方法，并调用”，这真的是太有操作了，果真就是“白嫖一时爽，一直白嫖一直爽”。</p>
-<p>而如果到现在为止，有读者还对Webpack逆向的效率将信将疑的话，那么我接下来贴出一个基于油猴脚本的版本，它简直把“白嫖”发挥到了极致。</p>
+<h4 id="hidp-heading-17">八、结语</h4>
+<p>真就如同传闻中的那样，Webpack逆向可以快速完成逆向需求，除了补环境以外，几乎不需要写代码，比我先前逐步调试的方式好了不止一星半点。</p>
+<p>这个过程主要在于“找”和“调”，即“找到目标方法，并调用”，这可太有操作了，果真就是“白嫖一时爽，一直白嫖一直爽”。</p>
+<p>到现在为止，如果还有读者还对Webpack逆向的效率有疑惑的话，那么接下来我贴出一个基于油猴脚本的transaction-id逆向版本，它简直把“白嫖”发挥到了极致。</p>
 <pre><code>// ==UserScript==
 // @name         transaction-id逆向
 // @namespace    http://tampermonkey.net/
@@ -591,13 +592,14 @@ async function run() {
 })();
 </code></pre>
 <p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202505/81340c2b220e47b9b287d0aa7d9b34a2-A84A826CF7967CAE6F57FAD26AEBEC1E.png?project=easyblog" /></p>
-<p><em>图7-1 新增油猴脚本</em></p>
-<p>新增油猴脚本后，在浏览器控制台调用挂载在window对象的Gd方法，一样能够生成transaction-id。</p>
+<p><em>图7-1 启用当前脚本</em></p>
+<p>随后在浏览器控制台调用挂载在window对象的Gd方法，一样能生成transaction-id。</p>
 <p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202505/0e52f05eea3645a58eb01fe8f889c16c-139ECD58B6B5CE2BD2066B877B95C0E9.png?project=easyblog" /></p>
 <p><em>图7-2 Gd执行结果</em></p>
-<p>当然，也并不是说只要Webpack逆向而把逐步调试抛弃，这二者本是一体的，逆向本身就是一个调试的过程，它们的关系更像js和js框架，只有二者结合起来，才能发挥出最大功效。</p>
+<p>虽然脚本只有短短的几十行代码，但也能够达到相同的目的，这就是Webpack逆向的厉害之处，可大幅减轻逆向的成本。</p>
+<p>当然，也并不是说只要Webpack逆向而把逐步调试抛弃，这二者本该为一体，或者说逆向本身就是一个调试的过程，它们的关系更像js和js框架，只有二者结合起来，才能发挥出最大功效。</p>
 <p>我承认以前是我说话大声了点，现在已经无法自拔地喜欢上Webpack逆向了，因为它实在太高效，更何况它还简单。</p>
-<p>你知道的，我早就是一名Webpack逆向的推崇者了，一起来学习...</p>
+<p>你知道的，我早就是一名Webpack逆向的推崇者了，一起学...</p>
 <hr />
 <p>本文<a href="https://github.com/errr0l/demo/tree/master/twitter-demo">代码</a>。</p>
 
