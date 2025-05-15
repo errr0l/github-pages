@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Webpack逆向 - 小埃的个人博客</title>
+    <title>【推特】Webpack逆向 - 小埃的个人博客</title>
     <link rel="stylesheet" href="../css/reset.css">
     <link rel="stylesheet" href="../css/base.css">
     <link rel="stylesheet" href="../css/index.css">
@@ -89,7 +89,7 @@
         });
     </script>
         <meta name="keywords" content="逆向,Webpack,推特,爬虫,js">
-        <meta name="description" content="Webpack逆向；最终咱还是陷入了逆向的困境中... “逐步调试+补全环境”是我惯用的逆向方式，它很符合我个人的喜好，最终的代码既“简单”又“高效”，但不得不承认的是，这种方式实在太耗费时间和精力...">
+        <meta name="description" content="【推特】Webpack逆向；最终咱还是陷入了逆向的困境中... “逐步调试+补全环境”是我惯用的逆向方式，它很符合我个人的喜好，最终的代码既“简单”又“高效”，但不得不承认的是，这种方式实在太耗费时间和精力...">
     <link rel="stylesheet" href="../css/article.css">
     <link rel="stylesheet" href="../css/markdown/github-markdown.css">
     <link rel="stylesheet" href="../css/markdown/github-markdown-light.css">
@@ -230,7 +230,7 @@
             <div class="wrapper">
                 <article class="mg-b-20">
                     <div class="markdown-body">
-                        <div class="title">Webpack逆向</div>
+                        <div class="title">【推特】Webpack逆向</div>
                         <div class="item meta mg-b-10">
                             <span class="author">由<a href="javascript:void(0);">errol</a>发表于<a href="#">2025-05-11</a></span>
                             <span>|</span>
@@ -263,7 +263,7 @@
 <p>毕竟是关乎效率的问题，不得不学。</p>
 <p>近期刚好有逆向推特的需求，且推特所用的打包工具也刚好是Webpack，很适合作为本次的分析目标。</p>
 <blockquote>
-<p>之前在推特下载文件时，使用的从来都是别人的工具，不是说不好用，而是说自己出于学习的目的想研究研究...</p>
+<p>之前在推特下载文件时，使用的从来都是别人的工具，不是说不好用，而是说自己出于学习的目的想研究研究，开始也有试过推特的api，但是非常难用，一来是死贵，二来是限制特别多，真不如正常请求...</p>
 </blockquote>
 <h4 id="hidp-heading-0">一、原理</h4>
 <p>首先得提醒，<strong>这里说的是webpack打包后的代码如何在浏览器运行的原理</strong>，而非Webpack的打包原理。</p>
@@ -337,8 +337,8 @@ function b(e) {
 <p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202505/2742653307fa4470a5c05901155f46f5-E0E116A71C0D266E6BB917CF22DB3713.png?project=easyblog" /></p>
 <p><em>图4-1 模块文件</em></p>
 <h4 id="hidp-heading-4">五、补环境</h4>
-<p>通常情况下，在本地运行时会报各种各样的错误，毕竟node虽然同为js运行环境，但也与浏览器环境存在差异，如node环境没有DOM和BOM，从而导致模块文件中读取、调用一些不存在的属性和api时，就会报错。</p>
-<p>因此，作为替代，在node环境中要显示声明一些同名的对象、属性、方法，以防止报错，业界把这一步称为“补环境”。</p>
+<p>通常情况下，在本地运行时会报各种各样的错误，毕竟node虽然同为js运行环境，但也与浏览器环境存在差异，如node环境没有DOM和BOM，从而当模块文件中读取、调用一些不存在的属性和api时，就会报错。</p>
+<p>因此，作为替代，在node环境中要显示声明一些同名的对象、属性、方法，以保证程序能正常运行，业界把这一步称为“补环境”。</p>
 <p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202505/1f650cbc639b49ad8e13db6c70a83df3-32E0625CDB13AB83A4009377710820FE.png?project=easyblog" /></p>
 <p><em>图5-1 声明window、self对象</em></p>
 <h5 id="hidp-heading-5">1、env.js</h5>
@@ -385,11 +385,11 @@ console.log(&quot;transactionId: %s&quot;, transactionId);
 <p>这是由于方法内部使用了<code>window.crypto.subtle</code>属性（目前crypto为undefined），光看名字就知道是与加密相关的api，所以要继续补环境。</p>
 <h5 id="hidp-heading-10">1、subtle</h5>
 <p>经调试可知（还请由读者自己完成），最终fn内部会调用<a href="https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto/digest">window.crypto.subtle.digest</a>来生成加密数据。</p>
-<pre><code>const { encode } = require(&quot;./utils/crypto&quot;);
+<p>为env.js文件中的window对象新增crypto属性。</p>
+<pre><code>// encode是node环境中与window.crypto.subtle.digest相当的简单实现
+const { encode } = require(&quot;./utils/crypto&quot;);
 const { atob, btoa } = require('./utils/transaction_id_generator');
 
-// 为env.js文件中的window对象新增crypto属性；
-// encode是node环境中与window.crypto.subtle.digest相当的简单实现
 window.crypto = {
     subtle: {
         digest: encode
@@ -401,7 +401,7 @@ window.atob = atob;
 window.btoa = btoa;
 </code></pre>
 <h5 id="hidp-heading-11">2、tsv&amp;d</h5>
-<p>此外，算法法中还有与HTML页面交互的部分代码，具体是：请求页面时，服务器会动态生成一些数据插入其中，随后前端通过调用document.querySelectorAll来获取数据，直接或间接作为生成client-transaction-id算法的参数。</p>
+<p>此外，算法法中还有与HTML页面交互的部分代码，具体是：请求页面时，服务器会动态生成一组数据插入其中，随后前端通过调用document.querySelectorAll来获取数据，直接或间接作为生成client-transaction-id算法的参数。</p>
 <p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202505/535a7a006e0d4af8b2fce8dae140689e-B7A31E5EC78A16397362E63E6B2E2499.png?project=easyblog" /></p>
 <p><em>图6-2 meta标签中的twitter-site-verification参数</em></p>
 <p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202505/af0e3d7dc5b0424098d199476256c589-8F8722E8D1F89ABAA7C4AAC0674F8F5A.png?project=easyblog" /></p>
@@ -471,10 +471,10 @@ async function run() {
 <p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202505/a260331cd7794391ad299264e0f9899b-57D647E596C59EBCA51994809B50FD47.png?project=easyblog" /></p>
 <p><em>图6-4 <code>node app-webpack-3.js</code>的执行结果</em></p>
 <h4 id="hidp-heading-14">七、请求推文</h4>
-<p>请先在config.txt文件中配置自己cookie后再往下。</p>
+<p>请先在config.txt文件中配置自己cookie后再往下，cookie为刚需。</p>
 <h5 id="hidp-heading-15">1、getTweet</h5>
-<p>定义请求推文方法，看似参数非常多，但其实只要修改一个，其他都可以直接从network面板中复制下来。</p>
-<p>且要确保<strong>请求推文</strong>和<strong>生成transaction-id</strong>的参数保持一致，即请求url和请求方法。</p>
+<p>定义请求推文方法，看似参数非常多，但其实只要修改一个，其他都是固定值，可以直接拷贝。</p>
+<p>但请务必要确保<strong>请求推文</strong>和<strong>生成transaction-id</strong>的参数保持一致，即请求url和请求方法。</p>
 <pre><code>async function getTweet(params) {
     const { transactionId, config, proxyAgent, tweetId } = params;
     // const tweetId = config.tweet_url.match(/.*?\/(\d+)/)[1];
@@ -531,10 +531,10 @@ async function run() {
 <p>响应数据已保存至本地文件（/output/{tweet_id}.json），找到需要的资源链接后，可直接在浏览器打开，但仍需要梯子，懂的都懂。</p>
 <p>如这里找到的其中一个视频链接，并于浏览器搜索栏中打开，然后就看到了<strong>米塔</strong>。</p>
 <p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202505/1409919239794acfbfac675726db294e-C3867AD287C99CA91D3B96E0C9762797.png?project=easyblog" /></p>
-<p>不过，这其实是一条公开的推文，当然，也可以试着去找一条敏感推文（涉及黄暴），同样能成功获取数据。</p>
+<p>不过，这其实是一条公开的推文，当然，也可以试着去找一条需要登录的敏感推文（涉及黄暴），同样能获取成功。</p>
 <h4 id="hidp-heading-17">八、结语</h4>
-<p>真就如同传闻中的那样，Webpack逆向可以快速完成逆向需求，除了补环境以外，几乎不需要写代码，比我先前逐步调试的方式好了不止一星半点。</p>
-<p>这个过程主要在于“找”和“调”，即“找到目标方法，并调用”，这可太有操作了，果真就是“白嫖一时爽，一直白嫖一直爽”。</p>
+<p>真就如同传闻中的那样，Webpack逆向可以快速完成逆向需求，除了补环境以外，几乎不需要写代码，比我先前逐步调试的方式好了不止一星半点，想到以后能减少那无聊乏味的出栈入栈操作，我就忍不住轻哼起来。</p>
+<p>这个过程主要在于“找”和“调”，即“找到目标方法，并调用”，这可太有操作、太有水平了，果真就是“白嫖一时爽，一直白嫖一直爽”。</p>
 <p>到现在为止，如果还有读者还对Webpack逆向的效率有疑惑的话，那么接下来我贴出一个基于油猴脚本的transaction-id逆向版本，它简直把“白嫖”发挥到了极致。</p>
 <pre><code>// ==UserScript==
 // @name         transaction-id逆向
@@ -596,10 +596,11 @@ async function run() {
 <p>随后在浏览器控制台调用挂载在window对象的Gd方法，一样能生成transaction-id。</p>
 <p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202505/0e52f05eea3645a58eb01fe8f889c16c-139ECD58B6B5CE2BD2066B877B95C0E9.png?project=easyblog" /></p>
 <p><em>图7-2 Gd执行结果</em></p>
-<p>虽然脚本只有短短的几十行代码，但也能够达到相同的目的，这就是Webpack逆向的厉害之处，可大幅减轻逆向的成本。</p>
-<p>当然，也并不是说只要Webpack逆向而把逐步调试抛弃，这二者本该为一体，或者说逆向本身就是一个调试的过程，它们的关系更像js和js框架，只有二者结合起来，才能发挥出最大功效。</p>
+<p>虽然脚本只有短短的几十行代码，但也能够达到相同的目的，这就是Webpack逆向的厉害之处，它大幅减少了逆向的成本。</p>
+<p>当然，也并不是说只要Webpack逆向而把逐步调试抛弃，这二者本该为一体，或者说逆向本身就是一个调试的过程，它们的关系更像语言和框架，只有二者结合起来，才能发挥出最大功效。</p>
+<p>真香警告。</p>
 <p>我承认以前是我说话大声了点，现在已经无法自拔地喜欢上Webpack逆向了，因为它实在太高效，更何况它还简单。</p>
-<p>你知道的，我早就是一名Webpack逆向的推崇者了，一起学...</p>
+<p>你知道的，我早就是一名Webpack逆向的推崇者了，一起学...？</p>
 <hr />
 <p>本文<a href="https://github.com/errr0l/demo/tree/master/twitter-demo">代码</a>。</p>
 
