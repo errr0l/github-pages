@@ -263,7 +263,7 @@
 <p>毕竟是关乎效率的问题，不得不学。</p>
 <p>近期刚好有逆向推特的需求，且推特所用的打包工具也刚好是Webpack，很适合作为本次的分析目标。</p>
 <blockquote>
-<p>之前在推特下载文件时，使用的从来都是别人的工具，不是说不好用，而是说自己出于学习的目的想研究研究，开始也有试过推特的api，但是非常难用，一来是死贵，二来是限制特别多，真不如正常请求...</p>
+<p>之前在推特下载文件时，使用的从来都是别人的工具，不是说不好用，而是说自己出于学习的目的想研究研究... 起初是打算有使用<a href="https://docs.x.com/x-api/introduction">推特api</a>，但是奈何非常难用，不仅死贵，限制还多，真不如正常请求。</p>
 </blockquote>
 <h4 id="hidp-heading-0">一、原理</h4>
 <p>首先得提醒，<strong>这里说的是webpack打包后的代码如何在浏览器运行的原理</strong>，而非Webpack的打包原理。</p>
@@ -337,7 +337,7 @@ function b(e) {
 <p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202505/2742653307fa4470a5c05901155f46f5-E0E116A71C0D266E6BB917CF22DB3713.png?project=easyblog" /></p>
 <p><em>图4-1 模块文件</em></p>
 <h4 id="hidp-heading-4">五、补环境</h4>
-<p>通常情况下，在本地运行时会报各种各样的错误，毕竟node虽然同为js运行环境，但也与浏览器环境存在差异，如node环境没有DOM和BOM，从而当模块文件中读取、调用一些不存在的属性和api时，就会报错。</p>
+<p>通常情况下，刚开始在本地运行时会伴随各种各样的错误，毕竟node虽然同为js运行环境，但也与浏览器环境存在较大差异，如node环境没有DOM和BOM，而当模块文件中读取、调用这些不存在的属性和api时，就会报错。</p>
 <p>因此，作为替代，在node环境中要显示声明一些同名的对象、属性、方法，以保证程序能正常运行，业界把这一步称为“补环境”。</p>
 <p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202505/1f650cbc639b49ad8e13db6c70a83df3-32E0625CDB13AB83A4009377710820FE.png?project=easyblog" /></p>
 <p><em>图5-1 声明window、self对象</em></p>
@@ -345,7 +345,7 @@ function b(e) {
 <p>为使代码看起来整洁，将大部分补环境声明统一定义在env.js文件中，通过<code>require('./env.js')</code>加载。</p>
 <p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202505/a84a1db71aac4c94a7c1495cb04f98c7-9CE2928824D225814527813B00E40874.png?project=easyblog" /></p>
 <p><em>图5-2 声明document、location等对象</em></p>
-<p>总之就是在运行的时候，看到缺什么补什么，直到没有影响运行的错误为止。</p>
+<p>总之就是看到缺什么补什么，直到没有影响运行的错误为止。</p>
 <h5 id="hidp-heading-6">2、loadResources</h5>
 <p>相当于浏览器通过script标签从服务器加载文件。</p>
 <pre><code class="language-js">function loadResources(basePath) {
@@ -358,6 +358,7 @@ function b(e) {
 }
 </code></pre>
 <h5 id="hidp-heading-7">3、run</h5>
+<p>定义程序执行入口方法。</p>
 <pre><code>function run() {
     require('./env'); // 补环境
     loadResources(path.join(__dirname, './resource/t2'));
@@ -527,14 +528,14 @@ async function run() {
 </code></pre>
 <p>最终成功获取到推文数据：</p>
 <p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202505/ce88bee624464b86b0902493f09c0d14-0567DE04693BCD988FB54D9C899B47D9.png?project=easyblog" /></p>
-<p><em>图6-5 https://x.com/NumbersguyV/status/1922320974180909474推文</em></p>
+<p><em>图6-5 https://x.com/mitadms/status/1922097619347636323推文</em></p>
 <p>响应数据已保存至本地文件（/output/{tweet_id}.json），找到需要的资源链接后，可直接在浏览器打开，但仍需要梯子，懂的都懂。</p>
 <p>如这里找到的其中一个视频链接，并于浏览器搜索栏中打开，然后就看到了<strong>米塔</strong>。</p>
 <p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202505/1409919239794acfbfac675726db294e-C3867AD287C99CA91D3B96E0C9762797.png?project=easyblog" /></p>
 <p>不过，这其实是一条公开的推文，当然，也可以试着去找一条需要登录的敏感推文（涉及黄暴），同样能获取成功。</p>
 <h4 id="hidp-heading-17">八、结语</h4>
-<p>真就如同传闻中的那样，Webpack逆向可以快速完成逆向需求，除了补环境以外，几乎不需要写代码，比我先前逐步调试的方式好了不止一星半点，想到以后能减少那无聊乏味的出栈入栈操作，我就忍不住轻哼起来。</p>
-<p>这个过程主要在于“找”和“调”，即“找到目标方法，并调用”，这可太有操作、太有水平了，果真就是“白嫖一时爽，一直白嫖一直爽”。</p>
+<p>如同传闻中的那样，Webpack逆向可以快速完成逆向需求，除了补环境以外，几乎不需要写代码，比我先前逐步调试的方式好了不止一星半点，想到以后能减少那无聊乏味的出栈入栈操作，我就忍不住轻哼起来。</p>
+<p>这个过程主要在于“找”和“调”，即“找到目标方法，并调用”... 嗯，这很有操作、很有水平，果真就是“白嫖一时爽，一直白嫖一直爽”。</p>
 <p>到现在为止，如果还有读者还对Webpack逆向的效率有疑惑的话，那么接下来我贴出一个基于油猴脚本的transaction-id逆向版本，它简直把“白嫖”发挥到了极致。</p>
 <pre><code>// ==UserScript==
 // @name         transaction-id逆向
@@ -596,7 +597,7 @@ async function run() {
 <p>随后在浏览器控制台调用挂载在window对象的Gd方法，一样能生成transaction-id。</p>
 <p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202505/0e52f05eea3645a58eb01fe8f889c16c-139ECD58B6B5CE2BD2066B877B95C0E9.png?project=easyblog" /></p>
 <p><em>图7-2 Gd执行结果</em></p>
-<p>虽然脚本只有短短的几十行代码，但也能够达到相同的目的，这就是Webpack逆向的厉害之处，它大幅减少了逆向的成本。</p>
+<p>虽然只有短短的几十行代码，但也能够达到相同的目的，这就是Webpack逆向的厉害之处，它大幅减少了逆向的成本。</p>
 <p>当然，也并不是说只要Webpack逆向而把逐步调试抛弃，这二者本该为一体，或者说逆向本身就是一个调试的过程，它们的关系更像语言和框架，只有二者结合起来，才能发挥出最大功效。</p>
 <p>真香警告。</p>
 <p>我承认以前是我说话大声了点，现在已经无法自拔地喜欢上Webpack逆向了，因为它实在太高效，更何况它还简单。</p>
