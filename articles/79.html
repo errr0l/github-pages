@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>pqt挂机活动收菜脚本 - 小埃的个人博客</title>
+    <link rel="stylesheet" href="../css/reset.css">
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/index.css">
+    <link rel="stylesheet" href="../css/header.css">
+    <link rel="stylesheet" href="../css/mobile.css">
+    <link rel="stylesheet" href="../css/theme-light.css">
+    <link rel="shortcut icon" href="../favicon.ico" type="image/x-icon">
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?d1fc0144cbb354a3f8442b7ba568bc2f";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+
+        window.addEventListener('DOMContentLoaded', () => {
+            let headerEle = document.getElementById('header');
+            let eleHeight = headerEle.offsetHeight;
+            let lastScrollTop = 0;
+            let topAnchor = 0; // 某个方向的锚点
+            let downAnchor = 0;
+            let stylTop = "-" + eleHeight + "px";
+            let stylTop2 = "0";
+            let threshold = 180;
+            function headerEleVisibleHandler() {
+                let scrollTop = document.documentElement.scrollTop;
+                // 向下滚动
+                if (scrollTop > lastScrollTop) {
+                    if (downAnchor !== 0) {
+                        downAnchor = 0;
+                    }
+                    if (topAnchor === 0) {
+                        topAnchor = scrollTop;
+                    }
+                    if ((scrollTop > threshold || scrollTop - topAnchor > threshold) && headerEle.style.top !== stylTop) {
+                        headerEle.style.top =  stylTop;
+                    }
+                }
+                // 向上
+                else {
+                    if (topAnchor !== 0) {
+                        topAnchor = 0;
+                    }
+                    if (downAnchor === 0) {
+                        downAnchor = scrollTop;
+                    }
+                    if ((scrollTop + threshold > downAnchor) && headerEle.style.top === stylTop) {
+                        headerEle.style.top = stylTop2;
+                    }
+                }
+                lastScrollTop = scrollTop;
+            }
+
+            function throttleWrapper(fn, options) {
+                if (!options) {
+                    options = {};
+                }
+                let timer = null;
+                const { timeout } = options;
+
+                const _setTimeout = () => {
+                    timer = window.setTimeout(() => {
+                        window.clearTimeout(timer);
+                        timer = null;
+                    }, timeout);
+                    return timer;
+                }
+
+                return function (...args) {
+                    if (timer) {
+                        return;
+                    }
+                    timer = -1;
+                    let result = fn.apply(this, args);
+                    _setTimeout();
+                    return result;
+                }
+            }
+            headerEleVisibleHandler = throttleWrapper(headerEleVisibleHandler, { timeout: 200 });
+            window.addEventListener("scroll", headerEleVisibleHandler);
+        });
+    </script>
+        <meta name="keywords" content="qt,shell,脚本,收菜">
+        <meta name="description" content="pqt挂机活动收菜脚本；策划终于按捺不住，开始疯狂收割起韭菜来了。为此，现在萌娘qt的游戏界面，几乎满屏都是令人厌烦的小红点，已经把“氪金”二字糊玩家脸上，堪比隔壁韩系滚服游戏...">
+    <link rel="stylesheet" href="../css/article.css">
+    <link rel="stylesheet" href="../css/markdown/github-markdown.css">
+    <link rel="stylesheet" href="../css/markdown/github-markdown-light.css">
+    <link rel="stylesheet" href="../css/gittalk-cover.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/viewerjs/1.11.7/viewer.min.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</head>
+<body>
+<div id="app">
+    <div id="header">
+    <div id="bar">
+        <div class="container mg-0-auto d-f pos-r">
+            <div class="logo">
+                <a href="../" class="nav-link" style="margin-right: 10px;">
+                    <img src="../image/portal/logo.jpg" alt="小埃的个人博客">
+                </a>
+            </div>
+            <div class="right">
+                <ul class="nav f-l">
+                        <li class="nav-item">
+                            <a href="../index.html" class="nav-link active">
+                                <span>首页</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="../category.html" class="nav-link ">
+                                <span>分类</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="../about.html" class="nav-link ">
+                                <span>关于</span>
+                            </a>
+                        </li>
+                </ul>
+                <div class="eb-title">
+                    小埃的个人博客
+                </div>
+                    <div id="search">
+                        <input type="text" id="search-input" data-prefix="../" placeholder="搜索" autocomplete="off" />
+                        <span class="search-icon t-a">
+                            <img class="el-icon-search" src="../image/portal/search.png" width="16" height="16">
+                        </span>
+                        <div id="search-result">
+                            <input type="text" class="input-1" id="search-input-2" data-prefix="../" placeholder="请输入" autocomplete="off" />
+                            <div class="content">
+                            </div>
+                            <div class="arrow"></div>
+                        </div>
+                    </div>
+
+                <div class="eb-menu">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-list-ul" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M5 11.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm-3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm0 4a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm0 4a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
+                    </svg>
+                </div>
+            </div>
+            <div id="sc-box">
+                <div class="wrapper">
+                        <div class="side-card b-s-1 mg-b-10">
+                            <div class="wrapper">
+                                <h2 class="item title">
+                                    <span>相关文章</span>
+                                </h2>
+                                <div class="item content">
+                                        <div class="item1 ">
+                                            <a href="../articles/74.html">
+                                                    看来以后不需要特意绕路了
+                                            </a>
+                                        </div>
+                                        <div class="item1 ">
+                                            <a href="../articles/44.html">
+                                                    效果看起来还不错
+                                            </a>
+                                        </div>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    <div id="main">
+        <div class="container mg-0-auto pd-t-10">
+            <div class="wrapper">
+                <article class="mg-b-20">
+                    <div class="markdown-body">
+                        <div class="title">pqt挂机活动收菜脚本</div>
+                        <div class="item meta mg-b-10">
+                            <span class="author">由<a href="javascript:void(0);">errol</a>发表于<a href="#">2025-06-01</a></span>
+                            <span>|</span>
+                            <span class="time">
+                            分类为
+                            <a href="../categories/3.html">游戏</a></span>
+                            <span>|</span>
+                            <span class="tags">
+                                标签为<a href="javascript:void(0);">qt</a>、<a href="javascript:void(0);">shell</a>、<a href="javascript:void(0);">脚本</a>、<a href="javascript:void(0);">收菜</a>
+                            </span>
+                        </div>
+                        <div class="content">
+                            <p>策划终于按捺不住，开始疯狂收割起韭菜来了。</p>
+<p>为此，现在萌娘qt的游戏界面，几乎满屏都是令人厌烦的小红点，已经把“氪金”二字糊玩家脸上，堪比隔壁韩系滚服游戏。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202506/7f7ac76789604bac8075c445694f1119-7062047202C8533D42AC53E922D54417.jpg?project=easyblog" /></p>
+<p><em>图1-1 满屏红1</em></p>
+<p>甚至一页还放不满，排到第二页里。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202506/ac62fbf79c414416bcc7e9fa07b02480-FB46BEA3A85A672B7E24A47CF7AAB5B2.jpg?project=easyblog" /></p>
+<p><em>图1-2 满屏红2</em></p>
+<p>其实的话，开活动本身也没什么不好，特别是qt这种比较简单的游戏，基本上没有“肝”的说法（只有“氪”），再者是因为qt已经算是一个老游戏，加速开活动也有点照顾新玩家的意思。</p>
+<p>从玩家角度来看，氪佬可以通过活动快速获取资源、提升战力，与其他人拉开差距，白嫖也多少能从中喝口汤；厂商同时“收割”，增加游戏收入，以提升产能，推出更多优质的内容。</p>
+<p>二者形成良性循环，妥妥一个双赢局面。</p>
+<p>但事实并非如此。</p>
+<p>玩家不仅没有体会到策划的“良苦用心”，反而被他突然的决策打了个措手不及，一片哀嚎。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202506/2d63b5a9e229426b9bb1bb91dcf5181d-331DAA5D7E71463D2B61E73657877068.jpg?project=easyblog" /></p>
+<p><em>图1-3 司马策划1</em></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202506/a429d6ad2fcc4658b575265798ab50bd-D8424C5F46A76C4A87AAD632DFB4A636.jpg?project=easyblog" /></p>
+<p><em>图1-4 司马策划2</em></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202506/c5522055b7e049e991b1d1dae6008678-81EDF1BFC08AE5D83B8B24C8692FC9E9.jpg?project=easyblog" /></p>
+<p><em>图1-5 司马策划3</em></p>
+<p>虽然一直都说qt的活动简单，确实，在大多数情况下，这句话是正确的，但即使如qt，也有一些恶心人的活动，我们司马策划给玩家送上的精心制作的屎味巧克力，挂机类活动，就是其中之一。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202506/3bf4c266949d44a1b38a97bc0f7fe224-D9FCE10831BD4DAA517F9F4E15E408E8.jpg?project=easyblog" /></p>
+<p><em>图2-1 挂机活动界面1</em></p>
+<p>呵呵，说起这个挂机活动就离谱了，它需要玩家活动期间<strong>全勤</strong>才能完成，请注意奥，这里的全勤不是每天登录游戏那么简单，而是指“定时收菜”。</p>
+<p>在为期12天的活动时间内，会有完成活动所必须的材料产出，需要玩家每隔一段时间上线领取，如图2-1左下角的绿瓶，否则就会溢出，最严重会导致无法完成活动。</p>
+<p>值得一提的是，活动刚开启时，容器只能存2、3个小时的材料（图2-2）；容器可升级，且提升速度，但总体完成活动的周期不变，这是说，如果没能领取所有已产出的材料的话，就会影响到后续，需要花更多的代价找补，尤其恶心。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202506/453bc284a93245f79808007510abfdab-1D911F9E6AA0AAC991062D814190A67E.png?project=easyblog" /></p>
+<p><em>图2-2 挂机活动界面2</em></p>
+<p>为完成活动，玩家可谓是八仙过海各显神通，置闲手机挂机（全天，有点费手机）、云手机挂机、安卓模拟器挂机，还有的比较原始，设定闹钟提醒自己...</p>
+<blockquote>
+<p>通常以连点器或按键精灵类软件为基础</p>
+</blockquote>
+<p>不过，即使有这些方案，也仍有不少玩家会因各种各样的问题无法按预期收菜，挂机时间过长，手机发烫、关机、闪退、断网、键位脱靶等等，这也不能怪玩家，本身就是因为活动过于逆天，谁特么有事没事盯着你那逼游戏。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202506/ecd172a7b45248b6ab32d2268e73dfbe-CC1AA2B523876DFDDCA460094160130D.jpg?project=easyblog" /></p>
+<p><em>图2-3 连点器键位</em></p>
+<p>从活动推出到现在，几乎没有优化过。</p>
+<p>也正因此，玩家和官方之间形成了一种心照不宣的默契，在同一时期内不开启多个挂机活动。</p>
+<p>但现在终于还是被打破了...</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202506/da1d69e4929f473da07551cf1e973073-7062047202C8533D42AC53E922D54417.jpg?project=easyblog" /></p>
+<p><em>图2-4 第一个挂机活动</em></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202506/bf480d4f47714feeb788978cf75a71be-FB46BEA3A85A672B7E24A47CF7AAB5B2.jpg?project=easyblog" /></p>
+<p><em>图2-5 第二个挂机活动</em></p>
+<p>也不知道这逼策划是怎么想的，本来完成一个挂机活动的条件都已经够苛刻的了，竟然还同时开启2个，且还不能保证以后会不会同时开3个、4个。</p>
+<p>我猜游戏官方的人从未参与过活动，或者说他们压根就不玩游戏，他们才敢这样搞。</p>
+<p>确实有点逼氪的意味，只有氪金，才能获取更多的容错时间，才能更简单地完成活动。</p>
+<p>但即便氪了金，容错有所增加，完成活动所必须的流程也不会因此消失，始终需要玩家收菜。</p>
+<p>考虑到连点器就连完成单个挂机活动都比较勉强的情况，我实在无法想象，同时做两个的点位要如何设置，才能满足在不同的界面收菜的条件... 即使退一步说，有玩家将点位弄出来了，它能不能稳定运行？活动数量增加时又该怎么拓展？这些都是问题。</p>
+<p><strong>因此，玩家出现上面截图里的反应并不奇怪。</strong></p>
+<p>越简单，越不容易出错，反之亦然。</p>
+<p><strong>所以，我早就已经用“shell+抓包”的方式来代替连点器了。</strong></p>
+<p>原理是抓取收菜接口及其参数，以curl或powershell的形式保存于文件中，供shell脚本读取执行，然后通过为脚本设置定时任务来达到自动收菜的效果。</p>
+<p>这是一种几乎完全绕过用户界面的方式，即不再需要苦逼地捣鼓连点器键位。</p>
+<p>到目前为止，脚本在linux上运行得还不错。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202506/bd104d7fe4104671af1a267e399522ce-07C3FAB79D16C664D24049E2DC0D67C4.png?project=easyblog" /></p>
+<p><em>图3-1 linux下shell+抓包方式收菜</em></p>
+<p>当然，考虑到使用windows的人更多，所以也是支持的。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202506/f7b8722ebf7e418d9cb8197429a664e1-54A663A1D76B6435585EBA0763CEE3E4.png?project=easyblog" /></p>
+<p><em>图3-2 windows下shell+抓包方式收菜</em></p>
+<p>而且这种方式拓展起来也比较方便，无论以后是3开还是4开活动，要做的只不过是往requests.txt文件里多保存一个接口而已。</p>
+<p>requests.txt：</p>
+<pre><code class="language-txt">curl 'https://us.nkrpg.com/api/quiz_dating/claim/explore/item' \
+  ...
+  -H 'x-qookia-build: 26.0.0.807' \
+  -H 'x-qookia-device: c4d04f3a-6472-48e2-8224-d93cb8e5e477' \
+  -H 'x-qookia-device-type: web' \
+  -H 'x-qookia-digest: 61c1434a72001471d468021d250c8d31a515f928' \
+  -H 'x-qookia-nkid: 61916215' \
+  -H 'x-qookia-pack: 95199d7e0a765a0fcf12cc3ad9486e3ca13a9fa8' \
+  -H 'x-qookia-server-prefix: xxx' \
+  -H 'x-qookia-time: 1747097634' \
+  -H 'x-qookia-user: xxx' \
+  --data-raw 'event_id=15'
+
+&amp;&amp;
+
+curl 'https://us.nkrpg.com/api/sexual_dating/claimItemExplore' \
+  ...
+  -H 'x-qookia-build: 26.0.0.807' \
+  -H 'x-qookia-device: c4d04f3a-6472-48e2-8224-d93cb8e5e477' \
+  -H 'x-qookia-device-type: web' \
+  -H 'x-qookia-digest: 61c1434a72001471d468021d250c8d31a515f928' \
+  -H 'x-qookia-nkid: 61916215' \
+  -H 'x-qookia-pack: 95199d7e0a765a0fcf12cc3ad9486e3ca13a9fa8' \
+  -H 'x-qookia-server-prefix: xxx' \
+  -H 'x-qookia-time: 1747097646' \
+  -H 'x-qookia-user: xxx' \
+  --data-raw 'event_id=21'
+
+&amp;&amp;
+
+第三个请求...
+
+&amp;&amp;
+
+第四个请求...
+</code></pre>
+<p>不过，也不是没有缺点，就是重新登录游戏后，抓包数据会失效，想要让脚本再次运行需要重新抓包，也因为这个问题，中间还发生了个小插曲...</p>
+<hr />
+<p>“shell+抓包”其实是退而求其次的方式，原本是打算做接口逆向的，但查看源码的时候不淡定了...</p>
+<p>除了一些工具、胶水类代码是js外，其他全部是<a href="https://developer.mozilla.org/en-US/docs/WebAssembly">WebAssembly</a>，也称wasm。</p>
+<blockquote>
+<p>WebAssembly is a type of code that can be run in modern web browsers. It is a low-level assembly-like language with a compact binary format that runs with near-native performance and provides languages such as C/C++, C# and Rust with a compilation target so that they can run on the web. It is also designed to run alongside JavaScript, allowing both to work together.</p>
+</blockquote>
+<p>以文档中的<a href="https://raw.githubusercontent.com/mdn/webassembly-examples/master/js-api-examples/simple.wasm">simple.wasm</a>为例：</p>
+<pre><code class="language-wasm">// simple.wat;
+// 由wasm转换的wat, 是一种相对来说方便人类阅读的文本格式；
+(module
+  (type (;0;) (func (param i32)))
+  (type (;1;) (func))
+  (import &quot;my_namespace&quot; &quot;imported_func&quot; (func (;0;) (type 0)))
+  (func (;1;) (type 1)
+    i32.const 42
+    call 0)
+  (export &quot;exported_func&quot; (func 1)))
+</code></pre>
+<p>简单来说，它是一种可以在浏览器运行的类汇编代码，通常是由其他语言编译而来（如C/C++、C#、Rust等），而不是直接书写，虽然效率较高，但也并不是为了取代js，而是作为js的补充。</p>
+<p>比方说，js不擅长处理密集型任务，此时交给wasm就很适合。</p>
+<p>由于wasm是一种低级语言，格式为紧凑的二进制，因此不便于阅读和调试，尽管可以转为wat，但仍不直观，不熟悉二进制编程的人，基本无法入手。</p>
+<blockquote>
+<p>也正因此，除了有人因为效率使用wasm外，也有人使用wasm来防逆向</p>
+</blockquote>
+<p>也不奇怪，毕竟是个游戏，具体来说是个unityweb项目。</p>
+<p>想试着调试，结果一进入wasm文件里，整个界面就卡死；又想着将wasm文件转为c可能会比较容易阅读，结果得到了一个600m+的文件，在编辑器打开都卡得不行；ida也一样，半天都加载不出来。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202506/718fdb958c83457b9b33e5e0171b9f85-71A5B552140AFD53D05170FC11663BA2.png?project=easyblog" /></p>
+<p><em>图3-3 wasm相关文件</em></p>
+<p>所以只能到此为止了，拼尽全力依旧无法战胜。</p>
+<hr />
+<p>但总的来说，还是比连点器好得多，至少对我本人是这样，基本上有网有电就能保证稳定运行。</p>
+<p>目前就先这样，至于逆向的话，以后应该还会再尝试，现在的能力确实不足以应付wasm。</p>
+<p>按需自取<a href="https://github.com/errr0l/pqt-claimer">脚本</a>。</p>
+
+                        </div>
+                    </div>
+                </article>
+                <div class="comment-wrap">
+                        <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+  <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+                        <div id="gitalk-container"></div>
+                        <script>
+                            const gitalk = new Gitalk({
+                                clientID: 'ae1422e500a8b19fb1fc',
+                                clientSecret: '9f387db6a84a4945cdf5dc743c16ce25fdef6b76',
+                                repo: 'github-pages',      // The repository of store comments,
+                                owner: 'errr0l',
+                                admin: ['errr0l'],
+                                id: location.pathname,      // Ensure uniqueness and length less than 50
+                                distractionFreeMode: false  // Facebook-like distraction free mode
+                            });
+                            gitalk.render('gitalk-container');
+                        </script>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="back">返回</div>
+</div>
+    <script src="../js/data.js"></script>
+    <script src="../js/lazy.js"></script>
+    <script src="../js/search.js"></script>
+    <script src="../js/menu.js"></script>
+<script src="../js/toc.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/viewerjs/1.11.7/viewer.min.js"></script>
+<script>
+    let back = document.querySelector(".back");
+    back.addEventListener("click", function () {
+        window.history.go(-1);
+    });
+    const viewer = new Viewer(document.querySelector('.markdown-body .content'), {
+        toolbar: {
+            zoomIn: 4,
+            zoomOut: 4,
+            oneToOne: 4,
+            reset: 0,
+            prev: 4,
+            play: 0,
+            next: 4,
+            rotateLeft: 0,
+            rotateRight: 0,
+            flipHorizontal: 0,
+            flipVertical: 0,
+        },
+    });
+</script>
+</body>
+</html>
