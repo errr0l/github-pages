@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>关于spring的循环依赖 - 小埃的个人博客</title>
+    <link rel="stylesheet" href="../css/reset.css">
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/index.css">
+    <link rel="stylesheet" href="../css/header.css">
+    <link rel="stylesheet" href="../css/mobile.css">
+    <link rel="stylesheet" href="../css/theme-light.css">
+    <link rel="shortcut icon" href="../favicon.ico" type="image/x-icon">
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?d1fc0144cbb354a3f8442b7ba568bc2f";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+
+        window.addEventListener('DOMContentLoaded', () => {
+            let headerEle = document.getElementById('header');
+            let eleHeight = headerEle.offsetHeight;
+            let lastScrollTop = 0;
+            let topAnchor = 0; // 某个方向的锚点
+            let downAnchor = 0;
+            let stylTop = "-" + eleHeight + "px";
+            let stylTop2 = "0";
+            let threshold = 180;
+            function headerEleVisibleHandler() {
+                let scrollTop = document.documentElement.scrollTop;
+                // 向下滚动
+                if (scrollTop > lastScrollTop) {
+                    if (downAnchor !== 0) {
+                        downAnchor = 0;
+                    }
+                    if (topAnchor === 0) {
+                        topAnchor = scrollTop;
+                    }
+                    if ((scrollTop > threshold || scrollTop - topAnchor > threshold) && headerEle.style.top !== stylTop) {
+                        headerEle.style.top =  stylTop;
+                    }
+                }
+                // 向上
+                else {
+                    if (topAnchor !== 0) {
+                        topAnchor = 0;
+                    }
+                    if (downAnchor === 0) {
+                        downAnchor = scrollTop;
+                    }
+                    if ((scrollTop + threshold > downAnchor) && headerEle.style.top === stylTop) {
+                        headerEle.style.top = stylTop2;
+                    }
+                }
+                lastScrollTop = scrollTop;
+            }
+
+            function throttleWrapper(fn, options) {
+                if (!options) {
+                    options = {};
+                }
+                let timer = null;
+                const { timeout } = options;
+
+                const _setTimeout = () => {
+                    timer = window.setTimeout(() => {
+                        window.clearTimeout(timer);
+                        timer = null;
+                    }, timeout);
+                    return timer;
+                }
+
+                return function (...args) {
+                    if (timer) {
+                        return;
+                    }
+                    timer = -1;
+                    let result = fn.apply(this, args);
+                    _setTimeout();
+                    return result;
+                }
+            }
+            headerEleVisibleHandler = throttleWrapper(headerEleVisibleHandler, { timeout: 200 });
+            window.addEventListener("scroll", headerEleVisibleHandler);
+        });
+    </script>
+        <meta name="keywords" content="spring,java,循环依赖">
+        <meta name="description" content="关于spring的循环依赖；虽然spring已经设计了三级缓存机制尽可能地避免循环依赖（Circular dependencies），但在某些情况下，该问题仍然存在...">
+    <link rel="stylesheet" href="../css/article.css">
+    <link rel="stylesheet" href="../css/markdown/github-markdown.css">
+    <link rel="stylesheet" href="../css/markdown/github-markdown-light.css">
+    <link rel="stylesheet" href="../css/gittalk-cover.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/viewerjs/1.11.7/viewer.min.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</head>
+<body>
+<div id="app">
+    <div id="header">
+    <div id="bar">
+        <div class="container mg-0-auto d-f pos-r">
+            <div class="logo">
+                <a href="../" class="nav-link" style="margin-right: 10px;">
+                    <img src="../image/portal/logo.jpg" alt="小埃的个人博客">
+                </a>
+            </div>
+            <div class="right">
+                <ul class="nav f-l">
+                        <li class="nav-item">
+                            <a href="../index.html" class="nav-link active">
+                                <span>首页</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="../category.html" class="nav-link ">
+                                <span>分类</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="../about.html" class="nav-link ">
+                                <span>关于</span>
+                            </a>
+                        </li>
+                </ul>
+                <div class="eb-title">
+                    小埃的个人博客
+                </div>
+                    <div id="search">
+                        <input type="text" id="search-input" data-prefix="../" placeholder="搜索" autocomplete="off" />
+                        <span class="search-icon t-a">
+                            <img class="el-icon-search" src="../image/portal/search.png" width="16" height="16">
+                        </span>
+                        <div id="search-result">
+                            <input type="text" class="input-1" id="search-input-2" data-prefix="../" placeholder="请输入" autocomplete="off" />
+                            <div class="content">
+                            </div>
+                            <div class="arrow"></div>
+                        </div>
+                    </div>
+
+                <div class="eb-menu">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-list-ul" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M5 11.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm-3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm0 4a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm0 4a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
+                    </svg>
+                </div>
+            </div>
+            <div id="sc-box">
+                <div class="wrapper">
+                        <div class="side-card b-s-1 mg-b-10">
+                            <div class="wrapper">
+                                <h2 class="item title">
+                                    <span>相关文章</span>
+                                </h2>
+                                <div class="item content">
+                                        <div class="item1 ">
+                                            <a href="../articles/40.html">
+                                                    探究MultipartResolver的运行原理
+                                            </a>
+                                        </div>
+                                        <div class="item1 ">
+                                            <a href="../articles/71.html">
+                                                    记录一次打包静态站点资源的优化
+                                            </a>
+                                        </div>
+                                        <div class="item1 ">
+                                            <a href="../articles/52.html">
+                                                    关于运行jar时，报“没有主清单属性”的问题
+                                            </a>
+                                        </div>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    <div id="main">
+        <div class="container mg-0-auto pd-t-10">
+            <div class="wrapper">
+                <article class="mg-b-20">
+                    <div class="markdown-body">
+                        <div class="title">关于spring的循环依赖</div>
+                        <div class="item meta mg-b-10">
+                            <span class="author">由<a href="javascript:void(0);">errol</a>发表于<a href="#">2025-07-20</a></span>
+                            <span>|</span>
+                            <span class="time">
+                            分类为
+                            <a href="../categories/1.html">编程</a></span>
+                            <span>|</span>
+                            <span class="tags">
+                                标签为<a href="javascript:void(0);">spring</a>、<a href="javascript:void(0);">java</a>、<a href="javascript:void(0);">循环依赖</a>
+                            </span>
+                        </div>
+                        <div class="content">
+                            <p>虽然spring已经设计了三级缓存机制尽可能地避免循环依赖（Circular dependencies），但在某些情况下，该问题仍然存在。</p>
+<p><strong>首先需要明确的是，“三级缓存解决循环依赖“的结果，是在”已经创建了对象“的条件下完成的。</strong></p>
+<blockquote>
+<p>先得把对象创建出来，再谈解决问题</p>
+</blockquote>
+<p>下面，引用spring的源码进行说明。</p>
+<blockquote>
+<p>org.springframework.beans.factory.support.DefaultSingletonBeanRegistry#getSingleton(java.lang.String, boolean)</p>
+</blockquote>
+<pre><code class="language-java">protected Object getSingleton(String beanName, boolean allowEarlyReference) {
+    // Quick check for existing instance without full singleton lock.
+    Object singletonObject = this.singletonObjects.get(beanName);
+    if (singletonObject == null &amp;&amp; isSingletonCurrentlyInCreation(beanName)) {
+        singletonObject = this.earlySingletonObjects.get(beanName);
+        if (singletonObject == null &amp;&amp; allowEarlyReference) {
+            if (!this.singletonLock.tryLock()) {
+                // Avoid early singleton inference outside of original creation thread.
+                return null;
+            }
+            try {
+                // Consistent creation of early reference within full singleton lock.
+                singletonObject = this.singletonObjects.get(beanName);
+                if (singletonObject == null) {
+                    singletonObject = this.earlySingletonObjects.get(beanName);
+                    if (singletonObject == null) {
+                        ObjectFactory&lt;?&gt; singletonFactory = this.singletonFactories.get(beanName);
+                        if (singletonFactory != null) {
+                            singletonObject = singletonFactory.getObject();
+                            // Singleton could have been added or removed in the meantime.
+                            if (this.singletonFactories.remove(beanName) != null) {
+                                this.earlySingletonObjects.put(beanName, singletonObject);
+                            }
+                            else {
+                                singletonObject = this.singletonObjects.get(beanName);
+                            }
+                        }
+                    }
+                }
+            }
+            finally {
+                this.singletonLock.unlock();
+            }
+        }
+    }
+    return singletonObject;
+}
+
+</code></pre>
+<p>其中，singletonObjects为一级缓存，该集合保存了已经初始化完毕，可直接使用的bean；</p>
+<pre><code class="language-java">/** Cache of singleton objects: bean name to bean instance. */
+private final Map&lt;String, Object&gt; singletonObjects = new ConcurrentHashMap&lt;&gt;(256);
+</code></pre>
+<p>earlySingletonObjects为二级缓存，保存了未初始化完成，但已经实例化的bean；</p>
+<pre><code class="language-java">/** Cache of early singleton objects: bean name to bean instance. */
+private final Map&lt;String, Object&gt; earlySingletonObjects = new ConcurrentHashMap&lt;&gt;(16);
+</code></pre>
+<p>而所谓的三级缓存，其实就是用于创建bean的工厂方法或构造器；</p>
+<pre><code class="language-java">/** Creation-time registry of singleton factories: bean name to ObjectFactory. */
+private final Map&lt;String, ObjectFactory&lt;?&gt;&gt; singletonFactories = new ConcurrentHashMap&lt;&gt;(16);
+</code></pre>
+<p>在向ioc容器请求bean时，首先会在一级缓存中查找，如果存在就直接返回；</p>
+<blockquote>
+<p>Object singletonObject = this.singletonObjects.get(beanName);</p>
+</blockquote>
+<p>然后再到二级缓存中查找，存在则返回，即便还未初始化完成；</p>
+<blockquote>
+<p>singletonObject = this.singletonObjects.get(beanName);</p>
+</blockquote>
+<p>还找不到时，最后从三级缓存中取出工厂方法或构造器（如果存在的话），创建对象并将其加入二级缓存；</p>
+<pre><code class="language-java">// 获取工厂方法或构造器
+ObjectFactory&lt;?&gt; singletonFactory = this.singletonFactories.get(beanName);
+// 创建bean
+singletonObject = singletonFactory.getObject();
+// 加入缓存
+this.earlySingletonObjects.put(beanName, singletonObject);
+</code></pre>
+<p>以上便是经过简化的spring用于处理循环依赖的三级缓存机制。</p>
+<p>然而，正是这种机制，会存在着这样的问题：如果现有A、B两个类，且它们是通过构造器互相注入参数的话，将会导致循环依赖，以下面的代码为例。</p>
+<pre><code class="language-java">@Component
+public class A {
+    final private B b;
+
+    A(B b) {
+        this.b = b;
+    }
+}
+
+@Component
+public class B {
+    final private A a;
+    B(A a) {
+        this.a = a;
+    }
+}
+</code></pre>
+<p>在创建a时，spring发现其构造函数中依赖到了B，于是开始创建b（spring的依赖注入机制【<a href="https://docs.spring.io/spring-framework/reference/core/beans/dependencies/factory-collaborators.html">Dependency Injection</a>】）。</p>
+<blockquote>
+<p>注意，此时a还未实例化完成，因此，二级缓存中不存在对应的bean</p>
+</blockquote>
+<p>而创建b时，spring又发现依赖到了A，接着转过头去创建a...</p>
+<p>此时，spring就会检测到，无论是a还是b，都在处于创建状态中，没法完成依赖注入（DI）。</p>
+<p>最终，抛出了循环依赖的异常。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202507/690c035b49864a8fb00c7c5fc6b5ce65-0A70F87F965C92366C168E70852DD25B.png?project=easyblog" /></p>
+<p><em>图1 循环依赖异常</em></p>
+<blockquote>
+<p>Caused by: org.springframework.beans.factory.BeanCurrentlyInCreationException: Error creating bean with name 'a': Requested bean is currently in creation: Is there an unresolvable circular reference or an asynchronous initialization dependency?
+at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.beforeSingletonCreation(DefaultSingletonBeanRegistry.java:544)
+at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:312)
+...</p>
+</blockquote>
+<p>不过，要解决这个问题，其实也简单。</p>
+<p>正如前面所说，三级缓存机制只是不能处理构造注入（<a href="https://docs.spring.io/spring-framework/reference/core/beans/dependencies/factory-collaborators.html#beans-constructor-injection">Constructor-based Dependency Injection</a>）方式互相引用的场景。</p>
+<p>换个说法，只要避免互相引用的双方使用构造注入，让工厂方法或构造器完成bean的实例化即可。</p>
+<p>事实上，除了构造注入外，spring还提供了其他的注入方式，如方法注入（<a href="https://docs.spring.io/spring-framework/reference/core/beans/dependencies/factory-collaborators.html#beans-setter-injection">Setter-based Dependency Injection</a>）、字段注入（直接在字段上使用@Autowired、@Inject等注解标注）。</p>
+<p>比方说，使用方法注入的方式，可以很好地解决这个问题：</p>
+<blockquote>
+<p>只需要改动其中的一个</p>
+</blockquote>
+<pre><code class="language-java">@Component
+public class A {
+    private B b;
+    
+    @Autowired
+    public void setB(B b) {
+        this.b = b;
+    }
+}
+</code></pre>
+<p>这样一来，a便可不依赖b完成实例化，同时加入二级缓存，此后，b也可以注入a（初始化稍后执行），最终程序得以正常运行。</p>
+<pre><code class="language-java">public static void main(String[] args) {
+        ApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
+        HelloWorld helloWorld = context.getBean(HelloWorld.class);
+        helloWorld.output();
+        final String[] definitionNames = context.getBeanDefinitionNames();
+
+        for (String name : definitionNames) {
+            System.out.println(name);
+        }
+    }
+</code></pre>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202507/496757b017c14a03a86bb414a2315c5a-C3B009777045947A270BEF4347434C04.png?project=easyblog" /></p>
+<p><em>图2 正常执行main方法的结果</em></p>
+<p>总的来说，文中所举的例子只是一种极端的情况，在项目中并不常见，设计程序时稍作留意即可；而由于spring的三级缓存已经处理了大部分循环依赖的场景，一般情况下甚至都不会遇到循环依赖的问题。</p>
+<p>以上。</p>
+
+                        </div>
+                    </div>
+                </article>
+                <div class="comment-wrap">
+                        <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+  <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+                        <div id="gitalk-container"></div>
+                        <script>
+                            const gitalk = new Gitalk({
+                                clientID: 'ae1422e500a8b19fb1fc',
+                                clientSecret: '9f387db6a84a4945cdf5dc743c16ce25fdef6b76',
+                                repo: 'github-pages',      // The repository of store comments,
+                                owner: 'errr0l',
+                                admin: ['errr0l'],
+                                id: location.pathname,      // Ensure uniqueness and length less than 50
+                                distractionFreeMode: false  // Facebook-like distraction free mode
+                            });
+                            gitalk.render('gitalk-container');
+                        </script>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="back">返回</div>
+</div>
+    <script src="../js/data.js"></script>
+    <script src="../js/lazy.js"></script>
+    <script src="../js/search.js"></script>
+    <script src="../js/menu.js"></script>
+<script src="../js/toc.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/viewerjs/1.11.7/viewer.min.js"></script>
+<script>
+    let back = document.querySelector(".back");
+    back.addEventListener("click", function () {
+        window.history.go(-1);
+    });
+    const viewer = new Viewer(document.querySelector('.markdown-body .content'), {
+        toolbar: {
+            zoomIn: 4,
+            zoomOut: 4,
+            oneToOne: 4,
+            reset: 0,
+            prev: 4,
+            play: 0,
+            next: 4,
+            rotateLeft: 0,
+            rotateRight: 0,
+            flipHorizontal: 0,
+            flipVertical: 0,
+        },
+    });
+</script>
+</body>
+</html>
