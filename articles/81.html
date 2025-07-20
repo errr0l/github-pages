@@ -199,6 +199,7 @@
                         </div>
                         <div class="content">
                             <p>虽然spring已经设计了三级缓存机制尽可能地避免循环依赖（Circular dependencies），但在某些情况下，该问题仍然存在。</p>
+<p>循环依赖，一般的解释是指两个或多个模块、组件或实体之间存在相互依赖的场景，但在本文，<strong>循环依赖指的是一种会导致应用无法正常启动的系统性问题</strong>。</p>
 <p><strong>首先需要明确的是，“三级缓存解决循环依赖“的结果，是在”已经创建了对象“的条件下完成的。</strong></p>
 <blockquote>
 <p>先得把对象创建出来，再谈解决问题</p>
@@ -288,6 +289,7 @@ public class A {
 @Component
 public class B {
     final private A a;
+
     B(A a) {
         this.a = a;
     }
@@ -326,13 +328,10 @@ public class A {
     }
 }
 </code></pre>
-<p>这样一来，a便可不依赖b完成实例化，同时加入二级缓存，此后，b也可以注入a（初始化稍后执行），最终程序得以正常运行。</p>
+<p>这样一来，a便可不依赖b完成实例化，同时加入二级缓存，此后，b也可以从缓存中取出a并注入（初始化稍后执行），最终程序得以正常运行。</p>
 <pre><code class="language-java">public static void main(String[] args) {
         ApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
-        HelloWorld helloWorld = context.getBean(HelloWorld.class);
-        helloWorld.output();
         final String[] definitionNames = context.getBeanDefinitionNames();
-
         for (String name : definitionNames) {
             System.out.println(name);
         }
