@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>【猿人学】jsvmp洞察先机逆向 - 小埃的个人博客</title>
+    <link rel="stylesheet" href="../css/reset.css">
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/index.css">
+    <link rel="stylesheet" href="../css/header.css">
+    <link rel="stylesheet" href="../css/mobile.css">
+    <link rel="stylesheet" href="../css/theme-light.css">
+    <link rel="shortcut icon" href="../favicon.ico" type="image/x-icon">
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?d1fc0144cbb354a3f8442b7ba568bc2f";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+
+        window.addEventListener('DOMContentLoaded', () => {
+            let headerEle = document.getElementById('header');
+            let eleHeight = headerEle.offsetHeight;
+            let lastScrollTop = 0;
+            let topAnchor = 0; // 某个方向的锚点
+            let downAnchor = 0;
+            let stylTop = "-" + eleHeight + "px";
+            let stylTop2 = "0";
+            let threshold = 180;
+            function headerEleVisibleHandler() {
+                let scrollTop = document.documentElement.scrollTop;
+                // 向下滚动
+                if (scrollTop > lastScrollTop) {
+                    if (downAnchor !== 0) {
+                        downAnchor = 0;
+                    }
+                    if (topAnchor === 0) {
+                        topAnchor = scrollTop;
+                    }
+                    if ((scrollTop > threshold || scrollTop - topAnchor > threshold) && headerEle.style.top !== stylTop) {
+                        headerEle.style.top =  stylTop;
+                    }
+                }
+                // 向上
+                else {
+                    if (topAnchor !== 0) {
+                        topAnchor = 0;
+                    }
+                    if (downAnchor === 0) {
+                        downAnchor = scrollTop;
+                    }
+                    if ((scrollTop + threshold > downAnchor) && headerEle.style.top === stylTop) {
+                        headerEle.style.top = stylTop2;
+                    }
+                }
+                lastScrollTop = scrollTop;
+            }
+
+            function throttleWrapper(fn, options) {
+                if (!options) {
+                    options = {};
+                }
+                let timer = null;
+                const { timeout } = options;
+
+                const _setTimeout = () => {
+                    timer = window.setTimeout(() => {
+                        window.clearTimeout(timer);
+                        timer = null;
+                    }, timeout);
+                    return timer;
+                }
+
+                return function (...args) {
+                    if (timer) {
+                        return;
+                    }
+                    timer = -1;
+                    let result = fn.apply(this, args);
+                    _setTimeout();
+                    return result;
+                }
+            }
+            headerEleVisibleHandler = throttleWrapper(headerEleVisibleHandler, { timeout: 200 });
+            window.addEventListener("scroll", headerEleVisibleHandler);
+        });
+    </script>
+        <meta name="keywords" content="js,逆向,猿人学">
+        <meta name="description" content="【猿人学】jsvmp洞察先机逆向；这是猿人学里的一道js逆向练习题目，但本文的目的并不在于解题，而只是逆向其请求数据所必要的加密参数v...">
+    <link rel="stylesheet" href="../css/article.css">
+    <link rel="stylesheet" href="../css/markdown/github-markdown.css">
+    <link rel="stylesheet" href="../css/markdown/github-markdown-light.css">
+    <link rel="stylesheet" href="../css/gittalk-cover.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/viewerjs/1.11.7/viewer.min.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</head>
+<body>
+<div id="app">
+    <div id="header">
+    <div id="bar">
+        <div class="container mg-0-auto d-f pos-r">
+            <div class="logo">
+                <a href="../" class="nav-link" style="margin-right: 10px;">
+                    <img src="../image/portal/logo.jpg" alt="小埃的个人博客">
+                </a>
+            </div>
+            <div class="right">
+                <ul class="nav f-l">
+                        <li class="nav-item">
+                            <a href="../index.html" class="nav-link active">
+                                <span>首页</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="../category.html" class="nav-link ">
+                                <span>分类</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="../about.html" class="nav-link ">
+                                <span>关于</span>
+                            </a>
+                        </li>
+                </ul>
+                <div class="eb-title">
+                    小埃的个人博客
+                </div>
+                    <div id="search">
+                        <input type="text" id="search-input" data-prefix="../" placeholder="搜索" autocomplete="off" />
+                        <span class="search-icon t-a">
+                            <img class="el-icon-search" src="../image/portal/search.png" width="16" height="16">
+                        </span>
+                        <div id="search-result">
+                            <input type="text" class="input-1" id="search-input-2" data-prefix="../" placeholder="请输入" autocomplete="off" />
+                            <div class="content">
+                            </div>
+                            <div class="arrow"></div>
+                        </div>
+                    </div>
+
+                <div class="eb-menu">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-list-ul" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M5 11.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm-3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm0 4a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm0 4a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
+                    </svg>
+                </div>
+            </div>
+            <div id="sc-box">
+                <div class="wrapper">
+                        <div class="side-card b-s-1 mg-b-10">
+                            <div class="wrapper">
+                                <h2 class="item title">
+                                    <span>相关文章</span>
+                                </h2>
+                                <div class="item content">
+                                        <div class="item1 ">
+                                            <a href="../articles/77.html">
+                                                    【推特】Webpack逆向
+                                            </a>
+                                        </div>
+                                        <div class="item1 ">
+                                            <a href="../articles/76.html">
+                                                    js实现监听单页面应用url的办法
+                                            </a>
+                                        </div>
+                                        <div class="item1 ">
+                                            <a href="../articles/72.html">
+                                                    【某易云逆向】模拟登录篇
+                                            </a>
+                                        </div>
+                                        <div class="item1 ">
+                                            <a href="../articles/70.html">
+                                                    为静态站点添加目录功能
+                                            </a>
+                                        </div>
+                                        <div class="item1 ">
+                                            <a href="../articles/69.html">
+                                                    【某易云逆向】滑动验证码校验篇
+                                            </a>
+                                        </div>
+                                        <div class="item1 ">
+                                            <a href="../articles/65.html">
+                                                    【某易云逆向】滑动验证码识别篇
+                                            </a>
+                                        </div>
+                                        <div class="item1 ">
+                                            <a href="../articles/66.html">
+                                                    关于nodejs使用相对路径读取文件的问题
+                                            </a>
+                                        </div>
+                                        <div class="item1 ">
+                                            <a href="../articles/55.html">
+                                                    解耦在js中的应用
+                                            </a>
+                                        </div>
+                                        <div class="item1 ">
+                                            <a href="../articles/22.html">
+                                                    为静态站点添加搜索功能
+                                            </a>
+                                        </div>
+                                        <div class="item1 ">
+                                            <a href="../articles/19.html">
+                                                    为vue单页面应用添加提示保存功能
+                                            </a>
+                                        </div>
+                                        <div class="item1 ">
+                                            <a href="../articles/15.html">
+                                                    兼容部署在Github Pages与其他服务器的应用引入资源的解决方案
+                                            </a>
+                                        </div>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    <div id="main">
+        <div class="container mg-0-auto pd-t-10">
+            <div class="wrapper">
+                <article class="mg-b-20">
+                    <div class="markdown-body">
+                        <div class="title">【猿人学】jsvmp洞察先机逆向</div>
+                        <div class="item meta mg-b-10">
+                            <span class="author">由<a href="javascript:void(0);">errol</a>发表于<a href="#">2025-07-05</a></span>
+                            <span>|</span>
+                            <span class="time">
+                            分类为
+                            <a href="../categories/1.html">编程</a></span>
+                            <span>|</span>
+                            <span class="tags">
+                                标签为<a href="javascript:void(0);">js</a>、<a href="javascript:void(0);">逆向</a>、<a href="javascript:void(0);">猿人学</a>
+                            </span>
+                        </div>
+                        <div class="content">
+                            <p>这是猿人学里的一道js逆向练习题目，但本文的目的并不在于解题，而只是逆向其请求数据所必要的加密参数v。</p>
+<blockquote>
+<p>https://match.yuanrenxue.cn/match/18data?page=2&amp;t=1751697204&amp;v=H%2BSPxe96K6TZLKNGgVw1SqAKEyoxPqR3%2B4ycCiHexKUFhX7jCHbicP2jNR13e1Wl</p>
+</blockquote>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202507/0ece7b6b6d944bc58f6a857255b71727-9E56E03120F3B8D290706FD057C7BB48.png?project=easyblog" /></p>
+<p><em>图1 加密参数v</em></p>
+<blockquote>
+<p>正常情况下，该接口会返回解题需要的数据</p>
+</blockquote>
+<h4 id="hidp-heading-0">1、定位</h4>
+<p>首先通过断点定位到请求发送的位置，同时得知v参数是在重写过的XMLHttpRequest.prototype.open()方法里生成的参数，该方法极其复杂，且经过混淆，难以阅读。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202507/632e88f0775a4a16928d057b0391f1ac-8A3709DECEE4EF81111877B8B91BBB95.png?project=easyblog" /></p>
+<p><em>图2 调用open()</em></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202507/d154bfe7a4da45de8d544cf92e368aca-F0167E1763AA5132742B7BC84B1C7815.png?project=easyblog" /></p>
+<p><em>图3 open()方法体</em></p>
+<p>基本的流程为：调用open()生成加密参数v -&gt; 拼接到url -&gt; 请求服务器。</p>
+<h4 id="hidp-heading-1">2、下载源码</h4>
+<p>将加密相关的代码保存至本地，以供后续使用代码生成加密参数。</p>
+<p>虽然只显示为一行，单其实代码还挺多的。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202507/d210e7f975744997bb055b28e4b23804-593704CADA7091DC5C0F638A130937FF.png?project=easyblog" /></p>
+<p><em>图4 源码1</em></p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202507/73a2a442aaf64907a652ae81994d88bb-73C360A59829D44E40BD0D870A12B1DB.png?project=easyblog" /></p>
+<p><em>图5 源码2</em></p>
+<h4 id="hidp-heading-2">3、检测环境</h4>
+<p>一般情况下，js逆向都需要进行该步骤，尤其是本文这种&quot;黑箱环境&quot;，里面很可能就存在环境检测机制，比方说如果确实某些参数时，终止运行代码。</p>
+<p>只不过之前涉及到的js逆向，代码简单，也没有经过混淆，比较容易看到所依赖的参数，window、document、location等，可以直接补充。</p>
+<p>检测方法是通过Proxy来实现，用于为指定对象创建代理后，劫持其对象属性的读取。</p>
+<p>使用的方式是，将该方法注入到目标网页中，先在实际的环境中运行一遍，并查看输出。</p>
+<p>一般是为document、window创建代理对象，比方说本案例是window对象。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202507/e9a83cabfd904aeca6da5a6ec18528e9-610704937A631454CAF337730B96E7ED.png?project=easyblog" /></p>
+<p><em>图6 注入源码位置</em></p>
+<p>因此，可以在断点处，注入检测环境代码，可以选择使用chrome的代码片段功能保存，并执行，再往下执行。</p>
+<pre><code class="language-js">function createProxy(obj, objName) {
+    const fields = [&quot;window&quot;];
+    return new Proxy(obj,{
+        get(target, prop, receiver) {
+            // 捕获属性读取
+            console.log(`[TRACE] Accessing ${objName}.${String(prop)}`);
+            // 可选：打印调用堆栈
+            let value;
+            try {
+                if (fields.includes(prop)) {
+                    value = target[prop];
+                }
+                else {
+                    value = Reflect.get(target, prop, receiver);
+                }
+            }
+            catch(e) {
+                console.log(e);
+                value = target[prop];
+            }
+
+            // 如果是函数，再代理函数调用
+            if (typeof value === 'function') {
+                return new Proxy(value,{
+                    apply(fnTarget, thisArg, args) {
+                        console.log(`[TRACE] Calling ${objName}.${String(prop)} with arguments: `, args);
+                        // console.trace(); // 打印调用堆栈
+                        // return Reflect.apply(fnTarget, thisArg, args);
+                        const r = Reflect.apply(fnTarget, thisArg, args);
+                        if (args.length &amp;&amp; typeof args[0] == 'string' &amp;&amp; args[0].startsWith('2|')) {
+                            console.log(r);
+                            debugger;
+                        }
+                        return r;
+                    }
+                });
+            }
+
+            return value;
+        },
+
+        set(target, prop, value, receiver) {
+            // 捕获属性写入
+            console.log(`[TRACE] Setting ${objName}.${String(prop)} = `, value);
+            // console.trace();
+            if (prop === '_$_') {
+                value = createProxy(value, prop);
+            }
+            return Reflect.set(target, prop, value, receiver);
+        }
+    });
+}
+
+// 创建代理对象
+___ = createProxy(window, 'window');
+document = createProxy(document, 'document');
+</code></pre>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202507/3cec46651fca4470b19f2e4af23479be-0D62428FB54B3A0175D8E8B443C37081.png?project=easyblog" /></p>
+<p><em>图7 浏览器环境</em></p>
+<p>确实用到了较多的属性（截图里只显示了部分）。</p>
+<h4 id="hidp-heading-3">4、补环境</h4>
+<p>这种情况下，手动补环境着实比较麻烦，因此可借用一些辅助工具来帮助完成工作，如jsdom。</p>
+<p>它可以很好地模拟浏览器环境。</p>
+<blockquote>
+<p>main.js</p>
+</blockquote>
+<pre><code class="language-js">const jsdom = require(&quot;jsdom&quot;);
+const { JSDOM } = jsdom;
+const fetch = require('node-fetch');
+
+// doc文档随便输入
+let { window } = new JSDOM(`&lt;!DOCTYPE html&gt;&lt;p&gt;Hello world&lt;/p&gt;`);
+function createProxy(obj, objName) {
+    // ...
+}
+
+window = createProxy(window, 'window');
+global = window;
+require(&quot;./1&quot;);
+</code></pre>
+<p>将本地环境调试到与浏览器环境相同的输出，尽可能保证代码在同样的环境下运行。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202507/b49fc28a2c41402c9d20090cce8597ce-9478209ED1953EA4B89C616463AC595E.png?project=easyblog" /></p>
+<p><em>图8 本地环境</em></p>
+<h4 id="hidp-heading-4">5、执行代码</h4>
+<p>不出意外的话，其实到这里就这样执行主业务代码了。</p>
+<p>跟浏览器环境一样，使用XMLHttpRequest发送请求，可以把代码直接拷贝下来，但毕竟只是模拟浏览器环境，因此需要做一些修改。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202507/e99aba1beb7d469186ef92e2fcddc791-ECB514BC970ADF822BCE8A953F6D5539.png?project=easyblog" /></p>
+<p><em>图9 发送xhr请求代码</em></p>
+<pre><code class="language-js">function getdata(page){
+    page = (page || 1);
+    var xml = new XMLHttpRequest();
+    xml.onreadystatechange = function cback(){
+        if (xml.readyState == 4){
+            try {
+                var data = JSON.parse(xml.response || xml.responseText) // xml.responseText 用于兼容 IE9
+                if (data['state'] == 'success'){
+                    data = data.data;
+                    let html = '';
+                    $.each(data, function(index, val) {
+                        html += '&lt;td&gt;'+ val.value + '&lt;/td&gt;'
+                    });
+                    $('.number').text('').append(html);
+                }else{
+                    if(window.page == 5){
+                        alert('第五页不在前端展示，请使用协议处理并模拟参数');
+                    }
+                    else{
+                        alert('因未知原因，数据拉取失败。可能是触发了风控系统');
+                        alert('生而为虫，我很抱歉');
+                    }
+
+                    $('.page-message').eq(0).addClass('active');
+                    $('.page-message').removeClass('active');
+                }
+            }
+            catch (e) {
+                alert('因未知原因，数据拉取失败。可能是触发了风控系统');
+                alert('生而为虫，我很抱歉');
+                $('.page-message').eq(0).addClass('active');
+                $('.page-message').removeClass('active');
+            }
+
+        }
+    };
+    xml.open('GET', 'https://match.yuanrenxue.cn/match/18data?page=' + page, true);
+    xml.send();
+}
+// page=1时，不会生成加密参数，故设置为2
+window.page = 2;
+getdata(window.page);
+</code></pre>
+<p>不出意外的话，以外就来了。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202507/fd39fb36f2854e85891e656fc370edae-B496612C7D631752BE3B8C17DFA195D6.png?project=easyblog" /></p>
+<p><em>图10 无法正常发送xhr请求</em></p>
+<p>与浏览器环境对比发现，劫持属性输出的内容有些不一样。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202507/f2ecbfcce15242fcbdcf678478b9a414-C3019FE20F1D023189FBE201887A99FE.png?project=easyblog" /></p>
+<p><em>图11 正常发送xhr请求所生成的参数</em></p>
+<p>看起来，像是本地环境缺少了一些参数，导致代码没能正常执行。</p>
+<p>很明显，&quot;2|678m79,677m79,677d79,677u79,772u20&quot;，&quot;2&quot;指的是当前页码，而&quot;|&quot;是分隔符，至于后面的&quot;678m79,677m79,677d79,677u79,772u20&quot;，经调试分析后猜测，应该是一些点击分页时，鼠标移动的轨迹参数。</p>
+<p>比如：678、677、772这样的数据，是点击第二页时，x轴的轨迹参数；而79、20是y轴的轨迹参数。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202507/1ecac5286f56418e822c0efffe7a0fca-4F45BFA39744C8832A36D491909691AF.png?project=easyblog" /></p>
+<p><em>图12 网页交互</em></p>
+<p>最终得出了生成数据的算法。</p>
+<pre><code class="language-js">// 模拟鼠标点位数据
+// 以第三页的坐标为基准，前后加减50
+function generatePoint(paganation) {
+    let x = 721 + (paganation - 3) * 50;
+    return `${x}m128,${x}m128,${x}m127,${x}d127,${x}u127`;
+}
+</code></pre>
+<p>createProxy()也要同步修改：使用劫持钩子设置轨迹参数。</p>
+<pre><code class="language-js">function createProxy(obj, objName) {
+    return new Proxy(obj, {
+        get(target, prop, receiver) {
+            // 捕获属性读取
+            console.log(`[TRACE] Accessing ${objName}.${String(prop)}`);
+
+            const value = Reflect.get(target, prop, receiver);
+            // 如果是函数，再代理函数调用
+            const type = typeof value;
+            if (type === 'function') {
+                return new Proxy(value, {
+                    apply(fnTarget, thisArg, args) {
+                        console.log(`[TRACE] Calling ${objName}.${String(prop)} with arguments: `, args);
+                        // 若prop为encodeURIComponent，则保存参数
+                        if (prop === 'encodeURIComponent') {
+                            saving = true;
+                            if (/\d+\|/.test(args.toString())) {
+                                args[0] = args[0] + generatePoint(+args[0].replace('|', ''));
+                            }
+                        }
+                        const r = Reflect.apply(fnTarget, thisArg, args);
+                        return r;
+                    }
+                });
+            }
+            return value;
+        },
+        set(target, prop, value, receiver) {
+            // 捕获属性写入
+            let type = typeof value;
+            if (type === 'string') {
+                console.log(`[TRACE] Setting ${objName}.${String(prop)} = `, value.slice(0, 200));
+            }
+            else {
+                console.log(`[TRACE] Setting ${objName}.${String(prop)} = `, value);
+            }
+            return Reflect.set(target, prop, value, receiver);
+        }
+    });
+}
+</code></pre>
+<p>但即便修改代码后，发现还是无法正常发送请求，可能是这样设置轨迹参数不合法，导致了源码内部运行一些逻辑的时候，出现了错误。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202507/17468fdb8674431f91d098e8f2ecb51d-98A882B61DC46AECE493C035BBEA7C2B.png?project=easyblog" /></p>
+<p><em>图13 再次发送失败</em></p>
+<p>但是，在图13中，看到了一个很不得了的东西，已经用红框标注了...</p>
+<p>事实上，它就是本文的目标，加密参数v。</p>
+<p>所以，虽然没能正常发送xhr请求，但其实本文的目的已经达到了，此时只需将代码稍作修改，也能达到正常发送请求的效果。</p>
+<p>修改createProxy()如下：</p>
+<pre><code class="language-js">function createProxy(obj, objName) {
+    return new Proxy(obj, {
+        get(target, prop, receiver) {
+            // ....
+            if (type === 'function') {
+                return new Proxy(value, {
+                    apply(fnTarget, thisArg, args) {
+                        console.log(`[TRACE] Calling ${objName}.${String(prop)} with arguments: `, args);
+                        let saving;
+                        // 若prop为encodeURIComponent，则保存参数
+                        if (prop === 'encodeURIComponent') {
+                            saving = true;
+                            if (/\d+\|/.test(args.toString())) {
+                                args[0] = args[0] + generatePoint(+args[0].replace('|', ''));
+                            }
+                        }
+                        const r = Reflect.apply(fnTarget, thisArg, args);
+                        if (saving) {
+                            if (!receiver.output) {
+                                receiver.output = [];
+                            }
+                            receiver.output.push(args);
+                        }
+                        return r;
+                    }
+                });
+            }
+            return value;
+        },
+        set(target, prop, value, receiver) {
+            // ...
+        }
+    });
+}
+</code></pre>
+<p>再修改getdata()方法的代码为：</p>
+<pre><code class="language-js">function getdata(page){
+    page = page || 2;
+    const xhr = new window.XMLHttpRequest();
+    // 将xhr.open()当做是获取加密数据的方法;
+    const href = `https://match.yuanrenxue.cn/match/18`;
+    const _url = `${href}data?page=${page}`;
+    xhr.open('GET', _url, true);
+    console.log(window.output);
+    const [a, b, c, d] = window.output;
+     // 获取秒数
+    const t = parseInt(a[0].slice(0, a[0].length / 2), 16);
+    const url = `${_url}&amp;t=${t}&amp;v=${d[0]}`;
+    console.log(url);
+}
+getdata(2);
+</code></pre>
+<p>再次执行代码：</p>
+<pre><code class="language-shell">[TRACE] Accessing window.output
+[TRACE] Accessing window.output
+[TRACE] Accessing window.output
+[
+  [ '687cb384687cb384' ],
+  [ '687cb384687cb384' ],
+  [ '2|671m128,671m128,671m127,671d127,671u127' ],
+  [
+    'sT68wsFnWIFX7L7jEbaUzcI1WpgGQPQ72dRZgoyXBTXw6dtiX+WJeydXeNqXuYRn'
+  ]
+]
+[TRACE] Accessing window.output
+https://match.yuanrenxue.cn/match/18data?page=2&amp;t=1753002884&amp;v=sT68wsFnWIFX7L7jEbaUzcI1WpgGQPQ72dRZgoyXBTXw6dtiX+WJeydXeNqXuYRn
+</code></pre>
+<p>格式跟浏览器环境一模一样，应该没啥问题。</p>
+<p>但如果使用生成的url请求服务器的话，会失败，这是由于网站做了限制，需要登录后才可以操作，不过，这已经不是本文的讨论范围了。</p>
+<p>本文完。</p>
+
+                        </div>
+                    </div>
+                </article>
+                <div class="comment-wrap">
+                        <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+  <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+                        <div id="gitalk-container"></div>
+                        <script>
+                            const gitalk = new Gitalk({
+                                clientID: 'ae1422e500a8b19fb1fc',
+                                clientSecret: '9f387db6a84a4945cdf5dc743c16ce25fdef6b76',
+                                repo: 'github-pages',      // The repository of store comments,
+                                owner: 'errr0l',
+                                admin: ['errr0l'],
+                                id: location.pathname,      // Ensure uniqueness and length less than 50
+                                distractionFreeMode: false  // Facebook-like distraction free mode
+                            });
+                            gitalk.render('gitalk-container');
+                        </script>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="back">返回</div>
+</div>
+    <script src="../js/data.js"></script>
+    <script src="../js/lazy.js"></script>
+    <script src="../js/search.js"></script>
+    <script src="../js/menu.js"></script>
+<script src="../js/toc.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/viewerjs/1.11.7/viewer.min.js"></script>
+<script>
+    let back = document.querySelector(".back");
+    back.addEventListener("click", function () {
+        window.history.go(-1);
+    });
+    const viewer = new Viewer(document.querySelector('.markdown-body .content'), {
+        toolbar: {
+            zoomIn: 4,
+            zoomOut: 4,
+            oneToOne: 4,
+            reset: 0,
+            prev: 4,
+            play: 0,
+            next: 4,
+            rotateLeft: 0,
+            rotateRight: 0,
+            flipHorizontal: 0,
+            flipVertical: 0,
+        },
+    });
+</script>
+</body>
+</html>
