@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>bean定义加入ioc容器的源码分析 - 小埃的个人博客</title>
+    <link rel="stylesheet" href="../css/reset.css">
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/index.css">
+    <link rel="stylesheet" href="../css/header.css">
+    <link rel="stylesheet" href="../css/mobile.css">
+    <link rel="stylesheet" href="../css/theme-light.css">
+    <link rel="shortcut icon" href="../favicon.ico" type="image/x-icon">
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?d1fc0144cbb354a3f8442b7ba568bc2f";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+
+        window.addEventListener('DOMContentLoaded', () => {
+            let headerEle = document.getElementById('header');
+            let eleHeight = headerEle.offsetHeight;
+            let lastScrollTop = 0;
+            let topAnchor = 0; // 某个方向的锚点
+            let downAnchor = 0;
+            let stylTop = "-" + eleHeight + "px";
+            let stylTop2 = "0";
+            let threshold = 180;
+            function headerEleVisibleHandler() {
+                let scrollTop = document.documentElement.scrollTop;
+                // 向下滚动
+                if (scrollTop > lastScrollTop) {
+                    if (downAnchor !== 0) {
+                        downAnchor = 0;
+                    }
+                    if (topAnchor === 0) {
+                        topAnchor = scrollTop;
+                    }
+                    if ((scrollTop > threshold || scrollTop - topAnchor > threshold) && headerEle.style.top !== stylTop) {
+                        headerEle.style.top =  stylTop;
+                    }
+                }
+                // 向上
+                else {
+                    if (topAnchor !== 0) {
+                        topAnchor = 0;
+                    }
+                    if (downAnchor === 0) {
+                        downAnchor = scrollTop;
+                    }
+                    if ((scrollTop + threshold > downAnchor) && headerEle.style.top === stylTop) {
+                        headerEle.style.top = stylTop2;
+                    }
+                }
+                lastScrollTop = scrollTop;
+            }
+
+            function throttleWrapper(fn, options) {
+                if (!options) {
+                    options = {};
+                }
+                let timer = null;
+                const { timeout } = options;
+
+                const _setTimeout = () => {
+                    timer = window.setTimeout(() => {
+                        window.clearTimeout(timer);
+                        timer = null;
+                    }, timeout);
+                    return timer;
+                }
+
+                return function (...args) {
+                    if (timer) {
+                        return;
+                    }
+                    timer = -1;
+                    let result = fn.apply(this, args);
+                    _setTimeout();
+                    return result;
+                }
+            }
+            headerEleVisibleHandler = throttleWrapper(headerEleVisibleHandler, { timeout: 200 });
+            window.addEventListener("scroll", headerEleVisibleHandler);
+        });
+    </script>
+        <meta name="keywords" content="spring,源码,java">
+        <meta name="description" content="bean定义加入ioc容器的源码分析；本文是spring框架源码学习系列的第一篇。当然，也并非那种吃透代码、扣细节程度的分析，只是单纯从一个开发者的角度，简单研究一些常用的组件的添加、运作方式。从整体上认识框架，了解其工作原理...">
+    <link rel="stylesheet" href="../css/article.css">
+    <link rel="stylesheet" href="../css/markdown/github-markdown.css">
+    <link rel="stylesheet" href="../css/markdown/github-markdown-light.css">
+    <link rel="stylesheet" href="../css/gittalk-cover.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/viewerjs/1.11.7/viewer.min.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</head>
+<body>
+<div id="app">
+    <div id="header">
+    <div id="bar">
+        <div class="container mg-0-auto d-f pos-r">
+            <div class="logo">
+                <a href="../" class="nav-link" style="margin-right: 10px;">
+                    <img src="../image/portal/logo.jpg" alt="小埃的个人博客">
+                </a>
+            </div>
+            <div class="right">
+                <ul class="nav f-l">
+                        <li class="nav-item">
+                            <a href="../index.html" class="nav-link active">
+                                <span>首页</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="../category.html" class="nav-link ">
+                                <span>分类</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="../about.html" class="nav-link ">
+                                <span>关于</span>
+                            </a>
+                        </li>
+                </ul>
+                <div class="eb-title">
+                    小埃的个人博客
+                </div>
+                    <div id="search">
+                        <input type="text" id="search-input" data-prefix="../" placeholder="搜索" autocomplete="off" />
+                        <span class="search-icon t-a">
+                            <img class="el-icon-search" src="../image/portal/search.png" width="16" height="16">
+                        </span>
+                        <div id="search-result">
+                            <input type="text" class="input-1" id="search-input-2" data-prefix="../" placeholder="请输入" autocomplete="off" />
+                            <div class="content">
+                            </div>
+                            <div class="arrow"></div>
+                        </div>
+                    </div>
+
+                <div class="eb-menu">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-list-ul" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M5 11.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm-3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm0 4a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm0 4a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
+                    </svg>
+                </div>
+            </div>
+            <div id="sc-box">
+                <div class="wrapper">
+                        <div class="side-card b-s-1 mg-b-10">
+                            <div class="wrapper">
+                                <h2 class="item title">
+                                    <span>相关文章</span>
+                                </h2>
+                                <div class="item content">
+                                        <div class="item1 ">
+                                            <a href="../articles/81.html">
+                                                    关于spring的循环依赖
+                                            </a>
+                                        </div>
+                                        <div class="item1 ">
+                                            <a href="../articles/40.html">
+                                                    探究MultipartResolver的运行原理
+                                            </a>
+                                        </div>
+                                        <div class="item1 ">
+                                            <a href="../articles/71.html">
+                                                    记录一次打包静态站点资源的优化
+                                            </a>
+                                        </div>
+                                        <div class="item1 ">
+                                            <a href="../articles/52.html">
+                                                    关于运行jar时，报“没有主清单属性”的问题
+                                            </a>
+                                        </div>
+                                        <div class="item1 ">
+                                            <a href="../articles/31.html">
+                                                    遇见黑心网站
+                                            </a>
+                                        </div>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    <div id="main">
+        <div class="container mg-0-auto pd-t-10">
+            <div class="wrapper">
+                <article class="mg-b-20">
+                    <div class="markdown-body">
+                        <div class="title">bean定义加入ioc容器的源码分析</div>
+                        <div class="item meta mg-b-10">
+                            <span class="author">由<a href="javascript:void(0);">errol</a>发表于<a href="#">2025-08-27</a></span>
+                            <span>|</span>
+                            <span class="time">
+                            分类为
+                            <a href="../categories/1.html">编程</a></span>
+                            <span>|</span>
+                            <span class="tags">
+                                标签为<a href="javascript:void(0);">spring</a>、<a href="javascript:void(0);">源码</a>、<a href="javascript:void(0);">java</a>
+                            </span>
+                        </div>
+                            <div class="cover mg-b-10">
+                                <img src="../image/portal/202508/4c154bb62cf24323a28029efc42f3afc-spring-logo.png?project=easyblog" alt="">
+                            </div>
+                        <div class="content">
+                            <p>本文是spring框架源码学习系列的第一篇。</p>
+<p>当然，也并非那种吃透代码、扣细节程度的分析，只是单纯从一个开发者的角度，简单研究一些常用的组件的添加、运作方式。</p>
+<p>从整体上认识框架，了解其工作原理，对排查和解决问题都很有帮助，提升框架使用熟练度的同时，也可以在一定程度上定制和拓展框架，所以个人认为，这是有必要的一环。</p>
+<p>文章要分析的是关于spring如何生成bean定义并加入ioc的源码，比较接近框架“底层”。</p>
+<p>一般来说，从java类转为spring bean组件要经历这样的一个过程：</p>
+<blockquote>
+<p>java类 -&gt; 字节码 -&gt; class -&gt; bean定义 -&gt; ioc -&gt; bean -&gt; ioc</p>
+</blockquote>
+<p>需要先转换为bean定义，再创建bean对象。</p>
+<p>但<strong>本文研究的只是其中的一部分，从class到ioc，即：class -&gt; bean定义 -&gt; ioc</strong>，因此相对来说没那么复杂。</p>
+<p>以一个最简单的spring应用为案例，并尽可能地排除其他干扰因素，着重分析这个转换的过程。</p>
+<blockquote>
+<p>bean定义，即<a href="https://docs.spring.io/spring-framework/reference/core/beans/child-bean-definitions.html#page-title">BeanDefinition</a>，是spring框架中的内部数据结构，它是对一个bean的元数据描述(Metadata)，如类信息、作用域、构造参数、依赖、属性、初始化方法等等，spring会根据bean定义来实例化bean</p>
+</blockquote>
+<h4 id="hidp-heading-0">一、项目结构</h4>
+<pre><code class="language-text">.
+|___debug-5.iml
+|___pom.xml
+|___src
+| |___test
+| | |___java
+| |___main
+| | |___resources
+| | | |___application.properties
+| | |___java
+| | | |___com
+| | | | |___err0l
+| | | | | |___spring
+| | | | | | |___debug5
+| | | | | | | |___HelloWorld.java
+| | | | | | | |___Debug5Application.java
+| | | | | | | |___TestController.java
+| | | | | | | |___AppConfig.java
+</code></pre>
+<p>其中，AppConfig为主配置类，Debug5Application为启动类，HelloWorld和TestController是没有任何业务逻辑的普通类。</p>
+<pre><code class="language-java">// 配置类
+@Configuration
+@ComponentScan
+public class AppConfig {
+}
+
+// 启动类
+public class Debug5Application {
+    public static void main(String[] args) {
+        final AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
+        final String[] definitionNames = context.getBeanDefinitionNames();
+        for (String name : definitionNames) {
+            System.out.println(name);
+        }
+    }
+}
+
+@Component
+public class HelloWorld {
+    public String key = &quot;hello, &quot;;
+    public String value = &quot;world&quot;;
+}
+
+@Controller
+public class TestController {
+}
+</code></pre>
+<p>pom.xml里也只有spring的核心依赖：</p>
+<pre><code class="language-text">&lt;dependencies&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+        &lt;artifactId&gt;spring-context&lt;/artifactId&gt;
+        &lt;version&gt;6.2.8&lt;/version&gt;
+    &lt;/dependency&gt;
+&lt;/dependencies&gt;
+</code></pre>
+<h4 id="hidp-heading-1">二、注册ConfigurationClassPostProcessor</h4>
+<p>ConfigurationClassPostProcessor是一个BeanFactoryPostProcessor接口的实现类，是spring的核心组件之一，用于处理使用@Configuration注解标注的配置类，如AppConfig。</p>
+<p>因此，要分析bean定义的注册过程，需重点关注该类。</p>
+<p>同时，它也是一个spring bean，或者说，任何受spring管理的对象都称为bean，所以也需要注册进ioc，其调用栈为：</p>
+<pre><code class="language-text">- new AnnotationConfigApplicationContext(AppConfig.class);
+-- this();
+--- new AnnotatedBeanDefinitionReader(this);
+---- AnnotationConfigUtils.registerAnnotationConfigProcessors(this.registry);
+</code></pre>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202508/5bf0a60b3c98400287babe6cfc3544b0-a87973a1-c9f2-4b4a-937b-c1c00e460b2c.png?project=easyblog" /></p>
+<p>图2-1 给postProcessBeanDefinitionRegistry()设置断点</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202508/61f0f2b5d5934b6b9f4790f337d39bac-34807231E9BB1A060F367DCF152F7D0E.png?project=easyblog" /></p>
+<p>图2-2 注册ConfigurationClassPostProcessor的bean定义信息</p>
+<p>安装好依赖，并在ConfigurationClassPostProcessor#postProcessBeanDefinitionRegistry()方法里打上断点后，并启动应用。</p>
+<blockquote>
+<p>BeanFactoryPostProcessor是spring框架中的一个扩展点，主要作用是在ioc容器实例化任何bean之前，读取并修改容器中已注册的bean定义的元数据信息(包括注册新的定义)</p>
+</blockquote>
+<h4 id="hidp-heading-2">三、调用BeanFactoryPostProcessor</h4>
+<p>BeanFactoryPostProcessor的调用先于任何bean相关的调用逻辑之前。</p>
+<pre><code class="language-text">- new AnnotationConfigApplicationContext(AppConfig.class);
+-- refresh();
+--- invokeBeanFactoryPostProcessors(beanFactory);
+---- PostProcessorRegistrationDelegate.invokeBeanFactoryPostProcessors(beanFactory, getBeanFactoryPostProcessors());
+----- invokeBeanDefinitionRegistryPostProcessors(currentRegistryProcessors, registry, beanFactory.getApplicationStartup());
+------ postProcessor.postProcessBeanDefinitionRegistry(registry);
+</code></pre>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202508/1b689da235a34b44a5df449bcb9bb595-06D7AC4E028608F693086B79A9790833.png?project=easyblog" /></p>
+<p>图3-1 执行到postProcessBeanDefinitionRegistry()方法中断点处</p>
+<h4 id="hidp-heading-3">四、调用ConfigurationClassPostProcessorr#postProcessBeanDefinitionRegistry()</h4>
+<h5 id="hidp-heading-4">1、筛选配置类</h5>
+<p>spring会先将ioc容器中的所有bean定义都当做是配置类候选，但经筛选后，只剩AppConfig。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202508/04ebbc426800490fb081f9b2350f64ba-AE291488B4E0997BEAA07A03972116A9.png?project=easyblog" /></p>
+<p>图4-1 筛选候选</p>
+<blockquote>
+<p>顺便一提，AppConfig的bean定义是在实例化AnnotationConfigApplicationContext时加入ioc容器的</p>
+</blockquote>
+<h5 id="hidp-heading-5">2、解析配置类</h5>
+<p>接着解析配置类候选。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202508/978e530a6dff463fb48f36314dcc366e-B9529E1C4073B8349162C8A10185766A.png?project=easyblog" /></p>
+<p>图4-2 解析候选</p>
+<p>将配置类bean定义包装为ConfigurationClass后再处理。</p>
+<pre><code class="language-text">- ConfigurationClass configClass = new ConfigurationClass(
+				beanDef.getMetadata(), beanName, (beanDef instanceof ScannedGenericBeanDefinition));
+- processConfigurationClass(configClass, DEFAULT_EXCLUSION_FILTER);
+-- doProcessConfigurationClass(configClass, sourceClass, filter);
+</code></pre>
+<h5 id="hidp-heading-6">3、扫描组件</h5>
+<p>查找当前bean定义中是否使用了@ComponentScan注解，说白了就是检查是否启用组件扫描功能。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202508/1853d609e4294819b02c6c07d9bfbb72-DC575FE4A689EF7F0DF360CE52EE1F28.png?project=easyblog" /></p>
+<p>图4-3 查找@ComponentScan</p>
+<p>结合前文可知，AppConfig类确实带有@ComponentScan注解，因此，componentScans不会为空，进而开始以当前SourceClass为基础，扫描其他组件。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202508/e7fba61cedb4444283280e78b109db6b-14C72BFFE12897258AAB3A067EBD7C69.png?project=easyblog" /></p>
+<p>图4-4 扫描组件</p>
+<p>如果未设置@ComponentScan的basePackages属性的话，则取当前配置类的所在包为基础路径。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202508/b1fd812532254ed28ce959f7624e9f2c-CE2AA2B3B5D446BAF9E5CF29AB582100.png?project=easyblog" /></p>
+<p>图4-5 获得包名</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202508/b24a9260543a4a8e8a25da5469b06ee6-488EAE0A658BA2CFE2FD5075060E8283.png?project=easyblog" /></p>
+<p>图4-6 根据包名查找</p>
+<p>其规则为，类路径、包名、资源名拼接在一起的表达式。</p>
+<h5 id="hidp-heading-7">4、加载字节码文件</h5>
+<blockquote>
+<p>classpath*:com/err0l/spring/debug5/**/*.class</p>
+</blockquote>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202508/12c97e853bbc4d03acd4c49d9adfe96f-9717315894947E474C1BC6BA3B612D93.png?project=easyblog" /></p>
+<p>图4-7 获得资源文件</p>
+<h5 id="hidp-heading-8">5、创建bean定义</h5>
+<p><strong>进一步判断，如果符合条件的话，如@Component、@Configuration、@Service、@Controller等，就将其包装为bean定义，并加入candidates待返回上层</strong>。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202508/4e07e4acc3f644eaa24f11c3f924029c-FA510B9A55FFE67363EC3CDBB1035663.png?project=easyblog" /></p>
+<p>图4-8 判断是否为组件(候选)</p>
+<p>如，本文代码中的HelloWorld、TestController。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202508/29e03dbda7b9477da6fcba21da1e8ed1-753A127C762E9B668231A68F91141C6F.png?project=easyblog" /></p>
+<p>图4-9 将字节码对应的class对象包装为bean定义信息</p>
+<h5 id="hidp-heading-9">6、将bean定义加入ioc</h5>
+<p>findCandidateComponents()方法返回调用后，进一步处理候选对象，如判断ioc容器中是否已经存在了同名的bean定义等。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202508/da36674d23544ebcbe86f3c1d3870eeb-7D049ADD32E1828F1F36818BE17B03FA.png?project=easyblog" /></p>
+<p>图4-10 判断候选是否符合加入ioc的条件</p>
+<p>如果checkCandidate(beanName, candidate)为true，则最终将bean定义信息加入ioc容器。</p>
+<pre><code class="language-java">if (checkCandidate(beanName, candidate)) {
+    BeanDefinitionHolder definitionHolder = new BeanDefinitionHolder(candidate, beanName);
+    definitionHolder = AnnotationConfigUtils.applyScopedProxyMode(scopeMetadata, definitionHolder, this.registry);
+    beanDefinitions.add(definitionHolder);
+    // 将definitionHolder加入registry(ioc)
+    registerBeanDefinition(definitionHolder, this.registry);
+}
+</code></pre>
+<h5 id="hidp-heading-10">7、进一步处理bean定义</h5>
+<p>类似的，在this.componentScanParser.parse(componentScan, sourceClass.getMetadata().getClassName())返回后，对已加入ioc容器的bean定义(scannedBeanDefinitions)进行处理。</p>
+<pre><code class="language-java">for (BeanDefinitionHolder holder : scannedBeanDefinitions) {
+    // ...
+    if (ConfigurationClassUtils.checkConfigurationClassCandidate(bdCand, this.metadataReaderFactory)) {
+        parse(bdCand.getBeanClassName(), holder.getBeanName());v
+    }
+}
+</code></pre>
+<p>因为加入ioc容器的bean定义本身，也可能是配置类，所以需要进一步处理。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202508/34a73b723a194066b90f2f8943678dc4-77BC6044DD4E8561BDF6DA02A99EE15A.png?project=easyblog" /></p>
+<p>图4-11 判断已解析的bean定义是否为配置类-1</p>
+<p>如果是配置类的话，就以解析配置类的方式，对其进行解析：</p>
+<pre><code class="language-text">- ConfigurationClassUtils.checkConfigurationClassCandidate(bdCand, this.metadataReaderFactory)
+- parse(bdCand.getBeanClassName(), holder.getBeanName());
+-- ConfigurationClass configClass = new ConfigurationClass(reader, beanName);
+-- processConfigurationClass(configClass, DEFAULT_EXCLUSION_FILTER);
+</code></pre>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202508/8c96c8a883714c98b0b77deb7b32ea20-E9932037AD4D3D03FD2D5C57C9824625.png?project=easyblog" /></p>
+<p>图4-12 判断已解析的bean定义是否为配置类-2</p>
+<p>至于判断条件，<strong>首先看bean定义是否使用了@Configuration注解，其次看是否使用了@ImportResource、@Import、@Component(包括其他派生注解)、@ComponentScan，最后看里是否含有@Bean标注的方法。</strong></p>
+<p>也就是说，使用了@Component或其派生注解的类，都会被spring看做是一个配置类，更准确地说，是一个<strong>轻量级的配置类</strong>。</p>
+<pre><code class="language-java">// CONFIGURATION_CLASS_ATTRIBUTE: configurationClass
+// CONFIGURATION_CLASS_LITE: lite
+if (config != null || Boolean.TRUE.equals(beanDef.getAttribute(CANDIDATE_ATTRIBUTE)) || isConfigurationCandidate(metadata)) {
+    beanDef.setAttribute(CONFIGURATION_CLASS_ATTRIBUTE, CONFIGURATION_CLASS_LITE);
+}
+</code></pre>
+<h5 id="hidp-heading-11">8、@Import相关</h5>
+<p>@ComponentScan注解相关的逻辑执行完后，开始处理@Import注解。</p>
+<pre><code class="language-java">// Process any @Import annotations
+processImports(configClass, sourceClass, getImports(sourceClass), filter, true);
+</code></pre>
+<p>@Import是spring提供的另一种导入组件的方式，主要是为了导入第三方组件而设置，使用时需要实现ImportSelector或ImportBeanDefinitionRegistrar接口，像springboot就是用这种方式来整合第三方依赖。</p>
+<p>由于本文并没有用到，所以... 略。</p>
+<blockquote>
+<p>基本的原理都是一样的，筛选 -&gt; 解析 -&gt; 加入ioc</p>
+</blockquote>
+<pre><code class="language-java">@Target(ElementType.TYPE)
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+public @interface Import {
+	/**
+	 * {@link Configuration @Configuration}, {@link ImportSelector},
+	 * {@link ImportBeanDefinitionRegistrar}, or regular component classes to import.
+	 */
+	Class&lt;?&gt;[] value();
+}
+</code></pre>
+<h5 id="hidp-heading-12">9、@ImportResource相关</h5>
+<p>@ImportResource也一样，略。</p>
+<pre><code class="language-java">AnnotationAttributes importResource = AnnotationConfigUtils.attributesFor(sourceClass.getMetadata(), ImportResource.class);
+// ...
+</code></pre>
+<h5 id="hidp-heading-13">10、@Bean相关</h5>
+<h6 id="hidp-heading-14">1) 包装@Bean方法为BeanMethod</h6>
+<p>接着处理@Bean注解相关部分，如果存在，则包装为BeanMethod类型，并加入当前配置类中(但未调用)。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202508/fb80faf3ba3a4df7b9b1be0bcc82ef12-B7C03A02DFBF74BA4ADBCC474CEE836A.png?project=easyblog" /></p>
+<p>图4-13 获取@Bean标注的方法</p>
+<p>在以上步骤都运行后，调用当前节点的最终处理方法(<em>不过，因为本案例比较简单，这个方法里什么都没做</em>)。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202508/2d9bb3d488a248588beef3e97a6a560f-0C2AF8FE7013466FDB6DC337BB259002.png?project=easyblog" /></p>
+<h6 id="hidp-heading-15">2) 将BeanMethod包装为bean定义，并加入ioc</h6>
+<p>图4-14 调用deferredImportSelectorHandler.process()方法</p>
+<p>主配置类解析完毕，最后的最后，加载配置类中附加的bean定义，如@Bean标注的方法等。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202508/7a6f1bff6d35478e9c81e071fd93dc7e-1E0B72D5BD6DD029AED75FC6870364F7.png?project=easyblog" /></p>
+<p>图4-15 调用this.reader.loadBeanDefinitions(configClasses)</p>
+<p>如果存在BeanMethod的话，就将其包装为bean定义，并加入ioc容器。</p>
+<pre><code class="language-java">for (BeanMethod beanMethod : configClass.getBeanMethods()) {
+    loadBeanDefinitionsForBeanMethod(beanMethod);
+}
+</code></pre>
+<p>至此，关于spring装载bean定义的源码分析到尾声了。</p>
+<h4 id="hidp-heading-16">四、结语</h4>
+<p>本文粗浅地分析了从创建bean定义到加入ioc容器的过程。</p>
+<p>spring提供了多种定义(标记)组件的方式，如@Configuration、@Component、@Bean等，编译为字节码后，在运行时通过类加载器获取得，符合条件的对象会被包装为bean定义，并加入ioc容器，后续会通过这些bean定义信息来实例化组件(本文未涉及的部分)。</p>
+<p>其中的关键在于ConfigurationClassPostProcessor类，它是spring解析组件的入口，以及@ComponentScan注解，只有启用了该注解，spring才会扫描除配置类以外的组件。</p>
+<p>以上。</p>
+
+                        </div>
+                    </div>
+                </article>
+                <div class="comment-wrap">
+                        <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+  <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+                        <div id="gitalk-container"></div>
+                        <script>
+                            const gitalk = new Gitalk({
+                                clientID: 'ae1422e500a8b19fb1fc',
+                                clientSecret: '9f387db6a84a4945cdf5dc743c16ce25fdef6b76',
+                                repo: 'github-pages',      // The repository of store comments,
+                                owner: 'errr0l',
+                                admin: ['errr0l'],
+                                id: location.pathname,      // Ensure uniqueness and length less than 50
+                                distractionFreeMode: false  // Facebook-like distraction free mode
+                            });
+                            gitalk.render('gitalk-container');
+                        </script>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="back">返回</div>
+</div>
+    <script src="../js/data.js"></script>
+    <script src="../js/lazy.js"></script>
+    <script src="../js/search.js"></script>
+    <script src="../js/menu.js"></script>
+<script src="../js/toc.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/viewerjs/1.11.7/viewer.min.js"></script>
+<script>
+    let back = document.querySelector(".back");
+    back.addEventListener("click", function () {
+        window.history.go(-1);
+    });
+    const viewer = new Viewer(document.querySelector('.markdown-body .content'), {
+        toolbar: {
+            zoomIn: 4,
+            zoomOut: 4,
+            oneToOne: 4,
+            reset: 0,
+            prev: 4,
+            play: 0,
+            next: 4,
+            rotateLeft: 0,
+            rotateRight: 0,
+            flipHorizontal: 0,
+            flipVertical: 0,
+        },
+    });
+</script>
+</body>
+</html>

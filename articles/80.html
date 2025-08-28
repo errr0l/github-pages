@@ -262,14 +262,14 @@
 <p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202507/73a2a442aaf64907a652ae81994d88bb-73C360A59829D44E40BD0D870A12B1DB.png?project=easyblog" /></p>
 <p><em>图5 源码2</em></p>
 <h4 id="hidp-heading-2">3、检测环境</h4>
-<p>一般情况下，js逆向都需要进行该步骤，尤其是本文这种&quot;黑箱环境&quot;，里面很可能就存在环境检测机制，比方说如果确实某些参数时，终止运行代码。</p>
-<p>只不过之前涉及到的js逆向，代码简单，也没有经过混淆，比较容易看到所依赖的参数，window、document、location等，可以直接补充。</p>
-<p>检测方法是通过Proxy来实现，用于为指定对象创建代理后，劫持其对象属性的读取。</p>
-<p>使用的方式是，将该方法注入到目标网页中，先在实际的环境中运行一遍，并查看输出。</p>
-<p>一般是为document、window创建代理对象，比方说本案例是window对象。</p>
+<p>一般情况下，js逆向都需要进行该步骤，尤其是本文这种&quot;黑箱环境&quot;，里面很可能就存在环境检测机制，比方说如果缺少某些参数时，终止运行代码。</p>
+<p>只不过之前涉及到的js逆向，代码较为简单，也没有经过混淆，容易看出所依赖的参数，window、document、location等，可以直接补全。</p>
+<p><strong>本次的检测方法是通过Proxy来实现的，用于为指定对象创建代理后，劫持其属性的读取操作。</strong></p>
+<p>使用的方式是将该检测方法注入到目标网页中，在实际的环境中运行一遍，并查看输出，以便确认该代码所依赖的环境数据。</p>
+<p>目标对象一般是document、window这种浏览器的顶级对象，比方说本案例是window。</p>
 <p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202507/e9a83cabfd904aeca6da5a6ec18528e9-610704937A631454CAF337730B96E7ED.png?project=easyblog" /></p>
 <p><em>图6 注入源码位置</em></p>
-<p>因此，可以在断点处，注入检测环境代码，可以选择使用chrome的代码片段功能保存，并执行，再往下执行。</p>
+<p>因此，可以在断点处，注入检测环境代码，可以使用chrome的代码片段功能保存，并运行该片段，再往下执行。</p>
 <pre><code class="language-js">function createProxy(obj, objName) {
     const fields = [&quot;window&quot;];
     return new Proxy(obj,{
@@ -325,13 +325,12 @@
 
 // 创建代理对象
 ___ = createProxy(window, 'window');
-document = createProxy(document, 'document');
 </code></pre>
 <p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202507/3cec46651fca4470b19f2e4af23479be-0D62428FB54B3A0175D8E8B443C37081.png?project=easyblog" /></p>
 <p><em>图7 浏览器环境</em></p>
-<p>确实用到了较多的属性（截图里只显示了部分）。</p>
+<p>如图7所示，代码里确实用到了较多的属性（截图里只显示了部分）。</p>
 <h4 id="hidp-heading-3">4、补环境</h4>
-<p>这种情况下，手动补环境着实比较麻烦，因此可借用一些辅助工具来帮助完成工作，如jsdom。</p>
+<p>这种情况下，手动补环境着实比较麻烦，因此可借用一些现成的辅助工具来帮助完成，如jsdom。</p>
 <p>它可以很好地模拟浏览器环境。</p>
 <blockquote>
 <p>main.js</p>
@@ -355,7 +354,8 @@ require(&quot;./1&quot;);
 <p><em>图8 本地环境</em></p>
 <h4 id="hidp-heading-4">5、执行代码</h4>
 <p>不出意外的话，其实到这里就这样执行主业务代码了。</p>
-<p>跟浏览器环境一样，使用XMLHttpRequest发送请求，可以把代码直接拷贝下来，但毕竟只是模拟浏览器环境，因此需要做一些修改。</p>
+<p>跟浏览器环境一样，使用XMLHttpRequest发送请求，可以把代码直接拷贝下来。</p>
+<p>但毕竟只是模拟浏览器环境，因此需要做一些修改。</p>
 <p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202507/e99aba1beb7d469186ef92e2fcddc791-ECB514BC970ADF822BCE8A953F6D5539.png?project=easyblog" /></p>
 <p><em>图9 发送xhr请求代码</em></p>
 <pre><code class="language-js">function getdata(page){
@@ -401,7 +401,7 @@ require(&quot;./1&quot;);
 window.page = 2;
 getdata(window.page);
 </code></pre>
-<p>不出意外的话，意外就要来了。。</p>
+<p>果不其然，不出意外的话，意外就来了。。</p>
 <p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202507/fd39fb36f2854e85891e656fc370edae-B496612C7D631752BE3B8C17DFA195D6.png?project=easyblog" /></p>
 <p><em>图10 无法正常发送xhr请求</em></p>
 <p>与浏览器环境对比发现，劫持属性输出的内容有些不一样。</p>
@@ -412,9 +412,9 @@ getdata(window.page);
 <p>比如：678、677、772这样的数据，是点击第二页时，x轴的轨迹参数；而79、20是y轴的轨迹参数。</p>
 <p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202507/1ecac5286f56418e822c0efffe7a0fca-4F45BFA39744C8832A36D491909691AF.png?project=easyblog" /></p>
 <p><em>图12 网页交互</em></p>
-<p>最终得出了生成数据的算法。</p>
+<p>最终得出了一个简易版生成模拟数据的算法。</p>
 <pre><code class="language-js">// 模拟鼠标点位数据
-// 以第三页的坐标为基准，前后加减50
+// 以第三页的坐标为基准，保持y轴不变，x轴前后加减(页码 * 50)
 function generatePoint(paganation) {
     let x = 721 + (paganation - 3) * 50;
     return `${x}m128,${x}m128,${x}m127,${x}d127,${x}u127`;
@@ -462,13 +462,15 @@ function generatePoint(paganation) {
     });
 }
 </code></pre>
-<p>但即便修改代码后，发现还是无法正常发送请求，可能是这样设置轨迹参数不合法，导致了源码内部运行一些逻辑的时候，出现了错误。</p>
+<p>更新后，再次运行。</p>
 <p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202507/17468fdb8674431f91d098e8f2ecb51d-98A882B61DC46AECE493C035BBEA7C2B.png?project=easyblog" /></p>
 <p><em>图13 再次发送失败</em></p>
-<p>但是，在图13中，看到了一个很不得了的东西，已经用红框标注了...</p>
-<p>事实上，它就是本文的目标，加密参数v。</p>
-<p>所以，虽然没能正常发送xhr请求，但其实本文的目的已经达到了，此时只需将代码稍作修改，也能达到正常发送请求的效果。</p>
-<p>修改createProxy()如下：</p>
+<p>但发现还是无法正常发送请求，猜测是设置轨迹参数的方式不合法，导致了内部代码执行某些逻辑的时候，出现了错误。</p>
+<p>不过，也并不是没有收获，而且是个重量级的东西，就在图13中，已经用红框标注了...</p>
+<p>事实上，它正是加密参数v。</p>
+<p>所以，虽然没能正常发送xhr请求，但其实本文的目的已经达到了。</p>
+<p>此时只需将代码稍作修改，也能达到正常发送请求的效果。</p>
+<p>调整createProxy()方法代码如下：</p>
 <pre><code class="language-js">function createProxy(obj, objName) {
     return new Proxy(obj, {
         get(target, prop, receiver) {
@@ -504,11 +506,11 @@ function generatePoint(paganation) {
     });
 }
 </code></pre>
-<p>再修改getdata()方法的代码为：</p>
+<p>同步调整getdata()方法：</p>
+<p>即将xhr.open()当做是获取加密数据的方法，生成链接后，再使用其他xhr库请求，axios、node-fetch等。</p>
 <pre><code class="language-js">function getdata(page){
     page = page || 2;
     const xhr = new window.XMLHttpRequest();
-    // 将xhr.open()当做是获取加密数据的方法;
     const href = `https://match.yuanrenxue.cn/match/18`;
     const _url = `${href}data?page=${page}`;
     xhr.open('GET', _url, true);
@@ -537,7 +539,7 @@ getdata(2);
 https://match.yuanrenxue.cn/match/18data?page=2&amp;t=1753002884&amp;v=sT68wsFnWIFX7L7jEbaUzcI1WpgGQPQ72dRZgoyXBTXw6dtiX+WJeydXeNqXuYRn
 </code></pre>
 <p>格式跟浏览器环境一模一样，应该没啥问题。</p>
-<p>但如果使用生成的url请求服务器的话，会失败，这是由于网站做了限制，需要登录后才可以操作，不过，这已经不是本文的讨论范围了。</p>
+<p>但如果使用该url请求服务器的话，会失败，这是由于网站做了限制，需要登录后才可以操作，不过，这已经不是本文的讨论范围了。</p>
 <p>本文完。</p>
 
                         </div>
