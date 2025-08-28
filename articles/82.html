@@ -89,7 +89,7 @@
         });
     </script>
         <meta name="keywords" content="spring,源码,java">
-        <meta name="description" content="bean定义加入ioc容器的源码分析；本文是spring框架源码学习系列的第一篇。当然，也并非那种吃透代码、扣细节程度的分析，只是单纯从一个开发者的角度，简单研究一些常用的组件的添加、运作方式。从整体上认识框架，了解其工作原理...">
+        <meta name="description" content="bean定义加入ioc容器的源码分析；本文是spring框架源码学习系列的第一篇。当然，也并非那种吃透代码、扣细节程度的分析，只是单纯从一个开发者的角度，简单研究一些常用的组件的创建，添加和运作方式。从整体上认识框架，了解其工作原理...">
     <link rel="stylesheet" href="../css/article.css">
     <link rel="stylesheet" href="../css/markdown/github-markdown.css">
     <link rel="stylesheet" href="../css/markdown/github-markdown-light.css">
@@ -212,16 +212,16 @@
                             </div>
                         <div class="content">
                             <p>本文是spring框架源码学习系列的第一篇。</p>
-<p>当然，也并非那种吃透代码、扣细节程度的分析，只是单纯从一个开发者的角度，简单研究一些常用的组件的添加、运作方式。</p>
+<p>当然，也并非那种吃透代码、扣细节程度的分析，只是单纯从一个开发者的角度，简单研究一些常用的组件的创建，添加和运作方式。</p>
 <p>从整体上认识框架，了解其工作原理，对排查和解决问题都很有帮助，提升框架使用熟练度的同时，也可以在一定程度上定制和拓展框架，所以个人认为，这是有必要的一环。</p>
 <p>文章要分析的是关于spring如何生成bean定义并加入ioc的源码，比较接近框架“底层”。</p>
-<p>一般来说，从java类转为spring bean组件要经历这样的一个过程：</p>
+<p>一般来说，从java类转为spring bean要经历一个过程：</p>
 <blockquote>
 <p>java类 -&gt; 字节码 -&gt; class -&gt; bean定义 -&gt; ioc -&gt; bean -&gt; ioc</p>
 </blockquote>
-<p>需要先转换为bean定义，再创建bean对象。</p>
-<p>但<strong>本文研究的只是其中的一部分，从class到ioc，即：class -&gt; bean定义 -&gt; ioc</strong>，因此相对来说没那么复杂。</p>
-<p>以一个最简单的spring应用为案例，并尽可能地排除其他干扰因素，着重分析这个转换的过程。</p>
+<p>也就是说，<strong>在spring中，是先有bean定义，才有bean对象</strong>。</p>
+<p>但<strong>本文研究的只是其中的一部分，从class到ioc，主要是关于spring如何创建bean定义及如何加入ioc容器的问题</strong>，因此相对来说没那么复杂。</p>
+<p>以下将尽可能排除其他干扰因素，用一个最简单的spring应用为案例，来分析这个转换的过程。</p>
 <blockquote>
 <p>bean定义，即<a href="https://docs.spring.io/spring-framework/reference/core/beans/child-bean-definitions.html#page-title">BeanDefinition</a>，是spring框架中的内部数据结构，它是对一个bean的元数据描述(Metadata)，如类信息、作用域、构造参数、依赖、属性、初始化方法等等，spring会根据bean定义来实例化bean</p>
 </blockquote>
@@ -255,6 +255,7 @@ public class AppConfig {
 // 启动类
 public class Debug5Application {
     public static void main(String[] args) {
+        // 使用基于注解的ApplicationContext
         final AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
         final String[] definitionNames = context.getBeanDefinitionNames();
         for (String name : definitionNames) {
