@@ -208,7 +208,7 @@
                             </span>
                         </div>
                             <div class="cover mg-b-10">
-                                <img src="../image/portal/202508/4c154bb62cf24323a28029efc42f3afc-spring-logo.png?project=easyblog" alt="">
+                                <img src="../image/portal/202508/93b4acc674b244ccb301f33c9aa304f1-990D860823CAFBCC070F1E8ADBA18DC5.png?project=easyblog" alt="">
                             </div>
                         <div class="content">
                             <p>本文是spring框架源码学习系列的第一篇。</p>
@@ -310,7 +310,7 @@ public class TestController {
 </code></pre>
 <p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202508/1b689da235a34b44a5df449bcb9bb595-06D7AC4E028608F693086B79A9790833.png?project=easyblog" /></p>
 <p>图3-1 执行到postProcessBeanDefinitionRegistry()方法中断点处</p>
-<h4 id="hidp-heading-3">四、调用ConfigurationClassPostProcessorr#postProcessBeanDefinitionRegistry()</h4>
+<h4 id="hidp-heading-3">四、调用ConfigurationClassPostProcessorr</h4>
 <h5 id="hidp-heading-4">1、筛选配置类</h5>
 <p>spring会先将ioc容器中的所有bean定义都当做是配置类候选，但经筛选后，只剩AppConfig。</p>
 <p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202508/04ebbc426800490fb081f9b2350f64ba-AE291488B4E0997BEAA07A03972116A9.png?project=easyblog" /></p>
@@ -323,8 +323,7 @@ public class TestController {
 <p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202508/978e530a6dff463fb48f36314dcc366e-B9529E1C4073B8349162C8A10185766A.png?project=easyblog" /></p>
 <p>图4-2 解析候选</p>
 <p>将配置类bean定义包装为ConfigurationClass后再处理。</p>
-<pre><code class="language-text">- ConfigurationClass configClass = new ConfigurationClass(
-				beanDef.getMetadata(), beanName, (beanDef instanceof ScannedGenericBeanDefinition));
+<pre><code class="language-text">- ConfigurationClass configClass = new ConfigurationClass(beanDef.getMetadata(), beanName, (beanDef instanceof ScannedGenericBeanDefinition));
 - processConfigurationClass(configClass, DEFAULT_EXCLUSION_FILTER);
 -- doProcessConfigurationClass(configClass, sourceClass, filter);
 </code></pre>
@@ -409,11 +408,7 @@ processImports(configClass, sourceClass, getImports(sourceClass), filter, true);
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface Import {
-	/**
-	 * {@link Configuration @Configuration}, {@link ImportSelector},
-	 * {@link ImportBeanDefinitionRegistrar}, or regular component classes to import.
-	 */
-	Class&lt;?&gt;[] value();
+    Class&lt;?&gt;[] value();
 }
 </code></pre>
 <h5 id="hidp-heading-12">9、@ImportResource相关</h5>
@@ -428,8 +423,8 @@ public @interface Import {
 <p>图4-13 获取@Bean标注的方法</p>
 <p>在以上步骤都运行后，调用当前节点的最终处理方法(<em>不过，因为本案例比较简单，这个方法里什么都没做</em>)。</p>
 <p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202508/2d9bb3d488a248588beef3e97a6a560f-0C2AF8FE7013466FDB6DC337BB259002.png?project=easyblog" /></p>
-<h6 id="hidp-heading-15">2) 将BeanMethod包装为bean定义，并加入ioc</h6>
 <p>图4-14 调用deferredImportSelectorHandler.process()方法</p>
+<h6 id="hidp-heading-15">2) 将BeanMethod包装为bean定义，并加入ioc</h6>
 <p>主配置类解析完毕，最后的最后，加载配置类中附加的bean定义，如@Bean标注的方法等。</p>
 <p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202508/7a6f1bff6d35478e9c81e071fd93dc7e-1E0B72D5BD6DD029AED75FC6870364F7.png?project=easyblog" /></p>
 <p>图4-15 调用this.reader.loadBeanDefinitions(configClasses)</p>
