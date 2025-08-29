@@ -214,13 +214,12 @@
                             <p>本文是spring框架源码学习系列的第一篇。</p>
 <p>当然，也并非那种吃透代码、扣细节程度的分析，只是单纯从一个开发者的角度，简单研究一些常用的组件的创建，添加和运作方式。</p>
 <p>从整体上认识框架，了解其工作原理，对排查和解决问题都很有帮助，提升框架使用熟练度的同时，也可以在一定程度上定制和拓展框架，所以个人认为，这是有必要的一环。</p>
-<p>文章要分析的是关于spring如何生成bean定义并加入ioc的源码，比较接近框架“底层”。</p>
-<p>一般来说，从java类转为spring bean要经历一个过程：</p>
+<p>文章要分析的是比较接近框架“底层”的源码。一般来说，从java类转为spring bean要经历一个过程：</p>
 <blockquote>
 <p>java类 -&gt; 字节码 -&gt; class -&gt; bean定义 -&gt; ioc -&gt; bean -&gt; ioc</p>
 </blockquote>
-<p>也就是说，<strong>在spring中，是先有bean定义，才有bean对象</strong>。</p>
-<p>但<strong>本文研究的只是其中的一部分，从class到ioc，主要是关于spring如何创建bean定义及如何加入ioc容器的问题</strong>，因此相对来说没那么复杂。</p>
+<p>也就是说，<strong>在spring中，是先有bean定义，才有bean对象</strong>，意识到这一点很重要。</p>
+<p>但<strong>本文研究的只是其中的一部分，从class到ioc，即: 字节码 -&gt; class -&gt; bean定义，主要是关于spring如何创建bean定义，以及如何加入ioc容器的问题</strong>，因此相对来说没那么复杂。</p>
 <p>以下将尽可能排除其他干扰因素，用一个最简单的spring应用为案例，来分析这个转换的过程。</p>
 <blockquote>
 <p>bean定义，即<a href="https://docs.spring.io/spring-framework/reference/core/beans/child-bean-definitions.html#page-title">BeanDefinition</a>，是spring框架中的内部数据结构，它是对一个bean的元数据描述(Metadata)，如类信息、作用域、构造参数、依赖、属性、初始化方法等等，spring会根据bean定义来实例化bean</p>
@@ -246,7 +245,7 @@
 | | | | | | | |___AppConfig.java
 </code></pre>
 <p>其中，AppConfig为主配置类，Debug5Application为启动类，HelloWorld和TestController是没有任何业务逻辑的普通类。</p>
-<pre><code class="language-java">// 配置类
+<pre><code class="language-java">// 配置类; 启用组件扫描功能;
 @Configuration
 @ComponentScan
 public class AppConfig {
@@ -311,7 +310,7 @@ public class TestController {
 </code></pre>
 <p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202508/1b689da235a34b44a5df449bcb9bb595-06D7AC4E028608F693086B79A9790833.png?project=easyblog" /></p>
 <p>图3-1 执行到postProcessBeanDefinitionRegistry()方法中断点处</p>
-<h4 id="hidp-heading-3">四、调用ConfigurationClassPostProcessorr</h4>
+<h4 id="hidp-heading-3">四、调用ConfigurationClassPostProcessor</h4>
 <h5 id="hidp-heading-4">1、筛选配置类</h5>
 <p>spring会先将ioc容器中的所有bean定义都当做是配置类候选，但经筛选后，只剩AppConfig。</p>
 <p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202508/04ebbc426800490fb081f9b2350f64ba-AE291488B4E0997BEAA07A03972116A9.png?project=easyblog" /></p>
@@ -437,8 +436,10 @@ public @interface Import {
 <p>至此，关于spring装载bean定义的源码分析到尾声了。</p>
 <h4 id="hidp-heading-16">四、结语</h4>
 <p>本文粗浅地分析了从创建bean定义到加入ioc容器的过程。</p>
-<p>spring提供了多种定义(标记)组件的方式，如@Configuration、@Component、@Bean等，编译为字节码后，在运行时通过类加载器获取得，符合条件的对象会被包装为bean定义，并加入ioc容器，后续会通过这些bean定义信息来实例化组件(本文未涉及的部分)。</p>
-<p>其中的关键在于ConfigurationClassPostProcessor类，它是spring解析组件的入口，以及@ComponentScan注解，只有启用了该注解，spring才会扫描除配置类以外的组件。</p>
+<p>其中的关键在于ConfigurationClassPostProcessor类，它是spring解析组件的入口，以及@ComponentScan注解，只有启用了该注解，spring才会扫描除主配置类以外的组件。</p>
+<p>有多种定义(标记)组件的方式，如@Component、@Configuration、@Bean等，使用这些注解标注的类编译为字节码后，在运行时通过类加载器获取得，并且会被包装为bean定义加入ioc容器。</p>
+<p>同时存在先后顺序：使用@Component及其派生注解的对象是首选，其次才是@Bean。</p>
+<p>后续会通过这些bean定义信息来实例化组件(本文未涉及的部分)。</p>
 <p>以上。</p>
 
                         </div>
