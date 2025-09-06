@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>bean加入ioc容器的源码分析 - 小埃的个人博客</title>
+    <link rel="stylesheet" href="../css/reset.css">
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/index.css">
+    <link rel="stylesheet" href="../css/header.css">
+    <link rel="stylesheet" href="../css/mobile.css">
+    <link rel="stylesheet" href="../css/theme-light.css">
+    <link rel="shortcut icon" href="../favicon.ico" type="image/x-icon">
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?d1fc0144cbb354a3f8442b7ba568bc2f";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+
+        window.addEventListener('DOMContentLoaded', () => {
+            let headerEle = document.getElementById('header');
+            let eleHeight = headerEle.offsetHeight;
+            let lastScrollTop = 0;
+            let topAnchor = 0; // 某个方向的锚点
+            let downAnchor = 0;
+            let stylTop = "-" + eleHeight + "px";
+            let stylTop2 = "0";
+            let threshold = 180;
+            function headerEleVisibleHandler() {
+                let scrollTop = document.documentElement.scrollTop;
+                // 向下滚动
+                if (scrollTop > lastScrollTop) {
+                    if (downAnchor !== 0) {
+                        downAnchor = 0;
+                    }
+                    if (topAnchor === 0) {
+                        topAnchor = scrollTop;
+                    }
+                    if ((scrollTop > threshold || scrollTop - topAnchor > threshold) && headerEle.style.top !== stylTop) {
+                        headerEle.style.top =  stylTop;
+                    }
+                }
+                // 向上
+                else {
+                    if (topAnchor !== 0) {
+                        topAnchor = 0;
+                    }
+                    if (downAnchor === 0) {
+                        downAnchor = scrollTop;
+                    }
+                    if ((scrollTop + threshold > downAnchor) && headerEle.style.top === stylTop) {
+                        headerEle.style.top = stylTop2;
+                    }
+                }
+                lastScrollTop = scrollTop;
+            }
+
+            function throttleWrapper(fn, options) {
+                if (!options) {
+                    options = {};
+                }
+                let timer = null;
+                const { timeout } = options;
+
+                const _setTimeout = () => {
+                    timer = window.setTimeout(() => {
+                        window.clearTimeout(timer);
+                        timer = null;
+                    }, timeout);
+                    return timer;
+                }
+
+                return function (...args) {
+                    if (timer) {
+                        return;
+                    }
+                    timer = -1;
+                    let result = fn.apply(this, args);
+                    _setTimeout();
+                    return result;
+                }
+            }
+            headerEleVisibleHandler = throttleWrapper(headerEleVisibleHandler, { timeout: 200 });
+            window.addEventListener("scroll", headerEleVisibleHandler);
+        });
+    </script>
+        <meta name="keywords" content="spring,源码">
+        <meta name="description" content="bean加入ioc容器的源码分析；本文是spring框架源码学习系列的第二篇。文章内容基于上一篇，<<bean定义加入ioc容器的源码分析>>，即完成注册bean定义之后的流程。主要是关于bean的生命周期和依赖注入...">
+    <link rel="stylesheet" href="../css/article.css">
+    <link rel="stylesheet" href="../css/markdown/github-markdown.css">
+    <link rel="stylesheet" href="../css/markdown/github-markdown-light.css">
+    <link rel="stylesheet" href="../css/gittalk-cover.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/viewerjs/1.11.7/viewer.min.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</head>
+<body>
+<div id="app">
+    <div id="header">
+    <div id="bar">
+        <div class="container mg-0-auto d-f pos-r">
+            <div class="logo">
+                <a href="../" class="nav-link" style="margin-right: 10px;">
+                    <img src="../image/portal/logo.jpg" alt="小埃的个人博客">
+                </a>
+            </div>
+            <div class="right">
+                <ul class="nav f-l">
+                        <li class="nav-item">
+                            <a href="../index.html" class="nav-link active">
+                                <span>首页</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="../category.html" class="nav-link ">
+                                <span>分类</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="../about.html" class="nav-link ">
+                                <span>关于</span>
+                            </a>
+                        </li>
+                </ul>
+                <div class="eb-title">
+                    小埃的个人博客
+                </div>
+                    <div id="search">
+                        <input type="text" id="search-input" data-prefix="../" placeholder="搜索" autocomplete="off" />
+                        <span class="search-icon t-a">
+                            <img class="el-icon-search" src="../image/portal/search.png" width="16" height="16">
+                        </span>
+                        <div id="search-result">
+                            <input type="text" class="input-1" id="search-input-2" data-prefix="../" placeholder="请输入" autocomplete="off" />
+                            <div class="content">
+                            </div>
+                            <div class="arrow"></div>
+                        </div>
+                    </div>
+
+                <div class="eb-menu">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-list-ul" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M5 11.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm-3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm0 4a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm0 4a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
+                    </svg>
+                </div>
+            </div>
+            <div id="sc-box">
+                <div class="wrapper">
+                        <div class="side-card b-s-1 mg-b-10">
+                            <div class="wrapper">
+                                <h2 class="item title">
+                                    <span>相关文章</span>
+                                </h2>
+                                <div class="item content">
+                                        <div class="item1 ">
+                                            <a href="../articles/82.html">
+                                                    bean定义加入ioc容器的源码分析
+                                            </a>
+                                        </div>
+                                        <div class="item1 ">
+                                            <a href="../articles/81.html">
+                                                    关于spring的循环依赖
+                                            </a>
+                                        </div>
+                                        <div class="item1 ">
+                                            <a href="../articles/40.html">
+                                                    探究MultipartResolver的运行原理
+                                            </a>
+                                        </div>
+                                        <div class="item1 ">
+                                            <a href="../articles/31.html">
+                                                    遇见黑心网站
+                                            </a>
+                                        </div>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    <div id="main">
+        <div class="container mg-0-auto pd-t-10">
+            <div class="wrapper">
+                <article class="mg-b-20">
+                    <div class="markdown-body">
+                        <div class="title">bean加入ioc容器的源码分析</div>
+                        <div class="item meta mg-b-10">
+                            <span class="author">由<a href="javascript:void(0);">errol</a>发表于<a href="#">2025-09-02</a></span>
+                            <span>|</span>
+                            <span class="time">
+                            分类为
+                            <a href="../categories/1.html">编程</a></span>
+                            <span>|</span>
+                            <span class="tags">
+                                标签为<a href="javascript:void(0);">spring</a>、<a href="javascript:void(0);">源码</a>
+                            </span>
+                        </div>
+                            <div class="cover mg-b-10">
+                                <img src="../image/portal/202509/c004851ba21d44e290dbbcc4351d93b2-spring-1.jpg?project=easyblog" alt="">
+                            </div>
+                        <div class="content">
+                            <p>本文是spring框架源码学习系列的第二篇。</p>
+<p>文章内容基于上一篇，<a href="./82.html">&lt;&lt;bean定义加入ioc容器的源码分析&gt;&gt;</a>，即完成注册bean定义之后的流程。</p>
+<p>主要是关于<a href="https://docs.spring.io/spring-framework/reference/core/beans/factory-nature.html#beans-factory-lifecycle">bean的生命周期</a>，以及<a href="https://docs.spring.io/spring-framework/reference/core/beans/dependencies/factory-collaborators.html#beans-constructor-injection">依赖注入</a>(Dependency Injection)的问题，二者同为spring的核心概念。</p>
+<p>与其他语言、框架中的概念类似，这里bean的生命周期也指对象从出生到销毁的周期性活动；而DI则是spring控制反转思想(Inverse Of Control)的主要实现方式。</p>
+<p>spring根据bean定义信息创建bean组件，并加入ioc容器。在这个过程中，bean的生命周期钩子会被触发，其中就包括通过依赖注入的方式，为bean设置属性的节点，分析其流程和运行方式是本文的主要目标。</p>
+<h4 id="hidp-heading-0">一、项目结构</h4>
+<p>为了能以同样简单的方式去分析，这里沿用了与上一篇文章里的同一套代码。</p>
+<pre><code class="language-text">.
+|___debug-5.iml
+|___pom.xml
+|___src
+| |___test
+| | |___java
+| |___main
+| | |___resources
+| | | |___application.properties
+| | |___java
+| | | |___com
+| | | | |___err0l
+| | | | | |___spring
+| | | | | | |___debug5
+| | | | | | | |___HelloWorld.java
+| | | | | | | |___Debug5Application.java
+| | | | | | | |___TestController.java
+| | | | | | | |___AppConfig.java
+</code></pre>
+<p>但也做了一点点改变：<strong>为TestController类中添加了helloWorld属性，以便分析bean注入依赖的源码</strong>。</p>
+<pre><code class="language-java">// 配置类; 启用组件扫描功能;
+@Configuration
+@ComponentScan
+public class AppConfig {
+}
+
+// 启动类
+public class Debug5Application {
+    public static void main(String[] args) {
+        // 使用基于注解的ApplicationContext
+        final AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
+        final String[] definitionNames = context.getBeanDefinitionNames();
+        for (String name : definitionNames) {
+            System.out.println(name);
+        }
+    }
+}
+
+@Component
+public class HelloWorld {
+    public String key = &quot;hello, &quot;;
+    public String value = &quot;world&quot;;
+}
+
+@Controller
+public class TestController {
+    @Autowired
+    private HelloWorld helloWorld;
+}
+</code></pre>
+<h4 id="hidp-heading-1">二、注册AutowiredAnnotationBeanPostProcessor</h4>
+<p>spring总是会将某种功能划分到某一个拓展点中，所以类似的，spring首先要向容器中注册实现了相关功能的bean定义。</p>
+<p>同为spring核心组件之一的<a href="https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/beans/factory/annotation/AutowiredAnnotationBeanPostProcessor.html">AutowiredAnnotationBeanPostProcessor</a>，是用于处理注入相关事项的BeanPostProcessor，像是常用的@Autowired、@Value、@Inject注解。</p>
+<blockquote>
+<p>还请注意，虽然看上去差不多，但BeanPostProcessor和上一篇文章中提到的BeanFactoryPostProcessor是两个不同的接口，BeanPostProcessor也是spring中的一个重要拓展点，是专门用于修改bean实例的接口，而BeanFactoryPostProcessor是专门用于修改bean定义的接口。</p>
+</blockquote>
+<p>可以是构造注入(Autowired Constructors)、方法注入(Autowired Method)、字段注入(Autowired Fields)，具体可查看文档。</p>
+<p>注册bean定义的方式，与注册ConfigurationClassPostProcessor基本一致，甚至是在同一个方法内。</p>
+<pre><code class="language-text">- new AnnotationConfigApplicationContext(AppConfig.class);
+-- this();
+--- new AnnotatedBeanDefinitionReader(this);
+---- AnnotationConfigUtils.registerAnnotationConfigProcessors(this.registry);
+
+// 如果容器内没有的话，就注册一个
+if (!registry.containsBeanDefinition(AUTOWIRED_ANNOTATION_PROCESSOR_BEAN_NAME)) {
+    RootBeanDefinition def = new RootBeanDefinition(AutowiredAnnotationBeanPostProcessor.class);
+    def.setSource(source);
+    // 将bean定义注册进registry
+    beanDefs.add(registerPostProcessor(registry, def, AUTOWIRED_ANNOTATION_PROCESSOR_BEAN_NAME));
+}
+</code></pre>
+<p>更准确的说，它是一个InstantiationAwareBeanPostProcessor类型，重写了postProcessProperties()，一个专门用于处理属性值的方法，在bean实例化完成之后执行。</p>
+<pre><code class="language-java">default PropertyValues postProcessProperties(PropertyValues pvs, Object bean, String beanName) throws BeansException {
+    return pvs;
+}
+</code></pre>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202509/a7ed01bc001547bbbafed39c0d7074ee-172F5F4E169495BF3A7A2EB77D7B88EB.png?project=easyblog" /></p>
+<p>图2-1 AutowiredAnnotationBeanPostProcessor类重写的postProcessProperties()方法</p>
+<p>在方法内设置断点后，启动应用。</p>
+<h4 id="hidp-heading-2">三、创建bean</h4>
+<p>注意，这里的“创建bean”是指，bean从无到有的完整流程，与后面的“实例化bean”做个区分。</p>
+<p>默认情况下，bean一般都为单例(Single Bean)，这是spring的默认作用域设置，指的是在同一个容器中，一个类只对应一个实例。</p>
+<p>创建bean的代码比较靠后，除了注册bean定义外，还有注册&amp;实例化BeanPostProcessor。</p>
+<p>比方说，前面注册的AutowiredAnnotationBeanPostProcessor是在以下步骤中完成的：</p>
+<blockquote>
+<p>registerBeanPostProcessors(beanFactory)</p>
+</blockquote>
+<p>以及初始化广播器和注册监听器等，这部分就不过多关注了。</p>
+<pre><code class="language-java">initApplicationEventMulticaster();
+registerListeners();
+</code></pre>
+<p>总而言之，就是要等到spring的环境都准备好后，才开始实例化bean。</p>
+<pre><code class="language-text">- new AnnotationConfigApplicationContext(AppConfig.class);
+-- refresh();
+--- invokeBeanFactoryPostProcessors(beanFactory);
+--- registerBeanPostProcessors(beanFactory);
+--- finishBeanFactoryInitialization(beanFactory);
+---- beanFactory.preInstantiateSingletons(); // 开始位置
+</code></pre>
+<p>先获取到所有的bean定义名称(这是在将bean定义加入ioc容器时添加的与bean定义一一对应的id)，通过名称获取到bean定义信息，再创建bean。</p>
+<pre><code class="language-java">// org.springframework.beans.factory.support.DefaultListableBeanFactory#preInstantiateSingletons
+
+List&lt;String&gt; beanNames = new ArrayList&lt;&gt;(this.beanDefinitionNames);
+
+for (String beanName : beanNames) {
+    // 获取到bean定义信息
+    RootBeanDefinition mbd = getMergedLocalBeanDefinition(beanName);
+    // 如果不是抽象的，且是单例模式时，调用preInstantiateSingleton()
+    if (!mbd.isAbstract() &amp;&amp; mbd.isSingleton()) {
+        CompletableFuture&lt;?&gt; future = preInstantiateSingleton(beanName, mbd);
+        if (future != null) {
+            futures.add(future);
+        }
+    }
+}
+</code></pre>
+<p>方法内部再进行一次判断，如果不是懒加载模式的话，调用创建方法：</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202509/d1feb428fed043dcb66b3e603d8fc42b-AC80E562EBAC07AA112569CE9B0F32E0.png?project=easyblog" /></p>
+<p>图3-1 创建bean</p>
+<p>不过，虽然定义为&quot;instantiateSingleton&quot;，但其实方法里又调用了getBean()，从根据方法名上看，其作用应该是&quot;获取bean&quot;，但结合两者的话，也不难推断出：</p>
+<blockquote>
+<p>getBean()有两种作用，即可以创建bean，又可以返回bean</p>
+</blockquote>
+<pre><code class="language-java">private void instantiateSingleton(String beanName) {
+    if (isFactoryBean(beanName)) {
+        // 略
+    }
+    else {
+        getBean(beanName);
+    }
+}
+</code></pre>
+<h4 id="hidp-heading-3">四、getBean()</h4>
+<p>在此处，更多的是指创建bean的作用。</p>
+<blockquote>
+<p>源码比较复杂，为了简化逻辑，这里只贴出创建一般bean的主要流程</p>
+</blockquote>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202509/75f153989f0141919c5f4e53051707a5-D77F528CAEC61123BDD4924BF4FB1F4A.png?project=easyblog" /></p>
+<p>图4-1 内部调用doGetBean()</p>
+<blockquote>
+<p>在java中，doXXX()方法，表示“真正要这么做了”的意思</p>
+</blockquote>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202509/76b75636f62f4211b33f616a55575f74-9F2DAC7EA59B812BD6D415A350FCB76D.png?project=easyblog" /></p>
+<p>图4-2 调用getSingleton()</p>
+<p>在getSingleton()方法里，先例行检查缓存中是否已经存在目标bean，如果不存在的话，才调用这个拉姆达表达式创建bean。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202509/f343f125cbea4e8e99a48493b62b17a2-3109CC37CCF2B862DEC9A1E6FF926502.png?project=easyblog" /></p>
+<p>图4-3 调用singletonFactory.getObject()</p>
+<h4 id="hidp-heading-4">五、bean的生命周期</h4>
+<p>在sring中，bean的生命周期分为以下7个阶段：</p>
+<table>
+<thead>
+<tr>
+<th>阶段</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1. 实例化（Instantiation）</td>
+<td>Spring 容器创建 Bean 的实例（通过构造函数或工厂方法）</td>
+</tr>
+<tr>
+<td>2. 属性赋值（Populate Properties）</td>
+<td>依赖注入（DI）：为 Bean 设置属性值和其他 Bean 的引用</td>
+</tr>
+<tr>
+<td>3. 初始化前（Before Initialization）</td>
+<td>调用 <code>BeanPostProcessor.postProcessBeforeInitialization()</code></td>
+</tr>
+<tr>
+<td>4. 初始化（Initialization）</td>
+<td>调用初始化方法（如 <code>@PostConstruct</code>、<code>InitializingBean.afterPropertiesSet()</code>、自定义 <code>init-method</code>）</td>
+</tr>
+<tr>
+<td>5. 初始化后（After Initialization）</td>
+<td>调用 <code>BeanPostProcessor.postProcessAfterInitialization()</code></td>
+</tr>
+<tr>
+<td>6. 使用中（In Use）</td>
+<td>Bean 就绪，可以被应用程序使用</td>
+</tr>
+<tr>
+<td>7. 销毁（Destruction）</td>
+<td>容器关闭时，调用销毁方法（如 <code>@PreDestroy</code>、<code>DisposableBean.destroy()</code>、自定义 <code>destroy-method</code>）</td>
+</tr>
+</tbody>
+</table>
+<p>由ioc容器全程管理，也可以介入，比方说前面提到的BeanPostProcessor接口，其实现类AutowiredAnnotationBeanPostProcessor，作用于bean实例化之后，如有需要，也可自行实现接口。</p>
+<p>以下将挑几个与本文相关度较高的阶段来分析。</p>
+<h5 id="hidp-heading-5">1、实例化bean</h5>
+<p>也就是从外部传入的拉姆达表达式。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202509/b8ab0d1f643a488d85e0704f270d8bd3-28BE9A5DB6E3467A5840C5615E0904C2.png?project=easyblog" /></p>
+<p>图5-1 调用createBean()</p>
+<pre><code class="language-text"># 方法所在类: org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory
+
+- createBean()
+-- Object beanInstance = doCreateBean(beanName, mbdToUse, args)
+--- instanceWrapper = createBeanInstance(beanName, mbd, args); // 实例化bean
+---- instantiateBean(beanName, mbd)
+----- getInstantiationStrategy().instantiate(mbd, beanName, this)
+</code></pre>
+<h5 id="hidp-heading-6">2、属性赋值</h5>
+<p>或者说依赖注入。</p>
+<blockquote>
+<p>虽然spring花费了比较多的篇幅来描述这个概念，但在我看来，就是“spring为对象实例填充属性”这么个事，不需要开发者参与</p>
+</blockquote>
+<p><strong>在此之前...</strong></p>
+<p>还需要提前把需要注入的参数列表解析出来，比方说，使用@Autowired标注的属性。</p>
+<p>这一步由AutowiredAnnotationBeanPostProcessor类来完成。</p>
+<pre><code class="language-text">- doCreateBean(beanName, mbdToUse, args)
+-- applyMergedBeanDefinitionPostProcessors(mbd, beanType, beanName)
+--- processor.postProcessMergedBeanDefinition(mbd, beanType, beanName)
+---- findInjectionMetadata(beanName, beanType, beanDefinition)
+----- findAutowiringMetadata(beanName, beanType, null)
+</code></pre>
+<p>若没有缓存，则为当前clazz创建注入元数据(即需要注入的参数列表)，并加入缓存，供后续使用。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202509/d02f4b273c614a988ef1da823e33bc94-7ED80DDA33780178EF47B2AABB9282FF.png?project=easyblog" /></p>
+<p>图5-2 创建注入参数列表-1</p>
+<p>大致的意思是，通过反射获取到clazz的属性，根据@Autowired、@Value等条件过滤，最后包装为<strong>AutowiredElement</strong>类型。</p>
+<p>其中，AutowiredElement类中有inject()方法，负责注入属性值。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202509/e84ea7f875974e878b372325a36e8068-70F3E2E5F112EA7EC604650E89642589.png?project=easyblog" /></p>
+<p>图5-3 创建注入参数列表-2</p>
+<p>方法注入同理，也是包装为AutowiredElement类型。</p>
+<p>最终，buildAutowiringMetadata()方法返回一个InjectionMetadata实例。</p>
+<pre><code class="language-java">// ...
+return InjectionMetadata.forElements(elements, clazz);
+</code></pre>
+<p>创建注入参数列表到这里就结束了。</p>
+<hr />
+<p>完成前置工作后，开始进行<strong>依赖注入</strong>。</p>
+<p>调用populateBean()方法，就是所谓的DI。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202509/3548e9f8b0cb49f89d2299fa5577a279-F3D580FB1F60F8170CE69493A7561EDF.png?project=easyblog" /></p>
+<p>图5-4 populateBean()</p>
+<p>先创建一个空的key-value表。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202509/cc2b7cbd0dc7432990677ae7af476409-4F451EBD1A53EDE2940EA74D4C90CB71.png?project=easyblog" /></p>
+<p>图5-5 new MutablePropertyValues()</p>
+<p>然后再次运行AutowiredAnnotationBeanPostProcessor组件，只不过，这次调用的是postProcessProperties()方法，来自InstantiationAwareBeanPostProcessor接口。</p>
+<p>InjectionMetadata可以直接从缓存中获取，因为在上一步中已经设置好了。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202509/28fb0ea6d7b748fead2690e0413ac458-33A8D8030B5D1AFAACA1685FE1F19976.png?project=easyblog" /></p>
+<p>图5-6 开始注入属性</p>
+<p>遍历上一步解析的参数列表，并调用inject()方法。</p>
+<p>顺便一提，这里InjectedElement有两种子类型，一种是AutowiredMethodElement，另一种是AutowiredFieldElement，分别对应方法和字段注入元素。</p>
+<pre><code class="language-java">public void inject(Object target, @Nullable String beanName, @Nullable PropertyValues pvs) throws Throwable {
+    // ...
+    if (!elementsToIterate.isEmpty()) {
+        for (InjectedElement element : elementsToIterate) {
+            // 为方法或字段注入属性
+            element.inject(target, beanName, pvs);
+        }
+    }
+}
+</code></pre>
+<p><strong>解析过程中，若容器中没有找到对应类型的值，则创建</strong>。</p>
+<p>类似与方法调用，“如果方法里还调用了方法，就继续调用，直至调用返回”。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202509/16857149ceb64076b71fe623a93a4b0a-26DCEBDB7E10995100FB05FB7B7C31C3.png?project=easyblog" /></p>
+<p>图5-7 解析字段值</p>
+<pre><code class="language-text">- resolveFieldValue(field, bean, beanName)
+-- beanFactory.resolveDependency(desc, beanName, autowiredBeanNames, typeConverter)
+--- doResolveDependency(descriptor, requestingBeanName, autowiredBeanNames, typeConverter)
+---- getBean(dependencyName)
+----- doGetBean(name, null, null, false)
+------ ...
+</code></pre>
+<p>如果ioc容器中不存在对应的bean，则创建bean，这跟前面描述的流程基本一致。</p>
+<p><strong>唯一的不同点是返回值，创建testController的时候，丢弃返回值；而创建testController的依赖，helloWorld时，接收了返回值。</strong></p>
+<p>该返回值将会被应用于字段中：</p>
+<pre><code class="language-java">if (value != null) {
+    ReflectionUtils.makeAccessible(field);
+    field.set(bean, value);
+}
+</code></pre>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202509/1eb71a768a7a40688df56864e9bd5558-91A82C715CB4A3A2F6A85D2A4EFC2609.png?project=easyblog" /></p>
+<p>图5-8 创建(依赖)bean</p>
+<h5 id="hidp-heading-7">3、初始化bean</h5>
+<p>涵盖了bean生命周期的3-5阶段，简单来说，就是调用各种方法，包括Aware、BeanPostProcessor、InitializingBean等一系列接口指定的方法。</p>
+<p>不过一般情况下，这个初始化方法里基本上都是spring的默认实现，“什么都不会做，只是按流程跑一遍”。</p>
+<p>有特定需求时才会考虑这些。</p>
+<pre><code class="language-java">exposedObject = initializeBean(beanName, exposedObject, mbd);
+</code></pre>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202509/2b6385aec8cb4a67b47fd3291120e584-09BA825FB4D903DD4D79A74D0F1FD347.png?project=easyblog" /></p>
+<p>图5-9 initializeBean()</p>
+<h4 id="hidp-heading-8">六、将bean加入ioc容器</h4>
+<p>控制权返回DefaultSingletonBeanRegistry#getSingleton(String beanName, ObjectFactory&lt;?&gt; singletonFactory)，并从singletonFactory.getObject()拿到返回值，同时将其标志为新bean，作为后续将bean加入ioc容器的判断条件。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202509/89e0de93f3964a27b6122f9d355596c0-6CDE99ED7C5FF879D4A1B7FC00A628B8.png?project=easyblog" /></p>
+<p>图6-1 bean创建完成</p>
+<p>若newSingleton为true，则执行添加操作。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202509/53173a28c4b8404abc4de7c5bb604b76-4C6844C9D58AC7878597BFEBFC9A3ADE.png?project=easyblog" /></p>
+<p>图6-2 将bean加入容器-1</p>
+<p>从图6-3截图中，可以看到，一级缓存里确实不存在testController，添加之，并将其从二级、三级缓存中移除，如果存在的话。</p>
+<p>至此，bean加入ioc的流程基本分析完毕。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202509/6e3b1ae5f4ae44d598a8dee45bad5099-68C5255FB9C33D94B4BC7C014426AD68.png?project=easyblog" /></p>
+<p>图6-3 将bean加入容器-2</p>
+<h4 id="hidp-heading-9">七、结语</h4>
+<p>继上一篇文章中分析了bean定义的注册方式后，本文又简单分析了bean加入ioc容器的源码。</p>
+<p>这个过程包含了两个核心概念：<strong>bean的生命周期</strong>和<strong>依赖注入</strong>(DI)，其实现封装于<strong>AutowiredAnnotationBeanPostProcessor</strong>类中。</p>
+<p>spring创建bean组件时，会触发bean的整个生命周期：先实例化，再填充属性(DI)，然后初始化...</p>
+<p>最终，将创建的bean加入ioc容器。</p>
+<p>现在终于是把spring扫描组件和创建组件的原理串在一起了，可喜可贺XD。</p>
+<p>以上。</p>
+
+                        </div>
+                    </div>
+                </article>
+                <div class="comment-wrap">
+                        <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+  <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+                        <div id="gitalk-container"></div>
+                        <script>
+                            const gitalk = new Gitalk({
+                                clientID: 'ae1422e500a8b19fb1fc',
+                                clientSecret: '9f387db6a84a4945cdf5dc743c16ce25fdef6b76',
+                                repo: 'github-pages',      // The repository of store comments,
+                                owner: 'errr0l',
+                                admin: ['errr0l'],
+                                id: location.pathname,      // Ensure uniqueness and length less than 50
+                                distractionFreeMode: false  // Facebook-like distraction free mode
+                            });
+                            gitalk.render('gitalk-container');
+                        </script>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="back">返回</div>
+</div>
+    <script src="../js/data.js"></script>
+    <script src="../js/lazy.js"></script>
+    <script src="../js/search.js"></script>
+    <script src="../js/menu.js"></script>
+<script src="../js/toc.js"></script>
+<script src="../js/caption-setter.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/viewerjs/1.11.7/viewer.min.js"></script>
+<script>
+    let back = document.querySelector(".back");
+    back.addEventListener("click", function () {
+        window.history.go(-1);
+    });
+    const viewer = new Viewer(document.querySelector('.markdown-body .content'), {
+        toolbar: {
+            zoomIn: 4,
+            zoomOut: 4,
+            oneToOne: 4,
+            reset: 0,
+            prev: 4,
+            play: 0,
+            next: 4,
+            rotateLeft: 0,
+            rotateRight: 0,
+            flipHorizontal: 0,
+            flipVertical: 0,
+        },
+    });
+</script>
+</body>
+</html>

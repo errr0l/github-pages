@@ -158,6 +158,11 @@
                                 </h2>
                                 <div class="item content">
                                         <div class="item1 ">
+                                            <a href="../articles/83.html">
+                                                    bean加入ioc容器的源码分析
+                                            </a>
+                                        </div>
+                                        <div class="item1 ">
                                             <a href="../articles/81.html">
                                                     关于spring的循环依赖
                                             </a>
@@ -291,10 +296,10 @@ public class TestController {
 --- new AnnotatedBeanDefinitionReader(this);
 ---- AnnotationConfigUtils.registerAnnotationConfigProcessors(this.registry);
 </code></pre>
-<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202508/5bf0a60b3c98400287babe6cfc3544b0-a87973a1-c9f2-4b4a-937b-c1c00e460b2c.png?project=easyblog" /></p>
-<p>图2-1 给postProcessBeanDefinitionRegistry()设置断点</p>
 <p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202508/61f0f2b5d5934b6b9f4790f337d39bac-34807231E9BB1A060F367DCF152F7D0E.png?project=easyblog" /></p>
-<p>图2-2 注册ConfigurationClassPostProcessor的bean定义信息</p>
+<p>图2-1 注册ConfigurationClassPostProcessor的bean定义信息</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202508/5bf0a60b3c98400287babe6cfc3544b0-a87973a1-c9f2-4b4a-937b-c1c00e460b2c.png?project=easyblog" /></p>
+<p>图2-2 给postProcessBeanDefinitionRegistry()设置断点</p>
 <p>安装好依赖，并在ConfigurationClassPostProcessor#postProcessBeanDefinitionRegistry()方法里打上断点后，并启动应用。</p>
 <blockquote>
 <p>BeanFactoryPostProcessor是spring框架中的一个扩展点，主要作用是在ioc容器实例化任何bean之前，读取并修改容器中已注册的bean定义的元数据信息(包括注册新的定义)</p>
@@ -340,14 +345,15 @@ public class TestController {
 <p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202508/b24a9260543a4a8e8a25da5469b06ee6-488EAE0A658BA2CFE2FD5075060E8283.png?project=easyblog" /></p>
 <p>图4-6 根据包名查找</p>
 <p>其规则为，类路径、包名、资源名拼接在一起的表达式。</p>
-<h5 id="hidp-heading-7">4、加载字节码文件</h5>
 <blockquote>
 <p>classpath*:com/err0l/spring/debug5/**/*.class</p>
 </blockquote>
+<h5 id="hidp-heading-7">4、加载字节码文件</h5>
 <p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202508/12c97e853bbc4d03acd4c49d9adfe96f-9717315894947E474C1BC6BA3B612D93.png?project=easyblog" /></p>
 <p>图4-7 获得资源文件</p>
+<p>根据表达式，使用类加载器，从磁盘中加载字节码文件到内存。</p>
 <h5 id="hidp-heading-8">5、创建bean定义</h5>
-<p><strong>进一步判断，如果符合条件的话，如@Component、@Configuration、@Service、@Controller等，就将其包装为bean定义，并加入candidates待返回上层</strong>。</p>
+<p><strong>从资源文件中读取元数据作进一步判断，如果符合条件的话，如是否含有@Component、@Configuration、@Service、@Controller等注解(默认规则)，就将其包装为bean定义，并加入candidates待返回上层</strong>。</p>
 <p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202508/4e07e4acc3f644eaa24f11c3f924029c-FA510B9A55FFE67363EC3CDBB1035663.png?project=easyblog" /></p>
 <p>图4-8 判断是否为组件(候选)</p>
 <p>如，本文代码中的HelloWorld、TestController。</p>
@@ -386,7 +392,7 @@ public class TestController {
 </code></pre>
 <p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202508/8c96c8a883714c98b0b77deb7b32ea20-E9932037AD4D3D03FD2D5C57C9824625.png?project=easyblog" /></p>
 <p>图4-12 判断已解析的bean定义是否为配置类-2</p>
-<p>至于判断条件，<strong>首先看bean定义是否使用了@Configuration注解，其次看是否使用了@ImportResource、@Import、@Component(包括其他派生注解)、@ComponentScan，最后看里是否含有@Bean标注的方法。</strong></p>
+<p>至于判断条件，<strong>首先看bean定义是否使用了@Configuration注解，其次看是否使用了@ImportResource、@Import、@Component及其派生注解、@ComponentScan，最后看里是否含有@Bean标注的方法。</strong></p>
 <p>也就是说，使用了@Component或其派生注解的类，都会被spring看做是一个配置类，更准确地说，是一个<strong>轻量级的配置类</strong>。</p>
 <pre><code class="language-java">// CONFIGURATION_CLASS_ATTRIBUTE: configurationClass
 // CONFIGURATION_CLASS_LITE: lite
@@ -399,7 +405,7 @@ if (config != null || Boolean.TRUE.equals(beanDef.getAttribute(CANDIDATE_ATTRIBU
 <pre><code class="language-java">// Process any @Import annotations
 processImports(configClass, sourceClass, getImports(sourceClass), filter, true);
 </code></pre>
-<p>@Import是spring提供的另一种导入组件的方式，主要是为了导入第三方组件而设置，使用时需要实现ImportSelector或ImportBeanDefinitionRegistrar接口，像springboot就是用这种方式来整合第三方依赖。</p>
+<p>@Import是spring提供的另一种导入组件的方式，主要是为了导入第三方组件而设置，使用时需要实现ImportSelector或ImportBeanDefinitionRegistrar接口，像springboot就多用这种方式来整合第三方依赖。</p>
 <p>由于本文并没有用到，所以... 略。</p>
 <blockquote>
 <p>基本的原理都是一样的，筛选 -&gt; 解析 -&gt; 加入ioc</p>
@@ -434,7 +440,7 @@ public @interface Import {
 }
 </code></pre>
 <p>至此，关于spring装载bean定义的源码分析到尾声了。</p>
-<h4 id="hidp-heading-16">四、结语</h4>
+<h4 id="hidp-heading-16">五、结语</h4>
 <p>本文粗浅地分析了从创建bean定义到加入ioc容器的过程。</p>
 <p>其中的关键在于ConfigurationClassPostProcessor类，它是spring解析组件的入口，以及@ComponentScan注解，只有启用了该注解，spring才会扫描除主配置类以外的组件。</p>
 <p>有多种定义(标记)组件的方式，如@Component、@Configuration、@Bean等，使用这些注解标注的类编译为字节码后，在运行时通过类加载器获取得，并且会被包装为bean定义加入ioc容器。</p>
@@ -472,6 +478,7 @@ public @interface Import {
     <script src="../js/search.js"></script>
     <script src="../js/menu.js"></script>
 <script src="../js/toc.js"></script>
+<script src="../js/caption-setter.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/viewerjs/1.11.7/viewer.min.js"></script>
 <script>
     let back = document.querySelector(".back");

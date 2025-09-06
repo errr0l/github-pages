@@ -31,5 +31,3 @@ const latestSideCard = makeSideCard(latest, {
 });
 
 wrapper.appendChild(latestSideCard);
-
-
