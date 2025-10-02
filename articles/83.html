@@ -89,7 +89,7 @@
         });
     </script>
         <meta name="keywords" content="spring,源码,java">
-        <meta name="description" content="Spring源码 (二) - bean加入ioc容器；本文是spring框架源码学习系列的第二篇。文章内容基于上一篇[bean定义加入ioc容器的源码分析](./82.html)，即完成注册bean定义之后的流程。主要是关于bean的生命周期和依赖注入的问题，二者同为需要特别关注的spring核心概念...">
+        <meta name="description" content="Spring源码 (二) - bean加入ioc容器；本文是spring框架源码学习系列的第二篇。文章内容基于上一篇《bean定义加入ioc容器》，即完成注册bean定义之后的流程。主要是关于bean的生命周期和依赖注入的问题，二者同为需要特别关注的spring核心概念...">
     <link rel="stylesheet" href="../css/article.css">
     <link rel="stylesheet" href="../css/markdown/github-markdown.css">
     <link rel="stylesheet" href="../css/markdown/github-markdown-light.css">
@@ -163,6 +163,11 @@
                                             </a>
                                         </div>
                                         <div class="item1 ">
+                                            <a href="../articles/84.html">
+                                                    Spring源码 (三) - 服务器处理请求流程
+                                            </a>
+                                        </div>
+                                        <div class="item1 ">
                                             <a href="../articles/81.html">
                                                     关于spring的循环依赖
                                             </a>
@@ -217,7 +222,7 @@
                             </div>
                         <div class="content">
                             <p>本文是spring框架源码学习系列的第二篇。</p>
-<p>文章内容基于上一篇<a href="./82.html">bean定义加入ioc容器的源码分析</a>，即完成注册bean定义之后的流程。</p>
+<p>文章内容基于上一篇<a href="./82.html">《bean定义加入ioc容器》</a>，即完成注册bean定义之后的流程。</p>
 <p>主要是关于<a href="https://docs.spring.io/spring-framework/reference/core/beans/factory-nature.html#beans-factory-lifecycle">bean的生命周期</a>和<a href="https://docs.spring.io/spring-framework/reference/core/beans/dependencies/factory-collaborators.html#beans-constructor-injection">依赖注入</a>(Dependency Injection)的问题，二者同为需要特别关注的spring核心概念。</p>
 <p>与其他语言、框架类似，这里bean的生命周期也指对象从出生到销毁的周期性活动；而依赖注入则是spring控制反转思想(Inverse Of Control)的主要表现形式。</p>
 <p>spring根据bean定义信息创建bean组件，并加入ioc容器。在这个过程中，bean的生命周期钩子会被触发，其中就包括通过依赖注入的方式，为bean设置属性的节点(<strong>依赖注入是bean生命周期的一部分</strong>)，分析其流程和运作方式是本文的主要目标。</p>

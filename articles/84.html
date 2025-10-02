@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Spring源码 (三) - 服务器处理请求流程 - 小埃的个人博客</title>
+    <link rel="stylesheet" href="../css/reset.css">
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/index.css">
+    <link rel="stylesheet" href="../css/header.css">
+    <link rel="stylesheet" href="../css/mobile.css">
+    <link rel="stylesheet" href="../css/theme-light.css">
+    <link rel="shortcut icon" href="../favicon.ico" type="image/x-icon">
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?d1fc0144cbb354a3f8442b7ba568bc2f";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+
+        window.addEventListener('DOMContentLoaded', () => {
+            let headerEle = document.getElementById('header');
+            let eleHeight = headerEle.offsetHeight;
+            let lastScrollTop = 0;
+            let topAnchor = 0; // 某个方向的锚点
+            let downAnchor = 0;
+            let stylTop = "-" + eleHeight + "px";
+            let stylTop2 = "0";
+            let threshold = 180;
+            function headerEleVisibleHandler() {
+                let scrollTop = document.documentElement.scrollTop;
+                // 向下滚动
+                if (scrollTop > lastScrollTop) {
+                    if (downAnchor !== 0) {
+                        downAnchor = 0;
+                    }
+                    if (topAnchor === 0) {
+                        topAnchor = scrollTop;
+                    }
+                    if ((scrollTop > threshold || scrollTop - topAnchor > threshold) && headerEle.style.top !== stylTop) {
+                        headerEle.style.top =  stylTop;
+                    }
+                }
+                // 向上
+                else {
+                    if (topAnchor !== 0) {
+                        topAnchor = 0;
+                    }
+                    if (downAnchor === 0) {
+                        downAnchor = scrollTop;
+                    }
+                    if ((scrollTop + threshold > downAnchor) && headerEle.style.top === stylTop) {
+                        headerEle.style.top = stylTop2;
+                    }
+                }
+                lastScrollTop = scrollTop;
+            }
+
+            function throttleWrapper(fn, options) {
+                if (!options) {
+                    options = {};
+                }
+                let timer = null;
+                const { timeout } = options;
+
+                const _setTimeout = () => {
+                    timer = window.setTimeout(() => {
+                        window.clearTimeout(timer);
+                        timer = null;
+                    }, timeout);
+                    return timer;
+                }
+
+                return function (...args) {
+                    if (timer) {
+                        return;
+                    }
+                    timer = -1;
+                    let result = fn.apply(this, args);
+                    _setTimeout();
+                    return result;
+                }
+            }
+            headerEleVisibleHandler = throttleWrapper(headerEleVisibleHandler, { timeout: 200 });
+            window.addEventListener("scroll", headerEleVisibleHandler);
+        });
+    </script>
+        <meta name="keywords" content="spring,spring-mvc,java">
+        <meta name="description" content="Spring源码 (三) - 服务器处理请求流程；本文是spring框架源码学习系列的第三篇。在有了bean和ioc的基础认识之后，这次来学习一个稍微重量级的框架，spring-webmvc（spring-mvc）。它是用于构建基于传统MVC...">
+    <link rel="stylesheet" href="../css/article.css">
+    <link rel="stylesheet" href="../css/markdown/github-markdown.css">
+    <link rel="stylesheet" href="../css/markdown/github-markdown-light.css">
+    <link rel="stylesheet" href="../css/gittalk-cover.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/viewerjs/1.11.7/viewer.min.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</head>
+<body>
+<div id="app">
+    <div id="header">
+    <div id="bar">
+        <div class="container mg-0-auto d-f pos-r">
+            <div class="logo">
+                <a href="../" class="nav-link" style="margin-right: 10px;">
+                    <img src="../image/portal/logo.jpg" alt="小埃的个人博客">
+                </a>
+            </div>
+            <div class="right">
+                <ul class="nav f-l">
+                        <li class="nav-item">
+                            <a href="../index.html" class="nav-link active">
+                                <span>首页</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="../category.html" class="nav-link ">
+                                <span>分类</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="../about.html" class="nav-link ">
+                                <span>关于</span>
+                            </a>
+                        </li>
+                </ul>
+                <div class="eb-title">
+                    小埃的个人博客
+                </div>
+                    <div id="search">
+                        <input type="text" id="search-input" data-prefix="../" placeholder="搜索" autocomplete="off" />
+                        <span class="search-icon t-a">
+                            <img class="el-icon-search" src="../image/portal/search.png" width="16" height="16">
+                        </span>
+                        <div id="search-result">
+                            <input type="text" class="input-1" id="search-input-2" data-prefix="../" placeholder="请输入" autocomplete="off" />
+                            <div class="content">
+                            </div>
+                            <div class="arrow"></div>
+                        </div>
+                    </div>
+
+                <div class="eb-menu">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-list-ul" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M5 11.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm-3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm0 4a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm0 4a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
+                    </svg>
+                </div>
+            </div>
+            <div id="sc-box">
+                <div class="wrapper">
+                        <div class="side-card b-s-1 mg-b-10">
+                            <div class="wrapper">
+                                <h2 class="item title">
+                                    <span>相关文章</span>
+                                </h2>
+                                <div class="item content">
+                                        <div class="item1 ">
+                                            <a href="../articles/83.html">
+                                                    Spring源码 (二) - bean加入ioc容器
+                                            </a>
+                                        </div>
+                                        <div class="item1 ">
+                                            <a href="../articles/82.html">
+                                                    Spring源码 (一) - bean定义加入ioc容器
+                                            </a>
+                                        </div>
+                                        <div class="item1 ">
+                                            <a href="../articles/81.html">
+                                                    关于spring的循环依赖
+                                            </a>
+                                        </div>
+                                        <div class="item1 ">
+                                            <a href="../articles/40.html">
+                                                    探究MultipartResolver的运行原理
+                                            </a>
+                                        </div>
+                                        <div class="item1 ">
+                                            <a href="../articles/71.html">
+                                                    记录一次打包静态站点资源的优化
+                                            </a>
+                                        </div>
+                                        <div class="item1 ">
+                                            <a href="../articles/52.html">
+                                                    关于运行jar时，报“没有主清单属性”的问题
+                                            </a>
+                                        </div>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    <div id="main">
+        <div class="container mg-0-auto pd-t-10">
+            <div class="wrapper">
+                <article class="mg-b-20">
+                    <div class="markdown-body">
+                        <div class="title">Spring源码 (三) - 服务器处理请求流程</div>
+                        <div class="item meta mg-b-10">
+                            <span class="author">由<a href="javascript:void(0);">errol</a>发表于<a href="#">2025-10-01</a></span>
+                            <span>|</span>
+                            <span class="time">
+                            分类为
+                            <a href="../categories/1.html">编程</a></span>
+                            <span>|</span>
+                            <span class="tags">
+                                标签为<a href="javascript:void(0);">spring</a>、<a href="javascript:void(0);">spring-mvc</a>、<a href="javascript:void(0);">java</a>
+                            </span>
+                        </div>
+                            <div class="cover mg-b-10">
+                                <img src="../image/portal/202510/643b085419ef43daafa9069cd225dceb-spring-1.jpg?project=easyblog" alt="">
+                            </div>
+                        <div class="content">
+                            <p>本文是spring框架源码学习系列的第三篇。</p>
+<p>在有了bean和ioc的基础认识之后，这次来学习一个稍微重量级的框架，spring-webmvc（spring-mvc）。</p>
+<p>它是用于构建基于传统MVC（Model-View-Controller）设计模式的web应用程序，是对servlet技术栈的高级封装，支持构建动态网页、RESTful API等服务。</p>
+<p>一般来说，只要涉及到web服务器开服，就离不开作为基石的spring-mvc，因此，其重要性是不言而喻的。</p>
+<blockquote>
+<p>当然，现在还有用于构建非阻塞、响应式应用的框架，Spring WebFlux，是对传统spring-mvc的补充，但不在今天的讨论范围内</p>
+</blockquote>
+<p>基本的工作流程如下：</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202510/1b921f02bc3b4b1bb061c41add2359ac-25C83578FD79C9A63ABF9C0B39F450E2.png?project=easyblog" /></p>
+<p>图1 spring-mvc处理请求</p>
+<p>本文会基于该流程图作进一步分析，尽可能地把工作原理捋清楚。</p>
+<h3 id="hidp-heading-0">一、准备阶段</h3>
+<p>配置本项目的运行环境，包括依赖、代码等。</p>
+<h4 id="hidp-heading-1">1、项目结构</h4>
+<p>整体上，与之前变化不大。</p>
+<pre><code class="language-text">.
+|___debug-2.iml
+|___pom.xml
+|___readme.txt
+|___src
+| |___test
+| | |___java
+| |___main
+| | |___resources
+| | |___java
+| | | |___com
+| | | | |___err0l
+| | | | | |___spring
+| | | | | | |___debug2
+| | | | | | | |___Map2JsonHttpMessageConverter.java
+| | | | | | | |___Debug2Application.java
+| | | | | | | |___TestController.java
+| | | | | | | |___AppConfig.java
+
+</code></pre>
+<h4 id="hidp-heading-2">2、添加依赖</h4>
+<p>在pom.xml文件中添加如下配置，新增了webmvc和tomcat的依赖。</p>
+<pre><code class="language-xml">&lt;dependencies&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+        &lt;artifactId&gt;spring-webmvc&lt;/artifactId&gt;
+        &lt;version&gt;6.2.9&lt;/version&gt;
+    &lt;/dependency&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;jakarta.servlet&lt;/groupId&gt;
+        &lt;artifactId&gt;jakarta.servlet-api&lt;/artifactId&gt;
+        &lt;version&gt;6.0.0&lt;/version&gt;
+        &lt;scope&gt;provided&lt;/scope&gt;
+    &lt;/dependency&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;org.apache.tomcat.embed&lt;/groupId&gt;
+        &lt;artifactId&gt;tomcat-embed-core&lt;/artifactId&gt;
+        &lt;version&gt;11.0.9&lt;/version&gt;
+    &lt;/dependency&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;org.apache.tomcat&lt;/groupId&gt;
+        &lt;artifactId&gt;tomcat-juli&lt;/artifactId&gt;
+        &lt;version&gt;11.0.9&lt;/version&gt;
+    &lt;/dependency&gt;
+&lt;/dependencies&gt;
+</code></pre>
+<h4 id="hidp-heading-3">3、基本代码</h4>
+<h5 id="hidp-heading-4">1）配置类</h5>
+<p>@EnableWebMvc注解在加载了spring-webmvc后存在，用于导入spring的WebMVC配置。</p>
+<p>这个注解主要导入org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport类，该类向ioc容器中注册了必要的组件，如RequestMappingHandlerMapping、ContentNegotiationManager、Validator等。</p>
+<p>支持定制化，如下面的代码中，通过重写默认方法来向容器中添加了一个自定义的HttpMessageConverter：一个简易的将Map转为json的实现。</p>
+<pre><code class="language-java">@EnableWebMvc
+@Configuration
+@ComponentScan
+public class AppConfig implements WebMvcConfigurer {
+    @Override
+    public void extendMessageConverters(List&lt;HttpMessageConverter&lt;?&gt;&gt; converters) {
+        converters.add(new Map2JsonHttpMessageConverter());
+    }
+}
+</code></pre>
+<h5 id="hidp-heading-5">2）启动类</h5>
+<p>main()方法里编程式地创建一个tomcat服务器实例，同时实例化spring应用上下文（ioc容器），以及<strong>本文主要的研究对象，中央处理器DispatcherServlet</strong>。</p>
+<p>将其映射到&quot;/&quot;路径下，以接管全部来自客户端的请求，并挂载到tomcat实例中。</p>
+<blockquote>
+<p>使用嵌入式tomcat的原因是，看起来比较直观；事实上，可以认为spring-webmvc注册的所有组件，都是为了辅助DispatcherServlet运行</p>
+</blockquote>
+<pre><code class="language-java">public class Debug2Application {
+    public static void main(String[] args) throws LifecycleException {
+        Tomcat tomcat = new Tomcat();
+        tomcat.setPort(8080);
+        tomcat.getConnector();
+
+        AnnotationConfigWebApplicationContext context = new AnnotationConfigWebApplicationContext();
+        context.register(AppConfig.class);
+
+        DispatcherServlet servlet = new DispatcherServlet(context);
+        Context ctx = tomcat.addContext(&quot;&quot;, null);
+        final ErrorPage errorPage = new ErrorPage();
+        errorPage.setLocation(&quot;/error&quot;);
+        ctx.addErrorPage(errorPage);
+        Tomcat.addServlet(ctx, &quot;dispatcher&quot;, servlet);
+        ctx.addServletMappingDecoded(&quot;/&quot;, &quot;dispatcher&quot;);
+
+        tomcat.start();
+        tomcat.getServer().await();
+    }
+}
+</code></pre>
+<h5 id="hidp-heading-6">3）控制器</h5>
+<p>包含了两个简单的接口实现，一个返回json数据，另一个返回html页面。</p>
+<pre><code class="language-java">@Controller
+public class TestController {
+    @GetMapping(&quot;/test1&quot;)
+    @ResponseBody
+    public Map&lt;String, String&gt; test1() {
+        Map&lt;String, String&gt; map = new HashMap&lt;&gt;();
+        map.put(&quot;key&quot;, &quot;hello&quot;);
+        map.put(&quot;value&quot;, &quot;world&quot;);
+        return map;
+    }
+
+    @GetMapping(value = &quot;/test2&quot;)
+    public ModelAndView test2() {
+        final ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName(&quot;hello&quot;);
+        return modelAndView;
+    }
+}
+</code></pre>
+<h4 id="hidp-heading-7">4、设置断点</h4>
+<p>已经配置DispatcherServlet处理所有的请求，因此，只需要在其中设置断点即可。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202510/ec47c7fbaa544128a63074ea8c8b713e-95B47583B5FD40E8118D518597C2B081.png?project=easyblog" /></p>
+<p>图1-1 在DispatcherServlet#doDispatch()中设置断点</p>
+<p>完成后，启动应用。</p>
+<h3 id="hidp-heading-8">二、&quot;/test1&quot;接口</h3>
+<p>本文是这样安排的，首先分析返回json数据的&quot;/test1&quot;接口，然后在此基础上，分析返回html页面的接口&quot;/test2&quot;。</p>
+<p>向服务器发起请求，使得程序执行到断点处。</p>
+<p><code>curl http://localhost:8080/test1 -H 'Accept: application/json'</code></p>
+<h4 id="hidp-heading-9">1、获取请求处理器</h4>
+<p>首先是调用getHandler()方法，获取到可以处理当前请求的方法，顺便一提，如果没有找到的话，就走404流程。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202509/605c08df18bc427399730dcd7fc0c856-311FC7B2D95929126C6C854788666CC4.png?project=easyblog" /></p>
+<p>图2-1 获取请求处理器-1</p>
+<p>默认情况下，spring-mvc注册了三个<strong>处理器映射(HandlerMapping)</strong>，分别是RouterFunctionMapping、RequestMappingHandlerMapping、BeanNameUrlHandlerMapping，里面保存了请求路由和请求处理程序的映射关系。</p>
+<p>其中，控制器处理方法存储于RequestMappingHandlerMapping中。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202509/8aac59aeee0d40f98b2e9fb1ad6be942-41610F75B83EFD5416702A285632B556.png?project=easyblog" /></p>
+<p>图2-2 获取请求处理器-2</p>
+<p>找到请求处理方法后，并不直接返回，而是又将其包装为<strong>处理器执行链(HandlerExecutionChain)</strong>。</p>
+<p>所谓执行链，其实就是一系列的<a href="https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-servlet/handlermapping-interceptor.html#page-title">拦截器</a>，它们作用于请求处理前后，负责像是鉴权、校验参数这样的工作。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202509/c4f4c53d9c074bba99094b0bdb77ee64-AA3179D582A956C87FB3CF4C0CE73BDC.png?project=easyblog" /></p>
+<p>图2-3 获取请求处理器-3</p>
+<h4 id="hidp-heading-10">2、将处理器包装为处理器适配器</h4>
+<p>这一步是spring为了屏蔽不同处理器之间的差异而采取的手段，将返回值统一定义为ModelAndView类型，像是中介一样的角色。</p>
+<p>此处适配器的具体类型为RequestMappingHandlerAdapter。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202509/0c0ca340c94b47439aea4d01f53743d6-897B2CB62DC2F7EEC76423240B890DE0.png?project=easyblog" /></p>
+<p>图2-4 获取处理器适配器</p>
+<h4 id="hidp-heading-11">3、调用请求处理器</h4>
+<pre><code class="language-text">- ha.handle(processedRequest, response, mappedHandler.getHandler());
+-- handleInternal(request, response, (HandlerMethod) handler);
+--- invokeHandlerMethod(request, response, handlerMethod);
+---- invocableMethod.invokeAndHandle(webRequest, mavContainer);
+</code></pre>
+<p>其中，在invokeHandlerMethod(request, response, handlerMethod)里，设置一些必要的数据，如参数解析器(HandlerMethodArgumentResolver)、返回值处理器(HandlerMethodReturnValueHandler)，以及ModelAndViewContainer等。</p>
+<h4 id="hidp-heading-12">4、解析参数</h4>
+<p>spring-mvc已经提前注册了参数解析器，因此可以在控制器方法中自定义参数类型，在符合条件的情况下，spring会自动注入。</p>
+<p>如果处理方法有参数的话，就在getMethodArgumentValues()方法中，使用参数解析器完成注入。</p>
+<p>如比较常见的Request、Response、Session等对象。</p>
+<p>此外，也支持声明请求路径、请求url等中的参数，但需要配合@PathVariable和@RequestParam注解使用，假设存在url参数：/test1?name=dd，则可以这样声明：</p>
+<p><code>test1(@RequestParam String name)</code></p>
+<p>一般来说，都是从ServletRequest实例中获取的数据，自定义参数只是一种“快捷方式”。</p>
+<p>以Session对象为例，可以在方法中直接声明：<code>test1(HttpSession session)</code>，也可以间接通过ServletRequest对象获取：<code>test1(HttpServletRequest request) { HttpSession session = request.getSession(); }</code>。</p>
+<pre><code class="language-java">@Nullable
+public Object invokeForRequest(NativeWebRequest request, @Nullable ModelAndViewContainer mavContainer, Object... providedArgs) throws Exception {
+    Object[] args = getMethodArgumentValues(request, mavContainer, providedArgs);
+...
+}
+</code></pre>
+<h4 id="hidp-heading-13">5、调用方法</h4>
+<p>将解析出的参数传入方法，通过反射调用，并拿到返回值。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202509/1d882f1e92824e9aa238e56c799ec998-4A27AEAEDCF771218FB8E5FB8FF01F47.png?project=easyblog" /></p>
+<p>图2-5 调用控制器方法</p>
+<h4 id="hidp-heading-14">6、处理返回值</h4>
+<p>与参数解析类似，spring-mvc同样注册了大量的返回值处理器，以应对处理器中不同类型返回值。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202509/19e9b90aafed4fb788af473ea644bedd-3E33165C50B0E5F45FB34E4A023A9106.png?project=easyblog" /></p>
+<p>图2-6 处理控制器方法返回值</p>
+<h4 id="hidp-heading-15">7、选择处理器</h4>
+<p>默认有15个，由于test1()方法使用了@ResponseBody标注，指示返回值应该写入响应体，所以这里选择的是RequestResponseBodyMethodProcessor。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202509/5a97458185e44bcc843637f26f9ec4a9-6E43B93A959F72248BE40C05C7F64E39.png?project=easyblog" /></p>
+<p>图2-7 获取可处理当前返回值的处理器</p>
+<h4 id="hidp-heading-16">8、调用返回值处理器方法</h4>
+<p><strong>一般情况下，Spring MVC控制器方法的返回值有两种处理方式：</strong></p>
+<p>第一种是返回字符串；被当作视图名称（View Name），用于查找模板（如JSP、Thymeleaf）进行渲染；</p>
+<p>第二种是返回对象(非ModelAndView等对象)；返回对象视为模型（Model），方法名被当做视图名称，然后渲染。</p>
+<p>二者都会尝试返回html页面，也就是传统的服务器渲染（SSR）。</p>
+<p>但在使用了@ResponseBody注解标准的情况下，将不再是以上的形式，而是会把返回值写入响应体。</p>
+<p>其中，”mavContainer.setRequestHandled(true)“将当前请求标记为”已处理“状态，为了规避后续将当前请求使用默认的方式处理。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202509/efaf106722414c0faa47f3a5c5289026-78BC779048D7F25C82115722AF7AD7D7.png?project=easyblog" /></p>
+<p>图2-8 将当前请求标记为&quot;已处理&quot;</p>
+<h4 id="hidp-heading-17">9、使用消息转换器将返回值写入响应体</h4>
+<blockquote>
+<p>writeWithMessageConverters(returnValue, returnType, inputMessage, outputMessage);</p>
+</blockquote>
+<p>显然，java类型的返回值不能直接写入响应体，而必须转换为能在http协议中传输的格式，如字符串、字节等。</p>
+<p>消息转换器就是为负责这部分工作而存在，如开头添加的Map2JsonHttpMessageConverter。</p>
+<h5 id="hidp-heading-18">1）内容协商</h5>
+<p>服务器按客户端可接受的媒体类型来响应请求，这样的机制称为“内容协商(Content Negotiation)”。</p>
+<p>spring-mvc也提供了这种机制，这里主要针对的是基于Accept请求头字段的内容协商。</p>
+<p>大致运行方式是：读取客户端传输的Accept头部字段，与服务器可产出的媒体类型相比较，选出一个最佳的类型。</p>
+<p>如，Accept为&quot;application/json&quot;，而服务器也可以产出这种类型，且权重最高则&quot;application/json&quot;为最佳类型。</p>
+<p><strong>有两个触发内容协商的地方：</strong></p>
+<p>第一个是在选择处理器的时候，如果存在多个处理同一路径的处理器时，会进行内容协商，并选择一个最合适的处理器；</p>
+<p>第二个是在处理返回值的时候，如果返回值是ResponseEntity类型，或者使用@ResponseBody注解标注(包括@RestController)时，会进行内容协商。</p>
+<p>本文主要说的是第二种情况，对于第一种，一般一个路径只对应一个处理器，所以不做考虑。</p>
+<p>这其实是依赖了一些列的消息转换器，它们可以将对应返回值类型转为对应的媒体类型，比如本文自定义消息转换器，支持将Map类型转为json数据。</p>
+<pre><code class="language-java">public class Map2JsonHttpMessageConverter extends AbstractHttpMessageConverter&lt;Map&lt;Object, Object&gt;&gt; {
+
+    Map2JsonHttpMessageConverter() {
+        super(StandardCharsets.UTF_8, MediaType.APPLICATION_JSON, MediaType.ALL);
+    }
+
+    @Override
+    protected boolean supports(Class&lt;?&gt; clazz) {
+        return Map.class.isAssignableFrom(clazz);
+    }
+
+    @Override
+    protected Map&lt;Object, Object&gt; readInternal(Class&lt;? extends Map&lt;Object, Object&gt;&gt; clazz, HttpInputMessage inputMessage) throws IOException, HttpMessageNotReadableException {
+        return null;
+    }
+
+    @Override
+    protected void writeInternal(Map&lt;Object, Object&gt; map, HttpOutputMessage outputMessage) throws IOException, HttpMessageNotWritableException {
+        HttpHeaders headers = outputMessage.getHeaders();
+        final MediaType contentType = headers.getContentType();
+        Charset charset = null;
+        if (contentType != null) {
+            charset = contentType.getCharset();
+        }
+        if (charset == null) {
+            charset = getDefaultCharset();
+        }
+        StringBuilder sb = new StringBuilder(&quot;{&quot;);
+        for (Map.Entry&lt;Object, Object&gt; entry : map.entrySet()) {
+            sb.append(&quot;\&quot;&quot;).append(entry.getKey()).append(&quot;\&quot;:&quot;);
+            Object value = entry.getValue();
+            if (value instanceof String) {
+                sb.append(&quot;\&quot;&quot;).append(value).append(&quot;\&quot;&quot;);
+            } else {
+                sb.append(value);
+            }
+            sb.append(&quot;,&quot;);
+        }
+        if (sb.length() &gt; 1) sb.setLength(sb.length() - 1);
+        sb.append(&quot;}&quot;);
+        assert charset != null;
+        StreamUtils.copy(sb.toString(), charset, outputMessage.getBody());
+    }
+}
+</code></pre>
+<p>获取客户端可接收的，以及服务器可产出的媒体类型，并以此为依据，选出最佳的一个。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202509/2ac7a8104c6042eeac071527c8bdd7df-F8311C27CC235B5048906ABB3F963D03.png?project=easyblog" /></p>
+<p>图2-9 获取服务器可产出的媒体类型</p>
+<pre><code class="language-java">List&lt;MediaType&gt; compatibleMediaTypes = new ArrayList&lt;&gt;();
+// 决策出客户端可接受的媒体类型
+determineCompatibleMediaTypes(acceptableTypes, producibleTypes, compatibleMediaTypes);
+
+// ...
+
+// 根据权重排序
+MimeTypeUtils.sortBySpecificity(compatibleMediaTypes);
+
+// 选择一个最合适的类型
+for (MediaType mediaType : compatibleMediaTypes) {
+    if (mediaType.isConcrete()) {
+        selectedMediaType = mediaType;
+        break;
+    }
+    // ...
+}
+</code></pre>
+<h5 id="hidp-heading-19">2）调用消息转换器的write()方法</h5>
+<p>选出支持写入&quot;最佳&quot;媒体类型的消息转换器，调用其write()方法，将返回值(body)写入响应对象中。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202509/ffed1a123d13450cb44db3f191b7443d-3B362ED7DD6019AFA1610A89A9A4E5EA.png?project=easyblog" /></p>
+<p>图2-10 写入</p>
+<pre><code class="language-text">- converter.write(body, selectedMediaType, outputMessage)
+-- writeInternal(t, outputMessage);
+--- StreamUtils.copy(sb.toString(), charset, outputMessage.getBody());
+</code></pre>
+<p>调用StreamUtils.copy()方法，将字符串写入响应对象。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202509/149c32149c3546f48ca226a05489d508-37A8AD061D4367105061623999264B43.png?project=easyblog" /></p>
+<p>图2-11 调用消息转换器的writeInternal()完成写入</p>
+<p>由于已经事先将当前请求标记为“已处理”状态，所以后续的getModelAndView()返回null，表示不需要处理视图相关的逻辑。</p>
+<p>或换句话说，当前请求的主要流程已经完成，这就是服务器返回json等数据类型的一般流程。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202510/3203f8107533478fb5c3d746046598de-08A8D0B1A22772ECABBCFCE017562A9A.png?project=easyblog" /></p>
+<p>图2-12 客户端成功接收到数据</p>
+<h3 id="hidp-heading-20">三、&quot;/test2&quot;接口</h3>
+<p>虽然两个接口的返回类型不同（一个是json数据，另一个是html页面），但处理流程基本相同。</p>
+<p><strong>分歧点在于&quot;处理返回值&quot;的部分</strong>，所以这里直接从&quot;选择处理器&quot;部分开始分析，有需要时就参考之前的内容。</p>
+<p>请求服务器：<code>curl http://localhost:8080/test2 -H 'Accept: text/html'</code></p>
+<h4 id="hidp-heading-21">1、选择处理器</h4>
+<p>与/test1接口不同，这里选择的返回值处理器类型为：ModelAndViewMethodReturnValueHandler。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202510/2860fd69416d4fbdbfb5f088eac50430-01358AD790512207D9FDF1A9EB816B83.png?project=easyblog" /></p>
+<p>图3-1 获取到&quot;/test2&quot;接口的返回值处理器</p>
+<h4 id="hidp-heading-22">2、调用返回值处理器方法</h4>
+<p>为mavContainer设置视图名称，并将返回值(即ModelAndView实例)的属性设置到其中。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202510/fbd81d67825645098bde793933bab218-8FE68EF5D2A2AC052D639B2CB7ECCC9B.png?project=easyblog" /></p>
+<p>图3-2 调用返回值处理器的处理方法</p>
+<h4 id="hidp-heading-23">3、获取ModelAndView</h4>
+<p>调用getModelAndView()，又重新创建了一个ModelAndView对象。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202510/dbf873cec4f444a783312acacf9621dc-2F625757BDC0086047ED637D7554B0EB.png?project=easyblog" /></p>
+<p>图3-3 得到ModelAndView对象</p>
+<p>虽然看起来确实有点鸡肋，但实则是为了兼容。</p>
+<p>比方说，如果返回值不是ModelAndView，而是字符串时，就变成：String -&gt; ModelAndViewContainer -&gt; ModelAndView。</p>
+<h4 id="hidp-heading-24">4、处理ModelAndView</h4>
+<p>处理器适配器得到返回值，调用processDispatchResult()方法处理ModelAndView。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202510/aee35cae809144da881e716c7b4636a0-4DA86C8180850B2F63924576503A2572.png?project=easyblog" /></p>
+<p>图3-4 得到ModelAndView对象</p>
+<p>如果ModelAndView mv不为空的话，调用其渲染方法。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202510/224764001a1143c4a96cb0062cd8ea09-6B53F4511A740C52F80F89E8EB4010C9.png?project=easyblog" /></p>
+<p>图3-5 渲染视图</p>
+<p>根据视图名称解析出视图，需要用到视图解析器（ViewResolver）。</p>
+<p>但由于本项目没有配置任何模板引擎的视图解析器（如jsp、freemaker、thymeleaf等），所以实际上它使用的是spring-mvc内部的视图解析器，解析出的视图的作用就是在内部转发了一次，相当于发起了一次&quot;/hello&quot;请求。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202510/87d5085f2cc84d518297fdbdb4b7feb6-187BE8AD488BCEDD2B6C25814969756D.png?project=easyblog" /></p>
+<p>图3-6 解析视图</p>
+<pre><code class="language-text">- resolveViewName(viewName, mv.getModelInternal(), locale, request)
+-- resolveViewNameInternal(viewName, locale)
+-- view.render(mv.getModelInternal(), request, response)
+--- renderMergedOutputModel(mergedModel, getRequestToExpose(request), response)
+---- rd.forward(request, response)
+</code></pre>
+<p>因为没有处理&quot;/hello&quot;的接口。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202510/4be1e391a7d948f48c6233728040cbb0-FF2E21B88542DAFA9617046D74AF8818.png?project=easyblog" /></p>
+<p>图3-7 找不到&quot;/hello&quot;路径的处理器</p>
+<p>所以最终的结果就是返回404。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202510/1af903c197de4c128f8e1c0063e08d8c-0D93BDB682C7FA2E6D6933F2D4F17EA8.png?project=easyblog" /></p>
+<p>图3-8 客户端收到404页面</p>
+<h4 id="hidp-heading-25">5、集成Thymeleaf</h4>
+<p>在pom.xml文件中新增如下依赖：</p>
+<pre><code class="language-xml">&lt;dependency&gt;
+    &lt;groupId&gt;org.thymeleaf&lt;/groupId&gt;
+    &lt;artifactId&gt;thymeleaf&lt;/artifactId&gt;
+    &lt;version&gt;3.1.2.RELEASE&lt;/version&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;org.thymeleaf&lt;/groupId&gt;
+    &lt;artifactId&gt;thymeleaf-spring6&lt;/artifactId&gt;
+    &lt;version&gt;3.1.2.RELEASE&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+<p>修改配置文件：</p>
+<pre><code class="language-java">@EnableWebMvc
+@Configuration
+@ComponentScan
+public class AppConfig implements WebMvcConfigurer, ApplicationContextAware {
+
+    ApplicationContext applicationContext;
+
+    // ...
+
+    @Bean
+    public SpringResourceTemplateResolver templateResolver(){
+        SpringResourceTemplateResolver templateResolver = new SpringResourceTemplateResolver();
+        templateResolver.setApplicationContext(applicationContext);
+        templateResolver.setPrefix(&quot;classpath:/templates/&quot;);
+        templateResolver.setSuffix(&quot;.html&quot;);
+        templateResolver.setTemplateMode(TemplateMode.HTML);
+        templateResolver.setCacheable(true);
+        return templateResolver;
+    }
+
+    @Bean
+    public SpringTemplateEngine templateEngine(){
+        SpringTemplateEngine templateEngine = new SpringTemplateEngine();
+        templateEngine.setTemplateResolver(templateResolver());
+        templateEngine.setEnableSpringELCompiler(true);
+        return templateEngine;
+    }
+
+    @Bean
+    public ThymeleafViewResolver viewResolver(){
+        ThymeleafViewResolver viewResolver = new ThymeleafViewResolver();
+        viewResolver.setTemplateEngine(templateEngine());
+        viewResolver.setOrder(1);
+        return viewResolver;
+    }
+
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        this.applicationContext = applicationContext;
+    }
+}
+</code></pre>
+<p>然后在resources/templates/中新增hello.html：</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202510/a82a676a2d874cdea478c940fdbe8331-5B7512D35F711CE55762F81A4C382D75.png?project=easyblog" /></p>
+<p>图3-9 hello.html</p>
+<h4 id="hidp-heading-26">6、解析视图</h4>
+<p>集成Thymeleaf后，再次发起请求时，将使用ThymeleafViewResolver来解析视图。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202510/5cfcbe3e39a34681b251aeb9327e1e4c-D2EC5BD50B7929887F287653E5F96BE4.png?project=easyblog" /></p>
+<p>图3-10 使用ThymeleafViewResolver解析视图</p>
+<p>在不启用缓存或无缓存的情况下，创建视图，并加入缓存。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202510/b0dad2d941c94bbfa07c092428e14fde-9F6266A1558DBC9FC7A3B5125C71A028.png?project=easyblog" /></p>
+<p>图3-11 创建视图</p>
+<h4 id="hidp-heading-27">7、渲染视图</h4>
+<p>简单概括就是，定位到模板文件，并完成解析和填充模型中的数据。</p>
+<pre><code class="language-text">- view.render(mv.getModelInternal(), request, response)
+-- renderFragment(this.markupSelectors, model, request, response)
+--- viewTemplateEngine.process(templateName, processMarkupSelectors, context, templateWriter)
+---- process(new TemplateSpec(template, templateSelectors, null,  null,null), context, writer)
+----- templateManager.parseAndProcess(templateSpec, context, writer)
+</code></pre>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202510/46a658734ce44a75a2ace1336cd749b1-E3130D5088670CE4EA4836C518640CAB.png?project=easyblog" /></p>
+<p>图3-12 获取到模板文件路径</p>
+<p>最后以<code>writer.flush()</code>结束，以保证所有的数据已写入到输出流中。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202510/ed2f8fd1308446118f91035b5fd7eebf-54098E067F9B03222D3D1D1F6AB1D39C.png?project=easyblog" /></p>
+<p>图3-13 完成数据写入</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202510/bc34581227394e7b9e6eae01147a3029-85FCEB77DE7995331F4DC07C2EA193F3.png?project=easyblog" /></p>
+<p>图3-14 客户端收到hello页面</p>
+<p>至此，返回html页面的部分也分析完毕。</p>
+<h3 id="hidp-heading-28">四、结语</h3>
+<p>本文先后分析了服务器返回json数据和返回html页面的流程。</p>
+<p>在tomcat接收到请求后，通过调用中央处理器DispatcherServlet的doDispatch()方法来完成响应。</p>
+<p>基本流程为：tomcat -&gt; 中央处理器 -&gt; 查找处理方法 -&gt; 调用 -&gt; 得到返回值 -&gt; 查找返回值处理器 -&gt; 调用 -&gt; 处理ModelAndView -&gt; 不为空则渲染。</p>
+<p>对于返回json数据的接口，如使用@ResponseBody注解标注，其返回值使用RequestResponseBodyMethodProcessor来处理，通过HttpMessageConverter完成数据写入；</p>
+<p>对于返回html页面的接口，如本文的&quot;/test2&quot;接口，其返回值ModelAndView则使用ModelAndViewMethodReturnValueHandler进行处理，使用视图解析器解析出视图解后，渲染视图。</p>
+<p>尽管有所区别，但整体上保持一致。</p>
+<p>如有需要需，请点击<a href="(https://github.com/errr0l/demo/tree/master/debug-2)">这里</a>前往github获取代码。</p>
+<p>以上。</p>
+
+                        </div>
+                    </div>
+                </article>
+                <div class="comment-wrap">
+                        <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+  <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+                        <div id="gitalk-container"></div>
+                        <script>
+                            const gitalk = new Gitalk({
+                                clientID: 'ae1422e500a8b19fb1fc',
+                                clientSecret: '9f387db6a84a4945cdf5dc743c16ce25fdef6b76',
+                                repo: 'github-pages',      // The repository of store comments,
+                                owner: 'errr0l',
+                                admin: ['errr0l'],
+                                id: location.pathname,      // Ensure uniqueness and length less than 50
+                                distractionFreeMode: false  // Facebook-like distraction free mode
+                            });
+                            gitalk.render('gitalk-container');
+                        </script>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="back">返回</div>
+</div>
+    <script src="../js/data.js"></script>
+    <script src="../js/lazy.js"></script>
+    <script src="../js/search.js"></script>
+    <script src="../js/menu.js"></script>
+<script src="../js/toc.js"></script>
+<script src="../js/caption-setter.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/viewerjs/1.11.7/viewer.min.js"></script>
+<script>
+    let back = document.querySelector(".back");
+    back.addEventListener("click", function () {
+        window.history.go(-1);
+    });
+    const viewer = new Viewer(document.querySelector('.markdown-body .content'), {
+        toolbar: {
+            zoomIn: 4,
+            zoomOut: 4,
+            oneToOne: 4,
+            reset: 0,
+            prev: 4,
+            play: 0,
+            next: 4,
+            rotateLeft: 0,
+            rotateRight: 0,
+            flipHorizontal: 0,
+            flipVertical: 0,
+        },
+    });
+</script>
+</body>
+</html>
