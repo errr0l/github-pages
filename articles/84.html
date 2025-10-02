@@ -421,10 +421,10 @@ public Object invokeForRequest(NativeWebRequest request, @Nullable ModelAndViewC
 <p>大致运行方式是：读取客户端传输的Accept头部字段，与服务器可产出的媒体类型相比较，选出一个最佳的类型。</p>
 <p>如，Accept为&quot;application/json&quot;，而服务器也可以产出这种类型，且权重最高则&quot;application/json&quot;为最佳类型。</p>
 <p><strong>有两个触发内容协商的地方：</strong></p>
-<p>第一个是在选择处理器的时候，如果存在多个处理同一路径的处理器时，会进行内容协商，并选择一个最合适的处理器；</p>
+<p>第一个是在选择处理器的时候，如果存在多个处理同一路径的处理器时，会进行内容协商，并选择出最佳处理器；</p>
 <p>第二个是在处理返回值的时候，如果返回值是ResponseEntity类型，或者使用@ResponseBody注解标注(包括@RestController)时，会进行内容协商。</p>
 <p>本文主要说的是第二种情况，对于第一种，一般一个路径只对应一个处理器，所以不做考虑。</p>
-<p>这其实是依赖了一些列的消息转换器，它们可以将对应返回值类型转为对应的媒体类型，比如本文自定义消息转换器，支持将Map类型转为json数据。</p>
+<p>这其实是依赖了一系列的消息转换器，它们可以将对应返回值类型转为对应的媒体类型，比如本的文自定义消息转换器，支持将Map类型转为json数据。</p>
 <pre><code class="language-java">public class Map2JsonHttpMessageConverter extends AbstractHttpMessageConverter&lt;Map&lt;Object, Object&gt;&gt; {
 
     Map2JsonHttpMessageConverter() {
@@ -508,10 +508,10 @@ for (MediaType mediaType : compatibleMediaTypes) {
 <p>图2-12 客户端成功接收到数据</p>
 <h3 id="hidp-heading-20">三、&quot;/test2&quot;接口</h3>
 <p>虽然两个接口的返回类型不同（一个是json数据，另一个是html页面），但处理流程基本相同。</p>
-<p><strong>分歧点在于&quot;处理返回值&quot;的部分</strong>，所以这里直接从&quot;选择处理器&quot;部分开始分析，有需要时就参考之前的内容。</p>
+<p><strong>分歧点在于&quot;处理返回值&quot;的部分</strong>，所以这里直接从&quot;选择处理器&quot;部分开始分析，有需要时参考之前的内容。</p>
 <p>请求服务器：<code>curl http://localhost:8080/test2 -H 'Accept: text/html'</code></p>
 <h4 id="hidp-heading-21">1、选择处理器</h4>
-<p>与/test1接口不同，这里选择的返回值处理器类型为：ModelAndViewMethodReturnValueHandler。</p>
+<p>与&quot;/test1&quot;接口不同，这里选择的返回值处理器类型为：ModelAndViewMethodReturnValueHandler。</p>
 <p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202510/2860fd69416d4fbdbfb5f088eac50430-01358AD790512207D9FDF1A9EB816B83.png?project=easyblog" /></p>
 <p>图3-1 获取到&quot;/test2&quot;接口的返回值处理器</p>
 <h4 id="hidp-heading-22">2、调用返回值处理器方法</h4>
@@ -525,7 +525,7 @@ for (MediaType mediaType : compatibleMediaTypes) {
 <p>虽然看起来确实有点鸡肋，但实则是为了兼容。</p>
 <p>比方说，如果返回值不是ModelAndView，而是字符串时，就变成：String -&gt; ModelAndViewContainer -&gt; ModelAndView。</p>
 <h4 id="hidp-heading-24">4、处理ModelAndView</h4>
-<p>处理器适配器得到返回值，调用processDispatchResult()方法处理ModelAndView。</p>
+<p>处理器适配器得到返回值后，调用processDispatchResult()方法进行处理。</p>
 <p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202510/aee35cae809144da881e716c7b4636a0-4DA86C8180850B2F63924576503A2572.png?project=easyblog" /></p>
 <p>图3-4 得到ModelAndView对象</p>
 <p>如果ModelAndView mv不为空的话，调用其渲染方法。</p>
@@ -541,10 +541,9 @@ for (MediaType mediaType : compatibleMediaTypes) {
 --- renderMergedOutputModel(mergedModel, getRequestToExpose(request), response)
 ---- rd.forward(request, response)
 </code></pre>
-<p>因为没有处理&quot;/hello&quot;的接口。</p>
+<p>因为没有处理&quot;/hello&quot;的接口，所以最终的结果就是返回404。</p>
 <p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202510/4be1e391a7d948f48c6233728040cbb0-FF2E21B88542DAFA9617046D74AF8818.png?project=easyblog" /></p>
 <p>图3-7 找不到&quot;/hello&quot;路径的处理器</p>
-<p>所以最终的结果就是返回404。</p>
 <p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202510/1af903c197de4c128f8e1c0063e08d8c-0D93BDB682C7FA2E6D6933F2D4F17EA8.png?project=easyblog" /></p>
 <p>图3-8 客户端收到404页面</p>
 <h4 id="hidp-heading-25">5、集成Thymeleaf</h4>
@@ -560,7 +559,7 @@ for (MediaType mediaType : compatibleMediaTypes) {
     &lt;version&gt;3.1.2.RELEASE&lt;/version&gt;
 &lt;/dependency&gt;
 </code></pre>
-<p>修改配置文件：</p>
+<p>修改配置类：</p>
 <pre><code class="language-java">@EnableWebMvc
 @Configuration
 @ComponentScan
@@ -610,11 +609,11 @@ public class AppConfig implements WebMvcConfigurer, ApplicationContextAware {
 <p>集成Thymeleaf后，再次发起请求时，将使用ThymeleafViewResolver来解析视图。</p>
 <p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202510/5cfcbe3e39a34681b251aeb9327e1e4c-D2EC5BD50B7929887F287653E5F96BE4.png?project=easyblog" /></p>
 <p>图3-10 使用ThymeleafViewResolver解析视图</p>
-<p>在不启用缓存或无缓存的情况下，创建视图，并加入缓存。</p>
+<p>在不启用缓存或无缓存的情况下，创建视图。</p>
 <p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202510/b0dad2d941c94bbfa07c092428e14fde-9F6266A1558DBC9FC7A3B5125C71A028.png?project=easyblog" /></p>
 <p>图3-11 创建视图</p>
 <h4 id="hidp-heading-27">7、渲染视图</h4>
-<p>简单概括就是，定位到模板文件，并完成解析和填充模型中的数据。</p>
+<p>运行ThymeleafView的渲染逻辑。简单概括就是，定位到模板文件，并完成解析和填充模型中的数据。</p>
 <pre><code class="language-text">- view.render(mv.getModelInternal(), request, response)
 -- renderFragment(this.markupSelectors, model, request, response)
 --- viewTemplateEngine.process(templateName, processMarkupSelectors, context, templateWriter)
@@ -626,8 +625,9 @@ public class AppConfig implements WebMvcConfigurer, ApplicationContextAware {
 <p>最后以<code>writer.flush()</code>结束，以保证所有的数据已写入到输出流中。</p>
 <p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202510/ed2f8fd1308446118f91035b5fd7eebf-54098E067F9B03222D3D1D1F6AB1D39C.png?project=easyblog" /></p>
 <p>图3-13 完成数据写入</p>
+<p>最终客户端接收到hello页面，当然，如果是浏览器的话，会渲染这个文档。</p>
 <p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202510/bc34581227394e7b9e6eae01147a3029-85FCEB77DE7995331F4DC07C2EA193F3.png?project=easyblog" /></p>
-<p>图3-14 客户端收到hello页面</p>
+<p>图3-14 客户端收到响应</p>
 <p>至此，返回html页面的部分也分析完毕。</p>
 <h3 id="hidp-heading-28">四、结语</h3>
 <p>本文先后分析了服务器返回json数据和返回html页面的流程。</p>
