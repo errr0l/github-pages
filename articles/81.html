@@ -158,6 +158,21 @@
                                 </h2>
                                 <div class="item content">
                                         <div class="item1 ">
+                                            <a href="../articles/84.html">
+                                                    Spring源码 (三) - 服务器处理请求流程
+                                            </a>
+                                        </div>
+                                        <div class="item1 ">
+                                            <a href="../articles/83.html">
+                                                    Spring源码 (二) - bean加入ioc容器
+                                            </a>
+                                        </div>
+                                        <div class="item1 ">
+                                            <a href="../articles/82.html">
+                                                    Spring源码 (一) - bean定义加入ioc容器
+                                            </a>
+                                        </div>
+                                        <div class="item1 ">
                                             <a href="../articles/40.html">
                                                     探究MultipartResolver的运行原理
                                             </a>
@@ -267,7 +282,13 @@ private final Map&lt;String, ObjectFactory&lt;?&gt;&gt; singletonFactories = new
 <blockquote>
 <p>singletonObject = this.singletonObjects.get(beanName);</p>
 </blockquote>
-<p>还找不到时，最后从三级缓存中取出工厂方法或构造器（如果存在的话），创建对象并将其加入二级缓存；</p>
+<p>还找不到时，最后从三级缓存中取出ObjectFactory，调用getObject()方法获取对象并将其加入二级缓存。</p>
+<p>如果获取成功，则跳过创建流程，避免重复。</p>
+<blockquote>
+<p>ObjectFactory可以看做一个对象获取器，在此之前，bean已经被创建</p>
+</blockquote>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202510/035bc0bb94b142c6b58295c8cdd20f42-D21636DF2E08A21669FCE0026566342B.png?project=easyblog" /></p>
+<p>图1 将bean实例包装为ObjectFactory并加入三级缓存</p>
 <pre><code class="language-java">// 获取工厂方法或构造器
 ObjectFactory&lt;?&gt; singletonFactory = this.singletonFactories.get(beanName);
 // 创建bean
@@ -303,7 +324,7 @@ public class B {
 <p>此时，spring就会检测到，无论是a还是b，都在处于创建状态中，没法完成依赖注入（DI）。</p>
 <p>最终，抛出了循环依赖的异常。</p>
 <p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202507/690c035b49864a8fb00c7c5fc6b5ce65-0A70F87F965C92366C168E70852DD25B.png?project=easyblog" /></p>
-<p><em>图1 循环依赖异常</em></p>
+<p>图2 循环依赖异常</p>
 <blockquote>
 <p>Caused by: org.springframework.beans.factory.BeanCurrentlyInCreationException: Error creating bean with name 'a': Requested bean is currently in creation: Is there an unresolvable circular reference or an asynchronous initialization dependency?
 at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.beforeSingletonCreation(DefaultSingletonBeanRegistry.java:544)
@@ -338,7 +359,7 @@ public class A {
     }
 </code></pre>
 <p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202507/496757b017c14a03a86bb414a2315c5a-C3B009777045947A270BEF4347434C04.png?project=easyblog" /></p>
-<p><em>图2 正常执行main方法的结果</em></p>
+<p>图3 正常执行main方法的结果</p>
 <p>总的来说，文中所举的例子只是一种极端的情况，在项目中并不常见，设计程序时稍作留意即可；而由于spring的三级缓存已经处理了大部分循环依赖的场景，一般情况下甚至都不会遇到循环依赖的问题。</p>
 <p>以上。</p>
 
@@ -372,6 +393,7 @@ public class A {
     <script src="../js/search.js"></script>
     <script src="../js/menu.js"></script>
 <script src="../js/toc.js"></script>
+<script src="../js/caption-setter.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/viewerjs/1.11.7/viewer.min.js"></script>
 <script>
     let back = document.querySelector(".back");

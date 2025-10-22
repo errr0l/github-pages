@@ -13,7 +13,7 @@ function search(value) {
         if (reg.test(item.title)) {
             let title = item.title.replace(reg, "<span style='color: var(--c-1);'>$1</span>");
             let _item = {
-                fileName: item.fileName,
+                fileName: item.url,
                 tag: item.tag,
                 title: title,
                 categoryName: item.categoryName,
