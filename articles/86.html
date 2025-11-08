@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>自己写的脚本竟被官方针对了？！ - 小埃的个人博客</title>
+    <title>我写的脚本竟被官方针对了？！ - 小埃的个人博客</title>
     <link rel="stylesheet" href="../css/reset.css">
     <link rel="stylesheet" href="../css/base.css">
     <link rel="stylesheet" href="../css/index.css">
@@ -88,8 +88,8 @@
             window.addEventListener("scroll", headerEleVisibleHandler);
         });
     </script>
-        <meta name="keywords" content="油猴脚本,脚本,js">
-        <meta name="description" content="自己写的脚本竟被官方针对了？！；前段时间，为某网站写了个油猴脚本，并发布到Greasy Fork上... 主要是因为网站的广告特别恶心，满屏广告不说，想下载个东西的时候，点击了，不仅没能打开正确的链接，还总是跳出新的广告，并且是个不断循环的过程，用户压根...">
+        <meta name="keywords" content="油猴脚本,js,逆向">
+        <meta name="description" content="我写的脚本竟被官方针对了？！；前段时间，为某网站写了个油猴脚本，并发布到Greasy Fork上... 主要是因为网站的广告特别恶心，满屏广告不说，想下载个东西的时候，点击了，不仅没能打开正确的链接，还总是跳出新的广告，并且是个不断循环的过程，用户压根...">
     <link rel="stylesheet" href="../css/article.css">
     <link rel="stylesheet" href="../css/markdown/github-markdown.css">
     <link rel="stylesheet" href="../css/markdown/github-markdown-light.css">
@@ -158,18 +158,8 @@
                                 </h2>
                                 <div class="item content">
                                         <div class="item1 ">
-                                            <a href="../articles/85.html">
-                                                    剖析0.1+0.2不等于0.3的原因
-                                            </a>
-                                        </div>
-                                        <div class="item1 ">
                                             <a href="../articles/80.html">
                                                     【猿人学】jsvmp洞察先机逆向
-                                            </a>
-                                        </div>
-                                        <div class="item1 ">
-                                            <a href="../articles/79.html">
-                                                    pqt挂机活动收菜脚本
                                             </a>
                                         </div>
                                         <div class="item1 ">
@@ -178,13 +168,33 @@
                                             </a>
                                         </div>
                                         <div class="item1 ">
+                                            <a href="../articles/85.html">
+                                                    剖析0.1+0.2不等于0.3的原因
+                                            </a>
+                                        </div>
+                                        <div class="item1 ">
                                             <a href="../articles/76.html">
                                                     js实现监听单页面应用url的办法
                                             </a>
                                         </div>
                                         <div class="item1 ">
+                                            <a href="../articles/72.html">
+                                                    【某易云逆向】模拟登录篇
+                                            </a>
+                                        </div>
+                                        <div class="item1 ">
                                             <a href="../articles/70.html">
                                                     为静态站点添加目录功能
+                                            </a>
+                                        </div>
+                                        <div class="item1 ">
+                                            <a href="../articles/69.html">
+                                                    【某易云逆向】滑动验证码校验篇
+                                            </a>
+                                        </div>
+                                        <div class="item1 ">
+                                            <a href="../articles/65.html">
+                                                    【某易云逆向】滑动验证码识别篇
                                             </a>
                                         </div>
                                         <div class="item1 ">
@@ -225,7 +235,7 @@
             <div class="wrapper">
                 <article class="mg-b-20">
                     <div class="markdown-body">
-                        <div class="title">自己写的脚本竟被官方针对了？！</div>
+                        <div class="title">我写的脚本竟被官方针对了？！</div>
                         <div class="item meta mg-b-10">
                             <span class="author">由<a href="javascript:void(0);">errol</a>发表于<a href="#">2025-11-08</a></span>
                             <span>|</span>
@@ -234,7 +244,7 @@
                             <a href="../categories/6.html">随说</a></span>
                             <span>|</span>
                             <span class="tags">
-                                标签为<a href="javascript:void(0);">油猴脚本</a>、<a href="javascript:void(0);">脚本</a>、<a href="javascript:void(0);">js</a>
+                                标签为<a href="javascript:void(0);">油猴脚本</a>、<a href="javascript:void(0);">js</a>、<a href="javascript:void(0);">逆向</a>
                             </span>
                         </div>
                             <div class="cover mg-b-10">
@@ -249,25 +259,29 @@
 <p>使用体验就像下面这位一样：</p>
 <p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202511/ff41afab69f54f7aa0928161645aeb21-CC56E1B93FC9604BADA1D6CC53E4F38C.png?project=easyblog" /></p>
 <p>图1 牛皮癣广告</p>
-<p>比较有意思的是，官方把这种情况定性为&quot;广告误触&quot;，为此，他们还设计了个叫&quot;误触卡&quot;的东西，来避免误触，笑了。</p>
-<p>且这东西只能通过在app做任务限量获取，不难想象，手段肯定是看广告，未来可能还会有付费方式。</p>
-<p>这个网站本身无下载功能（但也可能是我没注意到也说不定），所以基本上是以外部链接为主。</p>
-<p>运作机制比较简单，网站资源页提供了&quot;下载链接&quot;，点击后跳转到网站的广告页，里面才显示真的下载链接，像是百度云、MEGA等。</p>
-<p>但恶心的地方就在这里，<strong>无论点广告也的哪里，都会继续跳广告，并且还可能触发无限循环，而没法拿到真下载链接。</strong></p>
-<p>所以，我写了这个脚本...</p>
-<p>稍微调试了一下网站，发现资源页里的&quot;下载链接&quot;，其实就已经包含了真下载链接，只不过加密了而已，所以通过逆向得到加密方式后，真下载链接也自然就得到了。</p>
+<p>比较有意思的是，官方把这种情况定性为&quot;误触&quot;，为此，他们还设计了个叫&quot;误触卡&quot;的东西，来避免广告误触，笑了。</p>
+<p>且这东西只能通过在app做任务限量获取，虽然没用过，但不难想象，手段肯定是看广告，未来可能还会有付费的方式。</p>
+<p>网站本身不提供下载功能，所以都是以外部链接为主，运作机制比较简单，资源页提供了&quot;下载链接&quot;，点击后跳转到广告页，里面才显示真的下载链接，像是百度云、夸克、MEGA之类的。</p>
+<p>但是，恶心的地方就在这里，<strong>无论点广告页的哪里，都会继续跳广告，并且还可能触发无限循环，而没法拿到真下载链接。</strong></p>
+<p>所以，我才写了这个脚本...</p>
+<p>事实上也没花多少功夫，只是稍微调试了网站，发现资源页里的&quot;下载链接&quot;，其实已经包含真的下载链接，只不过经加密了而已，通过逆向得到加密算法后，真下载链接也自然而然到手了。</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202511/306c60ff8ea44f1397e280b8222b8b13-615FA9BFA68DB6A7BE500362FFAC41F9.png?project=easyblog" /></p>
+<p>图2 在原链接旁提供【复制】功能</p>
 <p><strong>这就是脚本的主要功能：绕过广告页，获取资源下载链接。</strong></p>
 <p>从发布到现在，运行得挺好的，直到几天前，有人反馈说脚本用不了了...</p>
-<p>开始以为是网站的正常迭代更新，但是，当我发现，脚本添加的节点被隐藏的时候（display: none），有点绷不住了。。</p>
-<p>原来脚本是被刻意针对，精准打了补丁。</p>
-<p>我还纳闷自己什么时候设置了这个样式，检查了代码也没发现，愣了一会才醒悟。</p>
+<p>开始以为是网站的正常迭代更新，但是，当我发现，脚本添加的节点被隐藏的时候，有点绷不住了。。</p>
+<blockquote>
+<p>display: none;</p>
+</blockquote>
+<p><strong>原来是刻意针对，精准打补丁。</strong></p>
+<p>最初我还纳闷自己什么时候写了这种样式，对代码从头到尾检查了一遍也没发现，愣了一会儿才醒悟。</p>
 <p><strong>原因我多少有点眉目，无非与利益相关，网站的主要收益来源于广告，使用脚本=少人看广告=少收益。</strong></p>
 <p>看广告可以，但体验疑似确实有点太过于恶心了。</p>
-<p>不过，其实也没几个人用：</p>
+<p>虽然也没几个人用：</p>
 <p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202511/70ee23397d8e4f20b30e0cb9956d0e87-D7AEBB86EF4E9DA3ED3DC6EF3A03C166.png?project=easyblog" /></p>
-<p>图2 脚本下载量</p>
-<p>只是有点惊讶，竟然有官方会精准打击脚本，甚至这种聊胜于无的也没放过。</p>
-<p>今天做最后一次脚本更新，后续网站再针对性打补丁时，就不再发布到Greasy Fork上了，虽然改起来简单，但写了也白写，还伴随着风险。</p>
+<p>图3 脚本下载量</p>
+<p>只是有点惊讶，官方竟然会精准打击脚本，甚至这种聊胜于无的也没放过，写了那么多这还是头一回。</p>
+<p>今天做最后一次代码更新，如果后续再被针对性打补丁时，可能就不再发布到Greasy Fork上了，改起来是简单，但也是白写，还伴随风险。</p>
 <p>没办法。</p>
 
                         </div>
