@@ -360,6 +360,25 @@ public class A {
 </code></pre>
 <p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202507/496757b017c14a03a86bb414a2315c5a-C3B009777045947A270BEF4347434C04.png?project=easyblog" /></p>
 <p>图3 正常执行main方法的结果</p>
+<p>注，如果A保持构造注入，而将B修改为字段注入的话，仍然会出现循环引用的异常。</p>
+<p>这主要是由于spring默认的创建策略，比方说A-Z，在当前情况下，A要先于B创建，A先创建，在注入阶段，由于A的实例还没加入缓存，B没法找到A的引用而导致错误。</p>
+<p>此时可以指定A依赖于B，spring就会优先创建B。</p>
+<pre><code class="language-java">@DependsOn(&quot;b&quot;)
+@Component
+public class A {
+    private B b;
+    A(B b) {
+        this.b = b;
+    }
+}
+
+@Component
+public class B {
+    @Autowired
+    private A a;
+}
+</code></pre>
+<p>当然，尽管确实有处理方法，但也应该要极力避免。</p>
 <p>总的来说，文中所举的例子只是一种极端的情况，在项目中并不常见，设计程序时稍作留意即可；而由于spring的三级缓存已经处理了大部分循环依赖的场景，一般情况下甚至都不会遇到循环依赖的问题。</p>
 <p>以上。</p>
 

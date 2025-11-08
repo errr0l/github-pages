@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>我写的脚本竟被针对了？！ - 小埃的个人博客</title>
+    <link rel="stylesheet" href="../css/reset.css">
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/index.css">
+    <link rel="stylesheet" href="../css/header.css">
+    <link rel="stylesheet" href="../css/mobile.css">
+    <link rel="stylesheet" href="../css/theme-light.css">
+    <link rel="shortcut icon" href="../favicon.ico" type="image/x-icon">
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?d1fc0144cbb354a3f8442b7ba568bc2f";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+
+        window.addEventListener('DOMContentLoaded', () => {
+            let headerEle = document.getElementById('header');
+            let eleHeight = headerEle.offsetHeight;
+            let lastScrollTop = 0;
+            let topAnchor = 0; // 某个方向的锚点
+            let downAnchor = 0;
+            let stylTop = "-" + eleHeight + "px";
+            let stylTop2 = "0";
+            let threshold = 180;
+            function headerEleVisibleHandler() {
+                let scrollTop = document.documentElement.scrollTop;
+                // 向下滚动
+                if (scrollTop > lastScrollTop) {
+                    if (downAnchor !== 0) {
+                        downAnchor = 0;
+                    }
+                    if (topAnchor === 0) {
+                        topAnchor = scrollTop;
+                    }
+                    if ((scrollTop > threshold || scrollTop - topAnchor > threshold) && headerEle.style.top !== stylTop) {
+                        headerEle.style.top =  stylTop;
+                    }
+                }
+                // 向上
+                else {
+                    if (topAnchor !== 0) {
+                        topAnchor = 0;
+                    }
+                    if (downAnchor === 0) {
+                        downAnchor = scrollTop;
+                    }
+                    if ((scrollTop + threshold > downAnchor) && headerEle.style.top === stylTop) {
+                        headerEle.style.top = stylTop2;
+                    }
+                }
+                lastScrollTop = scrollTop;
+            }
+
+            function throttleWrapper(fn, options) {
+                if (!options) {
+                    options = {};
+                }
+                let timer = null;
+                const { timeout } = options;
+
+                const _setTimeout = () => {
+                    timer = window.setTimeout(() => {
+                        window.clearTimeout(timer);
+                        timer = null;
+                    }, timeout);
+                    return timer;
+                }
+
+                return function (...args) {
+                    if (timer) {
+                        return;
+                    }
+                    timer = -1;
+                    let result = fn.apply(this, args);
+                    _setTimeout();
+                    return result;
+                }
+            }
+            headerEleVisibleHandler = throttleWrapper(headerEleVisibleHandler, { timeout: 200 });
+            window.addEventListener("scroll", headerEleVisibleHandler);
+        });
+    </script>
+        <meta name="keywords" content="油猴脚本,脚本,js">
+        <meta name="description" content="我写的脚本竟被针对了？！；前段时间，为某网站写了个油猴脚本，并发布到Greasy Fork上...
+主要是因为网站的广告特别恶心，想下载个东西的时候，不仅没打开正确的地址，还总是跳转到其他地方（广告）...">
+    <link rel="stylesheet" href="../css/article.css">
+    <link rel="stylesheet" href="../css/markdown/github-markdown.css">
+    <link rel="stylesheet" href="../css/markdown/github-markdown-light.css">
+    <link rel="stylesheet" href="../css/gittalk-cover.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/viewerjs/1.11.7/viewer.min.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</head>
+<body>
+<div id="app">
+    <div id="header">
+    <div id="bar">
+        <div class="container mg-0-auto d-f pos-r">
+            <div class="logo">
+                <a href="../" class="nav-link" style="margin-right: 10px;">
+                    <img src="../image/portal/logo.jpg" alt="小埃的个人博客">
+                </a>
+            </div>
+            <div class="right">
+                <ul class="nav f-l">
+                        <li class="nav-item">
+                            <a href="../index.html" class="nav-link active">
+                                <span>首页</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="../category.html" class="nav-link ">
+                                <span>分类</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="../about.html" class="nav-link ">
+                                <span>关于</span>
+                            </a>
+                        </li>
+                </ul>
+                <div class="eb-title">
+                    小埃的个人博客
+                </div>
+                    <div id="search">
+                        <input type="text" id="search-input" data-prefix="../" placeholder="搜索" autocomplete="off" />
+                        <span class="search-icon t-a">
+                            <img class="el-icon-search" src="../image/portal/search.png" width="16" height="16">
+                        </span>
+                        <div id="search-result">
+                            <input type="text" class="input-1" id="search-input-2" data-prefix="../" placeholder="请输入" autocomplete="off" />
+                            <div class="content">
+                            </div>
+                            <div class="arrow"></div>
+                        </div>
+                    </div>
+
+                <div class="eb-menu">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-list-ul" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M5 11.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm-3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm0 4a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm0 4a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
+                    </svg>
+                </div>
+            </div>
+            <div id="sc-box">
+                <div class="wrapper">
+                        <div class="side-card b-s-1 mg-b-10">
+                            <div class="wrapper">
+                                <h2 class="item title">
+                                    <span>相关文章</span>
+                                </h2>
+                                <div class="item content">
+                                        <div class="item1 ">
+                                            <a href="../articles/85.html">
+                                                    剖析0.1+0.2不等于0.3的原因
+                                            </a>
+                                        </div>
+                                        <div class="item1 ">
+                                            <a href="../articles/80.html">
+                                                    【猿人学】jsvmp洞察先机逆向
+                                            </a>
+                                        </div>
+                                        <div class="item1 ">
+                                            <a href="../articles/79.html">
+                                                    pqt挂机活动收菜脚本
+                                            </a>
+                                        </div>
+                                        <div class="item1 ">
+                                            <a href="../articles/77.html">
+                                                    【推特】Webpack逆向
+                                            </a>
+                                        </div>
+                                        <div class="item1 ">
+                                            <a href="../articles/76.html">
+                                                    js实现监听单页面应用url的办法
+                                            </a>
+                                        </div>
+                                        <div class="item1 ">
+                                            <a href="../articles/70.html">
+                                                    为静态站点添加目录功能
+                                            </a>
+                                        </div>
+                                        <div class="item1 ">
+                                            <a href="../articles/66.html">
+                                                    关于nodejs使用相对路径读取文件的问题
+                                            </a>
+                                        </div>
+                                        <div class="item1 ">
+                                            <a href="../articles/55.html">
+                                                    解耦在js中的应用
+                                            </a>
+                                        </div>
+                                        <div class="item1 ">
+                                            <a href="../articles/22.html">
+                                                    为静态站点添加搜索功能
+                                            </a>
+                                        </div>
+                                        <div class="item1 ">
+                                            <a href="../articles/19.html">
+                                                    为vue单页面应用添加提示保存功能
+                                            </a>
+                                        </div>
+                                        <div class="item1 ">
+                                            <a href="../articles/15.html">
+                                                    兼容部署在Github Pages与其他服务器的应用引入资源的解决方案
+                                            </a>
+                                        </div>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    <div id="main">
+        <div class="container mg-0-auto pd-t-10">
+            <div class="wrapper">
+                <article class="mg-b-20">
+                    <div class="markdown-body">
+                        <div class="title">我写的脚本竟被针对了？！</div>
+                        <div class="item meta mg-b-10">
+                            <span class="author">由<a href="javascript:void(0);">errol</a>发表于<a href="#">2025-11-08</a></span>
+                            <span>|</span>
+                            <span class="time">
+                            分类为
+                            <a href="../categories/6.html">随说</a></span>
+                            <span>|</span>
+                            <span class="tags">
+                                标签为<a href="javascript:void(0);">油猴脚本</a>、<a href="javascript:void(0);">脚本</a>、<a href="javascript:void(0);">js</a>
+                            </span>
+                        </div>
+                            <div class="cover mg-b-10">
+                                <img src="../image/portal/202511/ff6d0114f9094eafb75cec4d665dafba-tm.png?project=easyblog" alt="">
+                            </div>
+                        <div class="content">
+                            <p>前段时间，为某网站写了个油猴脚本，并发布到Greasy Fork上...</p>
+<p>主要是因为网站的广告特别恶心，想下载个东西的时候，不仅没打开正确的地址，还总是跳转到其他地方（广告），并且这个过程会不断循环，用户压根没有下载的机会，只能当个无情的刷广告机器。</p>
+<blockquote>
+<p>想关闭广告更是异想天开</p>
+</blockquote>
+<p>使用体验就像下面这位一样：</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202511/ff41afab69f54f7aa0928161645aeb21-CC56E1B93FC9604BADA1D6CC53E4F38C.png?project=easyblog" /></p>
+<p>图1 牛皮癣广告</p>
+<p>比较有意思的是，官方把这种情况定性为&quot;广告误触&quot;，为此，他们还设计了个叫&quot;误触卡&quot;的东西，来避免误触，笑了。</p>
+<p>且这东西只能通过在app做任务限量获取，不难想象，手段肯定是看广告，未来可能还会有付费方式。</p>
+<p>这个网站本身无下载功能（但也可能是我没注意到也说不定），所以基本上是以外部链接为主。</p>
+<p>运作机制比较简单，网站资源页提供了&quot;下载链接&quot;，点击后跳转到网站的广告页，里面才显示真的下载链接，像是百度云、MEGA等。</p>
+<p>但恶心的地方就在这里，无论点广告也得哪里，都会继续跳广告，并且还可能一直在循环，无法拿到真下载链接。</p>
+<p>所以，我写了这个脚本...</p>
+<p>稍微逆向了网站，发现资源页里的&quot;下载链接&quot;，其实就已经包含了真下载链接，只不过加密了而已，所以通过逆向得到加密方式后，真下载链接也就得到了。</p>
+<p><strong>这就是脚本的主要功能：绕过广告页，获取资源下载链接。</strong></p>
+<p>从发布到现在，运行得挺好的，直到几天前，有人反馈说脚本用不了了...</p>
+<p>开始以为是网站的正常迭代更新，但是，当我发现，脚本添加的节点被隐藏的时候（display: none），有点绷不住了。。</p>
+<p>原来脚本是被刻意针对，精准打了补丁。</p>
+<p>我还纳闷自己什么时候设置了这个样式，检查了代码也没发现，愣了一会才醒悟。</p>
+<p><strong>原因我心知肚明，无非与利益相关，网站的主要收益来源于广告，使用脚本=少人看广告=少收益。</strong></p>
+<p>但其实也没几个人用：</p>
+<p><img src="../image/portal/loading.gif" alt="image" data-src="../image/portal/202511/70ee23397d8e4f20b30e0cb9956d0e87-D7AEBB86EF4E9DA3ED3DC6EF3A03C166.png?project=easyblog" /></p>
+<p>图2 脚本下载量</p>
+<p>只是有点惊讶，竟然有官方会精准打击这种脚本。</p>
+<p>今天做最后一次脚本更新，后续网站再针对性打补丁时，就不再发布到Greasy Fork上了，虽然改起来简单，但写了也白写，还伴随着风险。</p>
+<p>没办法。</p>
+
+                        </div>
+                    </div>
+                </article>
+                <div class="comment-wrap">
+                        <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+  <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+                        <div id="gitalk-container"></div>
+                        <script>
+                            const gitalk = new Gitalk({
+                                clientID: 'ae1422e500a8b19fb1fc',
+                                clientSecret: '9f387db6a84a4945cdf5dc743c16ce25fdef6b76',
+                                repo: 'github-pages',      // The repository of store comments,
+                                owner: 'errr0l',
+                                admin: ['errr0l'],
+                                id: location.pathname,      // Ensure uniqueness and length less than 50
+                                distractionFreeMode: false  // Facebook-like distraction free mode
+                            });
+                            gitalk.render('gitalk-container');
+                        </script>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="back">返回</div>
+</div>
+    <script src="../js/data.js"></script>
+    <script src="../js/lazy.js"></script>
+    <script src="../js/search.js"></script>
+    <script src="../js/menu.js"></script>
+<script src="../js/toc.js"></script>
+<script src="../js/caption-setter.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/viewerjs/1.11.7/viewer.min.js"></script>
+<script>
+    let back = document.querySelector(".back");
+    back.addEventListener("click", function () {
+        window.history.go(-1);
+    });
+    const viewer = new Viewer(document.querySelector('.markdown-body .content'), {
+        toolbar: {
+            zoomIn: 4,
+            zoomOut: 4,
+            oneToOne: 4,
+            reset: 0,
+            prev: 4,
+            play: 0,
+            next: 4,
+            rotateLeft: 0,
+            rotateRight: 0,
+            flipHorizontal: 0,
+            flipVertical: 0,
+        },
+    });
+</script>
+</body>
+</html>
